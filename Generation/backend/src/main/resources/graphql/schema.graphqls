@@ -1,0 +1,13 @@
+type Query {
+    createImage: Image
+    getImageById(id: ID): Image
+}
+
+type Mutation {
+    submitImageId(id: ID): String
+}
+
+type Image {
+    id: ID
+    link: String
+}
