@@ -23,7 +23,7 @@ Timer Logic =
 | imageName        | String             | From image generation             | "Starry Night"                           |
 | imageDescription | String             | From image generation             | "A beautiful sky inspired by Van Gogh"   |
 | imageSurcharge   | Float              | Addditional costs from algorithm  | 59.99                                    |
-| imageRating      | Float              | From rating feature in gallery    | 4.8       (or NA if not in gallery)      | <--- rating between 1-10 hearts from gallery
+| imageLikes       | Integer            | From rating feature in gallery    | 4.8       (or NA if not in gallery)      | <--- rating between 1-10 hearts from gallery
 | isPublished      | Boolean            |                                   | TRUE for in gallery, FALSE for not       |
 | imageTimestamp   | String/Integer     | for the case of personal generation, item should be deleted after certain time? | |
 | imageLimit       | Integer            | Limits products from this at 10!  | 10                                       | <--- updated upon cart storage, undone without
@@ -34,9 +34,9 @@ Timer Logic =
 | Field            | Data Type          | Details                           | Example                                      |
 |------------------|--------------------|-----------------------------------|----------------------------------------------|
 | stockId          | ID                 | Primary key for the stock item    | 33312345                                     | ----> stockId allows to store combo and 
-| productType      | String             |                                   | "CUP", SHIRT, HOODIE, HAT, STICK             |       always check against stockQuantity 
-| productSize      | String             | only applicable for SHIRT, HOODIE | "XS", S, M, L, XL, XXL,      NA              |
-| productColor     | String             | only applicable for SHIRT, HOODIE | "YELLOW", RED, GREEN, BLUE, BLACK, WHITE, NA |
+| stockType        | String             |                                   | "CUP", SHIRT, HOODIE, HAT, STICKER           |       always check against stockQuantity 
+| stockSize        | String             | only applicable for SHIRT, HOODIE | "XS", S, M, L, XL, XXL,      NA              |
+| stockColor       | String             | only applicable for SHIRT, HOODIE | "YELLOW", RED, GREEN, BLUE, BLACK, WHITE, NA |
 | basePrice        | Float              |                                   | 19.99                                        |
 | stockQuantity    | Integer            |                                   | 80                                           | <--- updated upon cart storage, undone    
                                                                                                                                   without purchase
