@@ -24,7 +24,7 @@ public class CartItem {
         XS, S, M, L, XL, XXL, NA; // 'NA' for not applicable
     }
     public enum Color {
-        RED, GREEN, BLUE, BLACK, WHITE;
+        YELLOW, RED, GREEN, BLUE, BLACK, WHITE;
     }
 
     // Constructor

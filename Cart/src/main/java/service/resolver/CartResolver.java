@@ -1,8 +1,10 @@
+package service.resolver;
+
 import com.coxautodev.graphql.tools.GraphQLMutationResolver;
 import com.coxautodev.graphql.tools.GraphQLQueryResolver;
 
 import service.cart.CartStorage;
-import servive.cart.CartService;
+import service.cart.CartService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
