@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # ---------------- MONGO DATABASE ------------------------
+  mongodb:
+    image: mongo:latest
+    env_file: .env
+    volumes:
+        - ./data/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+        - ./data/mongodb:/data/db
+    ports:
+        - "8082:27017"
+    restart: always
+
+  mongo-express:
+    image: mongo-express:latest
+    depends_on:
+      - mongodb
+    env_file: .env
+    ports:
+      - "8081:8081"
+    restart: always
+
+# ---------------- MySQL DATABASE ------------------------
+  mysql:
+    image: mysql:latest
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    env_file: .env
+    ports:
+      - "8084:3306"
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - mysql
+    ports:
+      - "8083:80"
+    env_file: .env
+
+    restart: always
+
+# ----------------Microservices ----------------
+  authentication:
+    build: ./authentication
+    env_file: .env
+    ports:
+      - "8085:8080"
