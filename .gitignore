@@ -23,3 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 **/desktop.ini
+
+# Ignore everything in the data directories except .gitkeep
+/data/mongodb/*
+/data/mysql/*
+!/data/mongodb/.gitkeep
+!/data/mysql/.gitkeep
