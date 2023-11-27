@@ -19,9 +19,9 @@
 |------------------|--------------------|-----------------------------------|----------------------------------------------|
 | stock_id          | ID                 | Primary key for the stock item    | 33312345                                     | 
 | stock_type        | String             |                                   | "CUP", SHIRT, HOODIE, HAT, STICKER           |   
-| stockSize        | String             | only applicable for SHIRT, HOODIE | "XS", S, M, L, XL, XXL,      NA              |
-| stockColor       | String             | only applicable for SHIRT, HOODIE | "YELLOW", RED, GREEN, BLUE, BLACK, WHITE, NA |
-| basePrice        | Float              |                                   | 19.99                                        |
+| stock_size        | String             | only applicable for SHIRT, HOODIE | "XS", S, M, L, XL, XXL,      NA              |
+| stock_color       | String             | only applicable for SHIRT, HOODIE | "YELLOW", RED, GREEN, BLUE, BLACK, WHITE, NA |
+| base_price        | Float              |                                   | 19.99                                        |
 
 - index is the stock_id and stock_type
 - properties are handled with enums in the code
@@ -84,7 +84,7 @@ Image, user purchase history
 |------------------|--------------------|--------------------------------------|-----------------------|
 | user_id           | ID                 | User ID who liked the image          | 66612345              |
 | image_id          | ID                 | Image that was liked                 | 22212345              | 
-| is_Published         | Boolean     | TRUE for public, FALSE for private  | TRUE |
+| is_published         | Boolean     | TRUE for public, FALSE for private  | TRUE |
 
 - Image Surcharge can be calculated according to the likes in the likes table and the is_Published Boolean 
 - Possible conditions: public vs private price difference (like private is generally more expensive than public); when you publish an image and it gets more likes, it is more expensive for others to buy but cheaper four yourself to buy etc. 

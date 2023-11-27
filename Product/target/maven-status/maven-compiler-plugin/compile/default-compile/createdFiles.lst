@@ -1,0 +1,6 @@
+product/resolver/ProductMutation.class
+product/ProductServiceApplication.class
+product/repository/ProductRepository.class
+product/service/ProductService.class
+product/resolver/ProductQuery.class
+product/model/Product.class

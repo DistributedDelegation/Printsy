@@ -43,7 +43,13 @@ services:
 
 # ----------------Microservices ----------------
   authentication:
-    build: ./authentication
+    build: ./Authentication
     env_file: .env
     ports:
       - "8085:8080"
+
+  product:
+    build: ./Product
+    env_file: .env
+    ports:
+      - "8086:8082"

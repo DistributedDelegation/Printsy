@@ -1,0 +1,6 @@
+/home/coleneumark/distributed-systems/Printsy/Product/src/main/java/product/repository/ProductRepository.java
+/home/coleneumark/distributed-systems/Printsy/Product/src/main/java/product/service/ProductService.java
+/home/coleneumark/distributed-systems/Printsy/Product/src/main/java/product/resolver/ProductQuery.java
+/home/coleneumark/distributed-systems/Printsy/Product/src/main/java/product/ProductServiceApplication.java
+/home/coleneumark/distributed-systems/Printsy/Product/src/main/java/product/resolver/ProductMutation.java
+/home/coleneumark/distributed-systems/Printsy/Product/src/main/java/product/model/Product.java

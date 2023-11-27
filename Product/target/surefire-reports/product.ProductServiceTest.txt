@@ -1,0 +1,19 @@
+-------------------------------------------------------------------------------
+Test set: product.ProductServiceTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 2, Errors: 1, Skipped: 0, Time elapsed: 1.975 s <<< FAILURE! - in product.ProductServiceTest
+testCreateProduct  Time elapsed: 0.046 s  <<< ERROR!
+java.lang.NullPointerException: Cannot invoke "product.model.Product.getProductId()" because "savedProduct" is null
+	at product.ProductServiceTest.testCreateProduct(ProductServiceTest.java:55)
+
+testDeleteProductById  Time elapsed: 0.017 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Unexpected exception thrown: java.lang.RuntimeException: Product with ID 1 not found
+	at product.ProductServiceTest.testDeleteProductById(ProductServiceTest.java:85)
+Caused by: java.lang.RuntimeException: Product with ID 1 not found
+	at product.ProductServiceTest.lambda$testDeleteProductById$0(ProductServiceTest.java:85)
+	at product.ProductServiceTest.testDeleteProductById(ProductServiceTest.java:85)
+
+testGetProductById  Time elapsed: 0.013 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
+	at product.ProductServiceTest.testGetProductById(ProductServiceTest.java:74)
+
