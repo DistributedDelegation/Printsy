@@ -10,6 +10,5 @@ public boolean isStockAvailable(Long stockId) {
 
 
 
-- Check with Tania on databases
 - Check with Tania on communication style between services; is it REST or GraphQL inter-service?
 - Check with Tania on API Gateway

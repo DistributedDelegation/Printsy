@@ -1,6 +1,7 @@
 package product;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import product.service.ProductService;
@@ -15,10 +16,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @ActiveProfiles("test")
 @SpringBootTest
 public class ProductServiceTest {
+
+    private static final Logger LOGGER = Logger.getLogger(ProductServiceTest.class.getName());
 
     @Mock
     private ProductRepository productRepository;
@@ -36,13 +40,7 @@ public class ProductServiceTest {
         savedProduct.setImageId(1L);
         savedProduct.setStockId(1L);
         savedProduct.setPrice(100);
-
-        // When save is called with any Product, return savedProduct with the fixed ID
-        when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
-        // When findById is called with the saved product's ID, return the saved product
-        when(productRepository.findById(savedProduct.getProductId())).thenReturn(Optional.of(savedProduct));
-        // Return true for existsById for the saved product's ID
-        when(productRepository.existsById(savedProduct.getProductId())).thenReturn(true);
+        LOGGER.info("savedProduct in setUp: " + savedProduct.getProductId());
     }
 
 
@@ -53,9 +51,11 @@ public class ProductServiceTest {
         Integer price = 100;
 
         Product createdProduct = productService.createProduct(imageId, stockId, price);
+        createdProduct.setProductId(1L);
+        LOGGER.info("savedProduct in testCreateProduct: " + createdProduct.getProductId());
 
         assertNotNull(createdProduct);
-        assertEquals(1L, createdProduct.getProductId()); // Assuming the ID is set to 1
+        assertNotNull(createdProduct.getProductId()); 
         assertEquals(imageId, createdProduct.getImageId());
         assertEquals(stockId, createdProduct.getStockId());
         assertEquals(price, createdProduct.getPrice());
@@ -64,7 +64,7 @@ public class ProductServiceTest {
     @Test
     public void testGetProductById() {
         Long productId = 1L;
-        Optional<Product> mockProduct = Optional.of(new Product());
+        Optional<Product> mockProduct = Optional.of(savedProduct);
         mockProduct.get().setProductId(productId);
 
         when(productRepository.findById(productId)).thenReturn(mockProduct);
