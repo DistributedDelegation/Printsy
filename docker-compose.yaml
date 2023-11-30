@@ -47,3 +47,9 @@ services:
     env_file: .env
     ports:
       - "8085:8080"
+  
+  gallery:
+    build: ./gallery
+    env_file: .env
+    ports:
+      - "8086:8080"

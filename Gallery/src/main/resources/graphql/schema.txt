@@ -1,0 +1,42 @@
+# OBJECT TYPES define the shape of the data that can be fetched from the API
+
+# The Image type defines the fields for an image.
+type Image {
+  id: ID! # Unique identifier for the image (non-nullable)
+  data: String! # Byte array for encoded image
+}
+
+# ROOT OPERATION TYPES define top level operations that GraphQL uses to start traversing the graph type.
+
+# The Query type specifies the entry points for the API; similar to GET requests in REST.
+type Query {
+  # Gets a list of all images.
+  images: [Image] # Returns an array of Image types, could be null if there are no images.
+  # Gets a single image by its ID.
+  image(id: ID!): Image # Returns a single Image type based on the ID provided.
+  fetchImage(url: String!): String # Creates an image with the given URL and returns an encoded image
+}
+
+# The Mutation type defines the operations that can change data; similar to POST, PUT, DELETE in REST
+# These are the two functionalities we want to define for the API
+type Mutation {
+  # Saves an image by its ID to mongodb.
+  createImage(data: String!): String # Returns true if the save operation was successful, false otherwise.
+  updateImage(data: String!, id: ID!): String # Returns image ID if the update operation was successful.
+  deleteImage(id: ID!): String # Returns a successful / unsuccessful message.
+}
+
+# There is a third operation type, subscription, for real-time data fetching. COLE THIS COULD BE GOOD FOR YOU!
+#type Subscription {
+#    #Example just for the sake of including subscription. Notified when any new image is saved to the database
+#    imageSaved: Image
+#}
+
+# SCHEMA TYPE defines the root operations for the API.
+
+# The schema type is the root of all GraphQL queries and mutations.
+schema {
+  query: Query
+  mutation: Mutation
+  #    subscription: Subscription
+}
