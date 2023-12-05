@@ -38,7 +38,6 @@ services:
     ports:
       - "8083:80"
     env_file: .env
-
     restart: always
 
 # ----------------Microservices ----------------
@@ -50,6 +49,9 @@ services:
   
   gallery:
     build: ./gallery
+    depends_on:
+      - mongodb
+      - mysql
     env_file: .env
     ports:
       - "8086:8080"
