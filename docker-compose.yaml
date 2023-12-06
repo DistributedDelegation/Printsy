@@ -53,5 +53,6 @@ services:
       - mongodb
       - mysql
     env_file: .env
+    restart: always
     ports:
       - "8086:8080"
