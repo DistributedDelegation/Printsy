@@ -6,10 +6,10 @@ services:
     image: mongo:latest
     env_file: .env
     volumes:
-        - ./data/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-        - ./data/mongodb:/data/db
+      - ./data/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./data/mongodb:/data/db
     ports:
-        - "8082:27017"
+      - "8082:27017"
     restart: always
 
   mongo-express:
@@ -21,7 +21,7 @@ services:
       - "8081:8081"
     restart: always
 
-# ---------------- MySQL DATABASE ------------------------
+  # ---------------- MySQL DATABASE ------------------------
   mysql:
     image: mysql:latest
     volumes:
@@ -41,9 +41,25 @@ services:
 
     restart: always
 
-# ----------------Microservices ----------------
+  # ----------------Microservices ----------------
   authentication:
     build: ./authentication
     env_file: .env
     ports:
       - "8085:8080"
+
+  cart:
+    build: ./cart
+    env_file: .env
+    ports:
+      - "8086:8080"
+
+  transaction-gateway:
+    build: ./transaction/gateway
+    env_file: .env
+    ports:
+    - "8087:8080"
+
+  transaction-worker:
+    build: ./transaction/worker
+    env_file: .env
