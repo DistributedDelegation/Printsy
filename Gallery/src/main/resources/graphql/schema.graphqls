@@ -6,13 +6,17 @@ type Image {
 type Query {
   images: [Image] # Returns an array of Image types, could be null if there are no images.
   image(id: ID!): Image # Returns a single Image type based on the ID provided.
-  fetchImage(url: String!): String # Creates an image with the given URL and returns an encoded image
+  fetchMongoImage(url: String!): String # Creates an image with the given URL and returns an encoded image
+  fetchSQLImage(url: String!): String
 }
 
 type Mutation {
-  createImage(imageUrl: String!): ID! # Returns image ID if the save operation was successful, false otherwise.
-  updateImage(imageUrl: String!, id: ID!): String # Returns a successful / unsuccessful message.
-  deleteImage(id: ID!): String # Returns a successful / unsuccessful message.
+  createMongoImage(imageUrl: String!): ID! # Returns image ID if the save operation was successful, false otherwise.
+  updateMongoImage(imageUrl: String!, id: ID!): String # Returns a successful / unsuccessful message.
+  deleteMongoImage(id: ID!): String # Returns a successful / unsuccessful message.
+  createSQLImage(imageUrl: String!): ID!
+  updateSQLImage(imageUrl: String!, id: ID!): String
+  deleteSQLImage(id: ID!): String
 }
 
 schema {
