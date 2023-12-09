@@ -1,0 +1,23 @@
+type CartItem {
+    productId: ID!
+    userId: ID!
+    expirationTime: String
+}
+
+type Product {
+    productId: ID!
+    imageId: ID!
+    stockId: ID!
+    price: Int
+}
+
+type Query {
+    cartItemsByUserId(userId: ID!): [CartItem]
+    allProducts: [Product]
+    productById(productId: ID!): Product
+}
+
+type Mutation {
+    addToCart(productId: ID!, userId: ID!, expirationTime: String!): CartItem
+    removeFromCart(productId: ID!, userId: ID!): String
+}
