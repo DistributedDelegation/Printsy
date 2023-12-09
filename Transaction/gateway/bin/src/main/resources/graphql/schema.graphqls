@@ -1,8 +1,18 @@
+type Query {
+  getTransactionsForImage(imageId: String!): [Transaction]!
+}
+
 type Mutation {
-  processTransaction(sender: String!, receiver: String!, imageId: String!): TransactionResult!
+  validateTransaction(sender: String!, receiver: String!, imageId: String!): TransactionResult!
 }
 
 type TransactionResult {
   success: Boolean!
   result: Int!
+}
+
+type Transaction {
+  sender: String!
+  receiver: String!
+  imageId: String!
 }

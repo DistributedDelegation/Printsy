@@ -12,7 +12,6 @@ RUN mvn clean package
 FROM openjdk:17-slim
 COPY --from=builder /usr/src/app/target/transaction-worker-allinone.jar /usr/app/transaction-worker-allinone.jar
 WORKDIR /usr/app
-EXPOSE 8080
 
 # Run the application
 CMD ["java", "-jar", "transaction-worker-allinone.jar"]

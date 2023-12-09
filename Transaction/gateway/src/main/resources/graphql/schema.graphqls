@@ -3,7 +3,7 @@ type Query {
 }
 
 type Mutation {
-  validateTransaction(sender: String!, receiver: String!, imageId: String!): TransactionResult!
+  validateTransaction(sender: String!, receiver: String!, imageId: String!): [TransactionResult]!
 }
 
 type TransactionResult {
