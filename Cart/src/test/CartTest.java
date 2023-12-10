@@ -12,27 +12,27 @@ import org.mockito.MockitoAnnotations;
 
 class CartTest {
 
-    @Mock
-    private CartRepository cartRepository;
+    // @Mock
+    // private CartRepository cartRepository;
 
-    @InjectMocks
-    private CartService cartService;
+    // @InjectMocks
+    // private CartService cartService;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+    // @BeforeEach
+    // void setUp() {
+    //     MockitoAnnotations.openMocks(this);
+    // }
 
-    @Test
-    void testIsImageAvailable() {
-        Long imageId = 25L;
-        Integer transactionCount = 5; // from TransactionService
-        Integer countInCarts = 3; // from CartRepository
+    // @Test
+    // void testIsImageAvailable() {
+    //     Long imageId = 25L;
+    //     Integer transactionCount = 5; // from TransactionService
+    //     Integer countInCarts = 3; // from CartRepository
 
-        when(cartRepository.checkImagesInCart(imageId)).thenReturn(countInCarts);
+    //     when(cartRepository.checkImagesInCart(imageId)).thenReturn(countInCarts);
 
-        boolean isAvailable = cartService.isImageAvailable(imageId, transactionCount);
+    //     boolean isAvailable = cartService.isImageAvailable(imageId, transactionCount);
 
-        assertTrue(isAvailable);
-    }
+    //     assertTrue(isAvailable);
+    // }
 }

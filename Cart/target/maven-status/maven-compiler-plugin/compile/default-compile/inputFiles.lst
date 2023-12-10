@@ -2,5 +2,7 @@
 /home/coleneumark/distributed-systems/Printsy/Cart/src/main/java/cart/model/Cart.java
 /home/coleneumark/distributed-systems/Printsy/Cart/src/main/java/cart/model/Product.java
 /home/coleneumark/distributed-systems/Printsy/Cart/src/main/java/cart/resolver/CartResolver.java
+/home/coleneumark/distributed-systems/Printsy/Cart/src/main/java/cart/repository/ProductRepository.java
 /home/coleneumark/distributed-systems/Printsy/Cart/src/main/java/cart/CartServiceApplication.java
 /home/coleneumark/distributed-systems/Printsy/Cart/src/main/java/cart/repository/CartRepository.java
+/home/coleneumark/distributed-systems/Printsy/Cart/src/main/java/cart/model/RequestStatus.java

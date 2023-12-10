@@ -8,6 +8,8 @@ import cart.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.util.logging.Logger;
 import java.util.List;
@@ -20,13 +22,31 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
-    private final WebClient client; // Client to interact with the Transaction Service?
 
     @Autowired
-    public CartService(CartRepository cartRepository, ProductRepository productRepository,  WebClient client) {
+    public CartService(CartRepository cartRepository, ProductRepository productRepository) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
-        this.client = client;
+    }
+
+    // ----------------- Transaction Service -----------------
+    WebClient webClient = WebClient.builder()
+        .baseUrl("http://transaction-gateway")
+        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .build();
+
+    // Needs a Query in TransactionGateway to get the count of transactions for an image
+    public boolean getTransactionImageAvailability(Long imageId) {
+        //Integer response = webClient.post()
+            // .uri("/graphql")
+            // .bodyValue("{ \"query\": \"query GetTransactionsForImage($imageId: String!) { getTransactionsForImage(imageId: $imageId) { sender receiver imageId } }\", \"variables\": { \"imageId\": \"" + imageId + "\" } }")
+            // .retrieve()
+            // .bodyToMono(Integer.class)
+            // .block();
+        
+        Integer transactionCount = 0;
+    
+        return isImageAvailable(imageId, transactionCount);
     }
 
     public boolean isImageAvailable(Long imageId, Integer transactionCount) {
@@ -37,31 +57,51 @@ public class CartService {
         // Determine availability (assuming a threshold of 10)
         return total < 10;
     }
-    
-    public Integer getCartItemsByProductId(Long productId) {
-        return cartRepository.checkImagesInCart(productId);
-    }
 
-    public List<Cart> getCartItemsByUserId(Long userId) {
-        if (cartRepository.findCartItemsByUserId(userId).isEmpty()) {
-            throw new RuntimeException("No cart items found for user with ID " + userId);
+
+
+    // ----------------- Cart Service -----------------
+    // checked with: {"query": "query findImageByImageId($imageId: ID!) { findImageByImageId(imageId: $imageId) }","variables": { "imageId": "1" }}
+    public Integer getImageByImageId(Long imageId) {
+        if (cartRepository.checkImagesInCart(imageId) != null) {
+            return cartRepository.checkImagesInCart(imageId);
+        } else {
+            throw new RuntimeException("Image with ID " + imageId + " not found");
         }
-        return cartRepository.findCartItemsByUserId(userId);
     }
 
-    public Optional<Product> getProductById(Long productId) {
-        if (productRepository.existsById(productId)) {
-            return productRepository.findByProductId(productId);
+    // checked with: {"query": "query findCartItemsByProductId($productId: ID!) { findCartItemsByProductId(productId: $productId) }","variables": { "productId": "1" }}
+    public Integer getCartItemsByProductId(Long productId) {
+        if(cartRepository.checkImagesInCart(productId) != null) {
+            return cartRepository.checkImagesInCart(productId);
         } else {
             throw new RuntimeException("Product with ID " + productId + " not found");
         }
     }
 
+    // checked with: {"query": "query findCartItemsByUserId($userId: ID!) { findCartItemsByUserId(userId: $userId) { productId userId expirationTime } }","variables": { "userId": "1" }}
+    public List<Cart> getCartItemsByUserId(Long userId) {
+        if (cartRepository.checkCartItemsByUserId(userId).isEmpty()) {
+           throw new RuntimeException("No cart items found for user with ID " + userId);
+        }
+        return cartRepository.checkCartItemsByUserId(userId);
+    }
+
+    // checked with: {"query": "query findProductById($productId: ID!) { findProductById(productId: $productId) { productId imageId stockId price } }","variables": { "productId": "1" }}
+    public Optional<Product> getProductById(Long productId) {
+        if (productRepository.existsById(productId)) {
+            return productRepository.checkByProductId(productId);
+        } else {
+            throw new RuntimeException("Product with ID " + productId + " not found");
+        }
+    }
+
+    // checked with: {"query": "query findAllProducts { findAllProducts { productId imageId stockId price } }"}
     public List<Product> getAllProducts() {
-        if (productRepository.findAllProducts().isEmpty()) {
+        if (productRepository.checkAllProducts().isEmpty()) {
             throw new RuntimeException("No products found");
         }
-        return productRepository.findAllProducts();
+        return productRepository.checkAllProducts();
     }
 
 }

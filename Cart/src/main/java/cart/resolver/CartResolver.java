@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Optional;
 import java.util.List;
 
@@ -15,26 +14,21 @@ import java.util.List;
 public class CartResolver {
 
     private final CartService cartService;
-    private final WebClient client;
 
     @Autowired
-    public CartResolver(CartService cartService, WebClient client) {
+    public CartResolver(CartService cartService) {
         this.cartService = cartService;
-        this.client = client;
     }
 
     // ----------------- Queries -----------------
     @QueryMapping
-    public Boolean checkAvailability(@Argument Long imageId) {
-        // Fetch transaction data for the image from the TransactionGateway
-        Integer transactionCount = client.post()
-                .uri("/graphql")
-                .bodyValue("{ \"query\": \"query GetTransactionsForImage($imageId: String!) { getTransactionsForImage(imageId: $imageId) { sender receiver imageId } }\", \"variables\": { \"imageId\": \"" + imageId + "\" } }")
-                .retrieve()
-                .bodyToMono(Integer.class)
-                .block();
+    public Boolean findImageAvailability(@Argument Long imageId) {
+        return cartService.getTransactionImageAvailability(imageId);
+    }
 
-        return cartService.isImageAvailable(imageId, transactionCount);
+    @QueryMapping
+    public Integer findImageByImageId(@Argument Long imageId) {
+        return cartService.getImageByImageId(imageId);
     }
 
     @QueryMapping

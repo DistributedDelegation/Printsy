@@ -1,6 +1,8 @@
 cart/repository/CartRepository.class
+cart/model/RequestStatus.class
 cart/service/CartService.class
 cart/model/Cart.class
+cart/repository/ProductRepository.class
 cart/model/Product.class
 cart/resolver/CartResolver.class
 cart/CartServiceApplication.class
