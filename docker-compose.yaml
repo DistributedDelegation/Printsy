@@ -48,18 +48,18 @@ services:
     ports:
       - "8085:8080"
 
-  #cart:
-  #  build: ./cart
-  #  env_file: .env
-  #  ports:
-  #    - "8086:8080"
+  cart:
+    build: ./cart
+    env_file: .env
+    ports:
+      - "8086:8080"
 
-  #transaction-gateway:
-  #  build: ./transaction/gateway
-  #  env_file: .env
-  #  ports:
-  #  - "8087:8080"
+  transaction-gateway:
+    build: ./transaction/gateway
+    env_file: .env
+    ports:
+    - "8087:8080"
 
-  #transaction-worker:
-  #  build: ./transaction/worker
-  #  env_file: .env
+  transaction-worker:
+    build: ./transaction/worker
+    env_file: .env

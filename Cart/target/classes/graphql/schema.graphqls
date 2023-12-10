@@ -1,23 +1,42 @@
-type Mutation {
-  addToCart(userId: ID!, itemId: ID!, quantity: Int!): Cart
-  removeFromCart(userId: ID!, itemId: ID!): Cart
-  resetCartTimer(userId: ID!): Cart
+type Cart {         
+    productId: ID!
+    userId: ID!
+    expirationTime: String
+}
+
+type Product {
+    productId: ID!
+    imageId: ID!
+    stockId: ID!
+    price: Int
+}
+
+type RequestStatus {
+    status: Boolean!
+    quantity: Int
+    message: String
 }
 
 type Query {
-  cartTimer(userId: ID!): Timer
+    checkAvailability(imageId: ID!): Int              # TransactionGateway
+
+    checkImagesInCart(imageId: ID!): Int        # MySQL
+    findCartItemsByUserId(userId: ID!): [Cart]  # MySQL
+    findProductById(productId: ID!): Product    # MySQL
+    findAllProducts: [Product]                  # MySQL
 }
 
-type Cart {
-  items: [CartItem!]
-  timer: Timer!
+type Mutation {
+    addItemToCart(productId: ID!, userId: ID!, expirationTime: String!): RequestStatus
+    deleteCartItems(productId: ID!, userId: ID!): String
 }
 
-type CartItem {
-  itemId: ID!
-  quantity: Int!
-}
 
-type Timer {
-  timeLeft: Int!
+# ----- TransactionGateway ---------------------------------------------
+query GetTransactionsForImage($imageId: String!) {
+    getTransactionsForImage(imageId: $imageId) {
+        sender
+        receiver
+        imageId
+    }
 }

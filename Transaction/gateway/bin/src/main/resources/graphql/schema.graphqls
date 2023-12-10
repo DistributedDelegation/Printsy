@@ -1,0 +1,8 @@
+type Mutation {
+  processTransaction(sender: String!, receiver: String!, imageId: String!): TransactionResult!
+}
+
+type TransactionResult {
+  success: Boolean!
+  result: Int!
+}

@@ -10,4 +10,5 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     
     @Query("SELECT COUNT(c) FROM Cart c WHERE c.imageId = ?1")
     Long checkImagesInCart(Long imageId);
+    
 }
