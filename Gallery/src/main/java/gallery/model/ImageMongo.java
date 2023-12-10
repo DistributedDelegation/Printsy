@@ -7,23 +7,63 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ImageMongo {
 
     @Id
-    private String id;
+    private String imageId;
 
     private String imageUrl;
 
-    public String getId() {
-        return id;
+    private String imageName;
+
+    private String imageDescription;
+
+    private Boolean isImagePublishedYN;
+
+    private String imageTimestamp;
+
+    public String getImageId() {
+        return imageId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
     public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String url) {
-        this.imageUrl = url;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getImageDescription() {
+        return imageDescription;
+    }
+
+    public void setImageDescription(String imageDescription) {
+        this.imageDescription = imageDescription;
+    }
+
+    public Boolean getIsImagePublishedYN() {
+        return isImagePublishedYN;
+    }
+
+    public void setIsImagePublishedYN(Boolean isImagePublishedYN) {
+        this.isImagePublishedYN = isImagePublishedYN;
+    }
+
+    public String getImageTimestamp() {
+        return imageTimestamp;
+    }
+
+    public void setImageTimestamp(String imageTimestamp) {
+        this.imageTimestamp = imageTimestamp;
     }
 }

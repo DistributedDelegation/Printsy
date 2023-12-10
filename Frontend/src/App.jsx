@@ -3,12 +3,14 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Gallery from './components/Gallery'
+import Generation from './components/Generation'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
+      <Generation />
       <Gallery />
     </>
   )

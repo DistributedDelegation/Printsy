@@ -4,25 +4,38 @@ import jakarta.persistence.*;
 
 @Entity
 public class ImageSQL {
-
+    
     @Id
-    private String id;
+    @Column(unique = true, columnDefinition = "VARCHAR(250)")
+    private String imageId;
+
     @Column(columnDefinition = "TEXT")
-    private String imageUrl;
+    private String usrId;
 
-    public String getId() {
-        return id;
+    @Column(columnDefinition = "BOOLEAN")
+    private Boolean isImagePublishedYN;
+
+    public String getImageId() {
+        return imageId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setImageId(String imageId) {
+        this.imageId = imageId;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getUsrId() {
+        return usrId;
     }
 
-    public void setImageUrl(String url) {
-        this.imageUrl = url;
+    public void setUsrId(String usrId) {
+        this.usrId = usrId;
+    }
+
+    public Boolean getIsImagePublishedYN() {
+        return isImagePublishedYN;
+    }
+
+    public void setIsImagePublishedYN(Boolean isImagePublishedYN) {
+        this.isImagePublishedYN = isImagePublishedYN;
     }
 }

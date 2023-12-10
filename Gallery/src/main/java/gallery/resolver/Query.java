@@ -14,6 +14,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 // The query should match the Query defined in the schema.
 // This is similar to a controller for only GET requests.
@@ -32,78 +34,10 @@ public class Query {
     }
 
     @QueryMapping
-    public List<ImageMongo> getMongoImages() {
-        // Getting images from database to demonstrate interaction
-        // These findAll() methods come from the Repository interface that we defined
-        return mongoRepository.findAll();
-    }
-
-    @QueryMapping
-    public ImageMongo getMongoImage(@Argument String id) {
-        // Getting image from database to demonstrate interaction
-        // We use Optional<Image> here in case there is no image in the db with that id
-        // These findById() methods come from the Repository interface
-        Optional<ImageMongo> oImage = mongoRepository.findById(id);
-
-        if (oImage.isPresent()) {
-            return oImage.get();
-        } else {
-            throw new RuntimeException("No image found with id: " + id);
-        }
-    }
-
-    @QueryMapping
-    public String fetchMongoImage(@Argument String url) {
-
-        System.out.println("Attempting to fetch image from: " + url);
-
-        try {
-            // Check if the URL is valid by trying to parse it as a URI
-            new URI(url);
-            // If no exception is thrown, the URL is valid, so return it
-            System.out.println("Successfully retrieved image!");
-            return url;
-        } catch (URISyntaxException e) {
-            // If an exception is thrown, the URL is invalid, so throw a RuntimeException
-            throw new RuntimeException("Invalid URL: " + url, e);
-        }
-    }
-
-    @QueryMapping
-    public List<ImageSQL> getSQLImages() {
-        // Getting images from database to demonstrate interaction
-        // These findAll() methods come from the Repository interface that we defined
-        return sqlRepository.findAll();
-    }
-
-    @QueryMapping
-    public ImageSQL getSQLImage(@Argument String id) {
-        // Getting image from database to demonstrate interaction
-        // We use Optional<Image> here in case there is no image in the db with that id
-        // These findById() methods come from the Repository interface
-        Optional<ImageSQL> oImage = sqlRepository.findById(id);
-
-        if (oImage.isPresent()) {
-            return oImage.get();
-        } else {
-            throw new RuntimeException("No image found with id: " + id);
-        }
-    }
-
-    @QueryMapping
-    public String fetchSQLImage(@Argument String url) {
-
-        System.out.println("Attempting to fetch image from: " + url);
-
-        try {
-            // Check if the URL is valid by trying to parse it as a URI
-            new URI(url);
-            // If no exception is thrown, the URL is valid, so return it
-            System.out.println("Successfully retrieved image!");
-            return url;
-        } catch (URISyntaxException e) {
-            // If an exception is thrown, the URL is invalid, so throw a RuntimeException
-            throw new RuntimeException("Invalid URL: " + url, e);
-        }
+    public List<String> getAllPublishedImages() {
+        return mongoRepository.findByIsImagePublishedYN(true)
+                                .stream()
+                                .map(ImageMongo::getImageUrl)
+                                .collect(Collectors.toList());
     }
 }

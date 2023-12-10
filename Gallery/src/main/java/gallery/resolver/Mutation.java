@@ -13,6 +13,9 @@ import gallery.repository.ImageMySQLRepository;
 import java.util.Optional;
 import java.util.UUID;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
 @Controller
 public class Mutation {
 
@@ -29,125 +32,34 @@ public class Mutation {
     }
 
     @MutationMapping
-    public String createMongoImage(@Argument String imageUrl) {
+    public String saveToImageAndGalleryTable(@Argument String imageUrl, @Argument String imageNameInput, @Argument String imageDescriptionInput, @Argument Boolean imagePublishedYN, @Argument String usrId) {
 
         // Generate a uuid for the image, this will be the same in both dbs
-        String id = UUID.randomUUID().toString();
-        System.out.println("This is the Mongo id: "+id);
+        String imageId = UUID.randomUUID().toString();
+        System.out.println("This is the Image ID: "+ imageId);
+
+        Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+        String imageTimestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(timeStamp);
 
         // Create new image object
-        ImageMongo image = new ImageMongo();
-        image.setId(id);
-        image.setImageUrl(imageUrl);
+        ImageMongo imageMongo = new ImageMongo();
+        imageMongo.setImageId(imageId);
+        imageMongo.setImageUrl(imageUrl);
+        imageMongo.setImageName(imageNameInput);
+        imageMongo.setImageDescription(imageDescriptionInput);
+        imageMongo.setIsImagePublishedYN(imagePublishedYN);
+        imageMongo.setImageTimestamp(imageTimestamp);
+
+        ImageSQL imageSql = new ImageSQL();
+        imageSql.setImageId(imageId);
+        imageSql.setUsrId(usrId);
+        imageSql.setIsImagePublishedYN(imagePublishedYN);
 
         // Save the image to our repository
-        mongoRepository.save(image);
+        mongoRepository.save(imageMongo);
+        sqlRepository.save(imageSql);
 
-        return image.getId();
-    }
-
-    @MutationMapping
-    public String updateMongoImage(@Argument String imageUrl, @Argument String id) {
-
-        // Get image
-        Optional<ImageMongo> image = mongoRepository.findById(id);
-
-        if (image.isPresent()) {
-
-            ImageMongo foundImage = image.get();
-            foundImage.setImageUrl(imageUrl);
-
-            // Save the image to our repository
-            mongoRepository.save(foundImage);
-
-            return "Successfully updated image!";
-        }
-
-        // Should implement more sophisticated error handling
-        return "Image not found!";
-
-    }
-
-    @MutationMapping
-    public String deleteMongoImage(@Argument String id) {
-
-        // Get image
-        Optional<ImageMongo> image = mongoRepository.findById(id);
-
-        if (image.isPresent()) {
-
-            ImageMongo foundImage = image.get();
-
-            // Save the image to our repository
-            mongoRepository.delete(foundImage);
-
-            return "Successfully deleted image!";
-        }
-
-        // Should implement more sophisticated error handling
-        return "Image not found!";
-
-    }
-
-    @MutationMapping
-    public String createSQLImage(@Argument String imageUrl) {
-
-        // Generate a uuid for the image, this will be the same in both dbs
-        String id = UUID.randomUUID().toString();
-        System.out.println("This is the SQL id: "+id);
-
-        // Create new image object
-        ImageSQL image = new ImageSQL();
-        image.setId(id);
-        image.setImageUrl(imageUrl);
-
-        // Save the image to our repository
-        sqlRepository.save(image);
-
-        return image.getId();
-    }
-
-    @MutationMapping
-    public String updateSQLImage(@Argument String imageUrl, @Argument String id) {
-
-        // Get image
-        Optional<ImageSQL> image = sqlRepository.findById(id);
-
-        if (image.isPresent()) {
-
-            ImageSQL foundImage = image.get();
-            foundImage.setImageUrl(imageUrl);
-
-            // Save the image to our repository
-            sqlRepository.save(foundImage);
-
-            return "Successfully updated image!";
-        }
-
-        // Should implement more sophisticated error handling
-        return "Image not found!";
-
-    }
-
-    @MutationMapping
-    public String deleteSQLImage(@Argument String id) {
-
-        // Get image
-        Optional<ImageSQL> image = sqlRepository.findById(id);
-
-        if (image.isPresent()) {
-
-            ImageSQL foundImage = image.get();
-
-            // Save the image to our repository
-            sqlRepository.delete(foundImage);
-
-            return "Successfully deleted image!";
-        }
-
-        // Should implement more sophisticated error handling
-        return "Image not found!";
-
+        return imageId;
     }
 
 }
