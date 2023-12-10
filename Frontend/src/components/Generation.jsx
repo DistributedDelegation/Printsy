@@ -3,7 +3,7 @@ import { useState } from 'react'
 const Generation = () => {
     
     // Define GraphQL endpoint
-    let galleryGraphqlEndpoint = "http://localhost:8086/graphql";
+    let galleryGraphqlEndpoint = "http://localhost:8088/graphql";
 
     const sanitizeInput = (input) => {
         // Basic sanitation just to demonstrate. You might need more complex logic.

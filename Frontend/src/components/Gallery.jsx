@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 const Gallery = () => {
     // Define GraphQL endpoint
-    let galleryGraphqlEndpoint = "http://localhost:8086/graphql";
+    let galleryGraphqlEndpoint = "http://localhost:8088/graphql";
 
     const getAllPublishedImages = () => {    
         const query = JSON.stringify({

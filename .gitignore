@@ -25,6 +25,7 @@ package-lock.json
 *.sln
 *.sw?
 **/desktop.ini
+*.class
 
 # Ignore everything in the data directories except .gitkeep
 /data/mongodb/*
