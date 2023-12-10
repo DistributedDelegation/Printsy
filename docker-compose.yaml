@@ -60,6 +60,10 @@ services:
     ports:
     - "8087:8080"
 
-  transaction-worker:
+  transaction-worker-1:
+    build: ./transaction/worker
+    env_file: .env
+
+  transaction-worker-2:
     build: ./transaction/worker
     env_file: .env

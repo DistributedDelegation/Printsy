@@ -6,8 +6,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>manager</module>
-        <module>miner</module>
         <module>gateway</module>
         <module>worker</module>
     </modules>
