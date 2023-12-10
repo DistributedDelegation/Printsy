@@ -26,6 +26,12 @@ public class Cart {
     public Cart() {  
     }
 
+    public Cart(Long userId, Long productId, Date expirationTime) {
+        this.userId = userId;
+        this.productId = productId;
+        this.expirationTime = expirationTime;
+    }
+
     public Long getId() {
         return id;
     }

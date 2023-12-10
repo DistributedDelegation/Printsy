@@ -1,4 +1,4 @@
-type CartItem {
+type Cart {         
     productId: ID!
     userId: ID!
     expirationTime: String
@@ -11,13 +11,32 @@ type Product {
     price: Int
 }
 
+type RequestStatus {
+    status: Boolean!
+    quantity: Int
+    message: String
+}
+
 type Query {
-    cartItemsByUserId(userId: ID!): [CartItem]
-    allProducts: [Product]
-    productById(productId: ID!): Product
+    checkAvailability(imageId: ID!): Int              # TransactionGateway
+
+    checkImagesInCart(imageId: ID!): Int        # MySQL
+    findCartItemsByUserId(userId: ID!): [Cart]  # MySQL
+    findProductById(productId: ID!): Product    # MySQL
+    findAllProducts: [Product]                  # MySQL
 }
 
 type Mutation {
-    addToCart(productId: ID!, userId: ID!, expirationTime: String!): CartItem
-    removeFromCart(productId: ID!, userId: ID!): String
+    addItemToCart(productId: ID!, userId: ID!, expirationTime: String!): RequestStatus
+    deleteCartItems(productId: ID!, userId: ID!): String
+}
+
+
+# ----- TransactionGateway ---------------------------------------------
+query GetTransactionsForImage($imageId: String!) {
+    getTransactionsForImage(imageId: $imageId) {
+        sender
+        receiver
+        imageId
+    }
 }

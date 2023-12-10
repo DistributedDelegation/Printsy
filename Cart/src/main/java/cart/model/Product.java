@@ -1,7 +1,5 @@
 package cart.model;
 
-import java.beans.Transient;
-
 import jakarta.persistence.*;
 
 @Entity
@@ -22,12 +20,18 @@ public class Product {
     @Column(name = "price")
     private Integer price;
 
-    @Transient
+    @Transient  // creates non-persistent field for computations
     private Integer quantity;
 
 //---------------Getters and Setters-----------------
 
     public Product() {
+    }
+
+    public Product(Long imageId, Long stockId, Integer price) {
+        this.imageId = imageId;
+        this.stockId = stockId;
+        this.price = price;
     }
 
     public Long getProductId() {

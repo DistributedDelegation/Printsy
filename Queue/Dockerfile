@@ -10,9 +10,9 @@ RUN mvn clean package
 
 # Stage 2: Create the runtime image
 FROM openjdk:17-slim
-COPY --from=builder /usr/src/app/target/product-allinone.jar /usr/app/product-allinone.jar
+COPY --from=builder /usr/src/app/target/queue-allinone.jar /usr/app/queue-allinone.jar
 WORKDIR /usr/app
 EXPOSE 8082
 
 # Run the application
-CMD ["java", "-jar", "product-allinone.jar"]
+CMD ["java", "-jar", "queue-allinone.jar"]

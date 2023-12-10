@@ -49,17 +49,23 @@ services:
       - "8085:8080"
 
   cart:
-    build: ./cart
+    build: ./Cart
     env_file: .env
     ports:
       - "8086:8080"
 
+  #queue:
+  #  build: ./Queue
+  #  env_file: .env
+  #  ports:
+  #    - "8088:8080"
+
   transaction-gateway:
-    build: ./transaction/gateway
+    build: ./Transaction/gateway
     env_file: .env
     ports:
     - "8087:8080"
 
   transaction-worker:
-    build: ./transaction/worker
+    build: ./Transaction/worker
     env_file: .env

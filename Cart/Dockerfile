@@ -12,7 +12,7 @@ RUN mvn clean package
 FROM openjdk:17-slim
 COPY --from=builder /usr/src/app/target/cart-allinone.jar /usr/app/cart-allinone.jar
 WORKDIR /usr/app
-EXPOSE 8082
+EXPOSE 8086
 
 # Run the application
 CMD ["java", "-jar", "cart-allinone.jar"]
