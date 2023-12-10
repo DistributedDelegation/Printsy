@@ -4,6 +4,7 @@ import cart.model.Cart;
 import cart.model.Product;
 import cart.repository.CartRepository;
 import cart.repository.ProductRepository;
+import cart.service.TaskSchedulerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,13 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
+    private final TaskSchedulerService taskSchedulerService;
 
     @Autowired
-    public CartService(CartRepository cartRepository, ProductRepository productRepository) {
+    public CartService(CartRepository cartRepository, ProductRepository productRepository, TaskSchedulerService taskSchedulerService) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
+        this.taskSchedulerService = taskSchedulerService;
     }
 
     // ----------------- Transaction Service -----------------
@@ -102,6 +105,26 @@ public class CartService {
             throw new RuntimeException("No products found");
         }
         return productRepository.checkAllProducts();
+    }
+
+    // added a cart item with user_id = 333 for the check
+    // checked with: {"query": "mutation deleteCartItemsByUserId($userId: ID!) { deleteCartItemsByUserId(userId: $userId) }","variables": { "userId": "333" }}
+    public void deleteCartItemsByUserId(Long userId) {
+        if (cartRepository.checkCartItemsByUserId(userId).isEmpty()) {
+            throw new RuntimeException("No cart items found for user with ID " + userId);
+        }
+        cartRepository.deleteByUserId(userId);
+    }
+
+    // ----------------- Scheduled Task -----------------
+
+    public void scheduleCartCleanup(Long userId) {
+        Runnable cleanupTask = () -> {
+            System.out.println("Running scheduled cart cleanup for user ID: " + userId);
+            deleteCartItemsByUserId(userId);
+        };
+
+        taskSchedulerService.scheduleTask(cleanupTask);
     }
 
 }

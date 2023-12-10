@@ -5,6 +5,7 @@ import cart.model.Product;
 import cart.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 import java.util.Optional;
@@ -52,6 +53,14 @@ public class CartResolver {
     }
 
     // ----------------- Mutations -----------------
+    @MutationMapping
+    public String deleteCartItemsByUserId(@Argument Long userId) {
+        cartService.deleteCartItemsByUserId(userId);
+        return "Cart items deleted successfully for user ID: " + userId;
+    }
+
+
+
     //@MutationMapping
     //public RequestStatus addItemToCart(@Argument Long userId, @Argument Long productId, @Argument String expirationTime) {
     //    return cartService.addItemToCart(userId, productId, expirationTime);

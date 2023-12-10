@@ -14,14 +14,15 @@ type Product {
 type Query {
     findImageAvailability(imageId: ID!): Boolean    # TransactionGateway
 
-    findImageByImageId(imageId: ID!): Int
-    findCartItemsByProductId(productId: ID!): Int   # MySQL
+    findImageByImageId(imageId: ID!): Int           # MySQL
+    findCartItemsByProductId(productId: ID!): Int   
     findCartItemsByUserId(userId: ID!): [Cart] 
     findProductById(productId: ID!): Product
     findAllProducts: [Product]
 }
 
-#type Mutation {
-#    addItemToCart(productId: ID!, userId: ID!, expirationTime: String!): String
-#    deleteCartItems(productId: ID!, userId: ID!): String
-#}
+type Mutation {
+    deleteCartItemsByUserId(userId: ID!): String
+
+    #    addItemToCart(productId: ID!, userId: ID!, expirationTime: String!): String
+}
