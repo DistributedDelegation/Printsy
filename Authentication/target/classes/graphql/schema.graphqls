@@ -1,0 +1,19 @@
+type Query {
+  currentUser(bearerToken: String!): User
+  isUsernameAvailable(username: String!): Boolean
+}
+
+type Mutation {
+  authenticate(userCredentialInput: UserCredentialInput!): String
+  register(userCredentialInput: UserCredentialInput!): String
+}
+
+type User {
+  userID: ID!
+  emailAddress: String!
+}
+
+input UserCredentialInput {
+  emailAddress: String!
+  password: String!
+}

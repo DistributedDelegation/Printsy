@@ -1,0 +1,21 @@
+syntax = "proto3";
+package worker;
+option java_package = "worker";
+
+// Definition of the service
+service WorkerService {
+  // Function which can be called on the worker service
+  // ProcessRequest is something that the worker can do with a TestRequest, which will return a TestResponse
+  rpc ProcessRequest (TestRequest) returns (TestResponse) {}
+}
+// Defines a TestRequest, with properties for sender, receiver, and imageId.
+message TestRequest {
+  string sender = 1;
+  string receiver = 2;
+  string imageId = 3;
+}
+// The response message containing the result.
+message TestResponse {
+  bool success = 1;
+  int32 result = 2;
+}
