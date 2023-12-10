@@ -38,7 +38,6 @@ services:
     ports:
       - "8083:80"
     env_file: .env
-
     restart: always
 
   # ----------------Microservices ----------------
@@ -47,12 +46,22 @@ services:
     env_file: .env
     ports:
       - "8085:8080"
-
-  cart:
-    build: ./cart
+  
+  gallery:
+    build: ./gallery
+    depends_on:
+      - mongodb
+      - mysql
     env_file: .env
+    restart: always
     ports:
-      - "8086:8080"
+      - "8088:8080"
+
+  # cart:
+  #   build: ./cart
+  #   env_file: .env
+  #   ports:
+  #     - "8086:8080"
 
   transaction-gateway:
     build: ./transaction/gateway

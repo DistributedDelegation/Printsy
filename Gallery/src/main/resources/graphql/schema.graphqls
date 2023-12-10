@@ -1,0 +1,17 @@
+type Image {
+  id: ID! # Unique identifier for the image (non-nullable)
+  data: String! # Byte array for encoded image
+}
+
+type Query {
+  getAllPublishedImages: [String!]!
+}
+
+type Mutation {
+  saveToImageAndGalleryTable(imageUrl: String!, imageNameInput: String!, imageDescriptionInput: String!, imagePublishedYN: Boolean!, usrId: String!): ID! # Returns image ID if the save operation was successful, false otherwise.
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+target/
+package-lock.json
 
 # Editor directories and files
 .vscode/*
@@ -23,6 +25,7 @@ dist-ssr
 *.sln
 *.sw?
 **/desktop.ini
+*.class
 
 # Ignore everything in the data directories except .gitkeep
 /data/mongodb/*
