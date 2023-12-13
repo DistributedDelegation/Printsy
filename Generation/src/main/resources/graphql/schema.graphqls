@@ -3,9 +3,13 @@ type Image {
   imageURL: String! # URL of image
 }
 
+type Feature {
+    name: String!
+    options: [String!]
+}
+
 type Query {
-  images: [Image] # Returns an array of Image types, could be null if there are no images.
-  #fetchFeatures: [Features] # Feature element for dropdown
+  fetchFeatures: [Feature] # Returns a list of feature elements for dropdown
 }
 
 type Mutation {
