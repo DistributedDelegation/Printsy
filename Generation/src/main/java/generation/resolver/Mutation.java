@@ -43,13 +43,11 @@ public class Mutation {
         response.put("imageURL", imageUrl);
         
         return response;
+    }
 
-        /*
-
-        // Save the image to our repository
-        sqlRepository.save(image);
-
-         */
+    @MutationMapping
+    public String deleteImage(@Argument String id) {
+        return imageStorageService.deleteImage(id);
     }
 
     /*

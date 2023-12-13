@@ -101,7 +101,16 @@ public class ImageStorageService {
             }
         } catch (Exception e) {
             throw new RuntimeException("Error processing image", e);
+        }   
+    }
+
+    public String deleteImage(String id) {
+        String imageName = id + ".png";
+        try {
+            s3Client.deleteObject(bucketName, imageName);
+            return "Successfully deleted image!";
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting image", e);
         }
-        
     }
 }

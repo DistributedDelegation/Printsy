@@ -5,15 +5,12 @@ type Image {
 
 type Query {
   images: [Image] # Returns an array of Image types, could be null if there are no images.
-  #image(id: ID!): Image # Returns a single Image type based on the ID provided.
-  #fetchImage(url: String!): String # Creates an image with the given URL and returns an encoded image
   #fetchFeatures: [Features] # Feature element for dropdown
 }
 
 type Mutation {
   createImage(prompt: String!): Image! # Provide a prompt and returns image url
-  #updateImage(imageUrl: String!, id: ID!): String # Returns a successful / unsuccessful message.
-  #deleteImage(id: ID!): String # Returns a successful / unsuccessful message.
+  deleteImage(id: ID!): String # Returns a successful / unsuccessful message.
 }
 
 schema {
