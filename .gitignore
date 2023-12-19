@@ -32,3 +32,7 @@ package-lock.json
 /data/mysql/*
 !/data/mongodb/.gitkeep
 !/data/mysql/.gitkeep
+
+
+# API Key
+.env.api

@@ -1,0 +1,23 @@
+type Image {
+  id: ID! # Unique identifier for the image (non-nullable)
+  imageURL: String! # URL of image
+}
+
+type Feature {
+    name: String!
+    options: [String!]
+}
+
+type Query {
+  fetchFeatures: [Feature] # Returns a list of feature elements for dropdown
+}
+
+type Mutation {
+  createImage(prompt: String!): Image! # Provide a prompt and returns image url
+  deleteImage(id: ID!): String # Returns a successful / unsuccessful message.
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
