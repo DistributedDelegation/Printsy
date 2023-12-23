@@ -1,42 +1,201 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Global Styles */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #2E4C54;
+  font-family: var(--font-roboto);
+}
+
+/* Variables */
+:root {
+  /* Fonts */
+  --font-roboto: 'Roboto', sans-serif;
+
+  /* Font Sizes */
+  --font-size-lg: 18px;
+  --font-size-7xl: 26px;
+  --font-size-3xl: 22px;
+  --font-size-xl: 20px;
+
+  /* Colors */
+  --color-white: #fff;
+  --color-lightblue-100: #90bdbd;
+  --color-lightblue-200: rgba(144, 189, 189, 0.356);
+  --color-darkslategray-100: #2e4c54;
+  --color-darkslategray-200: rgba(46, 76, 84, 0.7);
+  --color-darkslategray-300: rgba(46, 76, 84, 0.3);
+  --color-gray: rgba(255, 255, 255, 0.3);
+
+  /* Border Radius */
+  --br-3xs: 10px;
+}
+
+/* Grid */
+#gridTemplate {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  max-width: 1180px; /* 12 columns of 80px each */
+  grid-gap: 20px;
+  justify-content: center;
+  margin: auto;
+  min-height: 100vh;
+  height: auto;
+}*/
+
+.header {
+  z-index: 10;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  position: absolute;
+  top: 35px;
+  left: 0;
+  width: 200px;
+  height: auto;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.content {
+  position: absolute;
+  top: 120px;
+  left: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Element Styles within .content */
+.content h2, .content p, .content .submit-button, .content .placeholder-square, .gallery {
+  margin-bottom: 26px;
 }
 
-.card {
-  padding: 2em;
+h2 {
+  font-size: var(--font-size-7xl);
+  font-weight: 700;
+  color: var(--color-darkslategray-100);
 }
 
-.read-the-docs {
-  color: #888;
+p, .imageCount, .likesCount {
+  font-size: var(--font-size-xl);
+  font-weight: 500;
+  color: var(--color-darkslategray-100);
+  margin-top: -15px;
+}
+
+
+h3 {
+  font-size: var(--font-size-xl);
+  font-weight: 500;
+  color: var(--color-darkslategray-100);
+  margin-bottom: 11px;
+}
+
+.content .text-input {
+  border-radius: var(--br-3xs);
+  border: 1px solid var(--color-darkslategray-100);
+  background: var(--color-gray);
+  color: var(--color-darkslategray-100);
+  font-size: var(--font-size-lg);
+  width: 360px;
+  min-height: 120px;
+  padding: 10px;
+  letter-spacing: -0.36px;
+  cursor: pointer;
+}
+
+::placeholder {
+  color: var(--color-darkslategray-100);
+  font-size: var(--font-size-lg);
+  font-weight: 400;
+}
+
+.primary-button, .secondary-button {
+  border-radius: var(--br-3xs);
+  border: 1px solid var(--color-darkslategray-100);
+  background: var(--color-darkslategray-100);
+  color: var(--color-lightblue-100);
+  text-align: center;
+  font-weight: 700;
+  width: 380px;
+  height: 42px; 
+  text-align: center;
+  cursor: pointer;
+}
+
+.primary-button:hover {
+  background: var(--color-darkslategray-200);
+}
+
+.secondary-button {
+  background: var(--color-lightblue-100);
+  color: var(--color-darkslategray-100);
+  margin-top: 11px;
+}
+
+.secondary-button:hover {
+  background: var(--color-darkslategray-300);
+}
+
+.gallery {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.gallery .galleryImagesElement {
+  display: block;
+  width: 180px;
+  object-fit: cover;
+  clear: left;
+  margin-right: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.galleryImagesElement .galleryImages {
+  width: 100%;
+  height: 180px;
+  box-shadow: 1px 4px 4px 0px rgba(30, 40, 34, 0.242);
+  cursor: pointer;
+}
+
+.galleryImagesElement .heart-icon {
+  margin-top: 10px;
+  width: 24px;
+  height: 21.291px;
+  background-image: url("/images/heart.svg");
+}
+
+.galleryImagesElement .heart-icon:hover {
+  background-image: url("/images/heart-filled.svg");
+}
+
+.galleryImagesElement .imageCount {
+  display: block;
+  width: 100%;
+  text-align: right;
+  color: var(--color-lightblue-100);
+  margin-top: -24px;
+}
+
+.galleryImagesElement .galleryImages:hover {
+  outline: 12px solid var(--color-lightblue-100);
+}
+
+.galleryImagesElement .likesCount {
+  display: block;
+  color: var(--color-lightblue-100);
+  margin-top: -26px;
+  left: 30px;
+  text-align: left;
+  position: relative;
+}
+
+.icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  cursor: pointer;
 }
