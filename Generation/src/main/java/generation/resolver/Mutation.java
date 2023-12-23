@@ -36,10 +36,24 @@ public class Mutation {
     public Map<String, String> createImage(@Argument String prompt) {
 
         Image newImage =  imageGenerationService.generateImage(prompt);
-        String imageUrl = imageStorageService.processAndUploadImage(newImage.getImageUrl(), newImage.getId());
+        //String imageUrl = imageStorageService.processAndUploadImage(newImage.getImageUrl(), newImage.getId());
 
         Map<String, String> response = new HashMap<>();
         response.put("id", newImage.getId());
+        response.put("imageURL", newImage.getImageUrl());
+        
+        return response;
+    }
+
+    @MutationMapping
+    public Map<String, String> uploadImage(@Argument String url) {
+
+        //Image newImage =  imageGenerationService.generateImage(prompt);
+        String id = UUID.randomUUID().toString();
+        String imageUrl = imageStorageService.processAndUploadImage(url, id);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("id",id);
         response.put("imageURL", imageUrl);
         
         return response;
@@ -49,50 +63,5 @@ public class Mutation {
     public String deleteImage(@Argument String id) {
         return imageStorageService.deleteImage(id);
     }
-
-    /*
-    @MutationMapping
-    public String updateImage(@Argument String imageUrl, @Argument String id) {
-
-        // Get image
-        Optional<Image> image = sqlRepository.findById(id);
-
-        if (image.isPresent()) {
-
-            Image foundImage = image.get();
-            foundImage.setImageUrl(imageUrl);
-
-            // Save the image to our repository
-            sqlRepository.save(foundImage);
-
-            return "Successfully updated image!";
-        }
-
-        // Should implement more sophisticated error handling
-        return "Image not found!";
-
-    }
-
-    @MutationMapping
-    public String deleteImage(@Argument String id) {
-
-        // Get image
-        Optional<Image> image = sqlRepository.findById(id);
-
-        if (image.isPresent()) {
-
-            Image foundImage = image.get();
-
-            // Save the image to our repository
-            sqlRepository.delete(foundImage);
-
-            return "Successfully deleted image!";
-        }
-
-        // Should implement more sophisticated error handling
-        return "Image not found!";
-
-    }
-    */
 
 }

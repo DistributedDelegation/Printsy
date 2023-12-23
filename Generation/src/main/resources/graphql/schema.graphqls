@@ -14,6 +14,7 @@ type Query {
 
 type Mutation {
   createImage(prompt: String!): Image! # Provide a prompt and returns image url
+  uploadImage(url: String!): Image! # Provide a image and returns uploaded url
   deleteImage(id: ID!): String # Returns a successful / unsuccessful message.
 }
 
