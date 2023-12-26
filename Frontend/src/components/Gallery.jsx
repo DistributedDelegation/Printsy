@@ -1,15 +1,16 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Gallery = () => {
-    // Define GraphQL endpoint
+    const [imageUrls, setImageUrls] = useState([]);
     let galleryGraphqlEndpoint = "http://localhost:8088/graphql";
+    const navigate = useNavigate();
 
-    const getAllPublishedImages = () => {    
+    const getAllPublishedImages = () => {
         const query = JSON.stringify({
           query: "{ getAllPublishedImages }",
         });
-      
-        // Send the request to the GraphQL endpoint
+
         fetch(galleryGraphqlEndpoint, {
           method: 'POST',
           headers: {
@@ -17,32 +18,38 @@ const Gallery = () => {
           },
           body: query
         })
-          .then(response => response.json())
-          .then(data => {
-            if (data) {
-              console.log("GetAllPublishedImages: " + data.data.getAllPublishedImages)
-              const imageUrls = data.data.getAllPublishedImages;
-              let imageDisplay = imageUrls.map(url => `<p>Image URL: ${url}</p><img className="galleryImages" src=${url}>`).join('');
-              document.getElementById('galleryImageContainer').innerHTML = imageDisplay;
-            }
-          })
-          .catch(error => {
-            console.error('Error fetching the image:', error);
-          });
-    }
+        .then(response => response.json())
+        .then(data => {
+          if (data && data.data.getAllPublishedImages) {
+            setImageUrls(data.data.getAllPublishedImages);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching the image:', error);
+        });
+    };
 
     useEffect(() => {
       getAllPublishedImages();
     }, []);
-  
+
+    const handleImageClick = (url) => {
+      console.log("/selectimage imageURL: " + url)
+      navigate('/selected-image', { state: { imageURL: url, uploadedImage: true } });
+    };
+
     return (
-        <div id="results" style={{marginTop: "30px", display: "flex", flexDirection: "row"}}>
-              <div id="galleryResults" style={{marginRight: "30px"}}>
-                  <div id="galleryImageContainer"></div>
-              </div>       
-        </div>
-    )
-}
+      <div id="galleryImageContainer">
+        {imageUrls.map((url, index) => (
+          <div key={index} className="galleryImagesElement">
+            <img className="galleryImages" src={url} alt="Gallery" onClick={() => handleImageClick(url)}/>
+            <span className="icon heart-icon"></span>
+            <span className="likesCount">10</span>
+            <span className="imageCount">3/10</span>
+          </div>
+        ))}
+      </div>
+    );
+};
 
 export default Gallery;
-

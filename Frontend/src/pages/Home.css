@@ -1,0 +1,134 @@
+#Generate {
+  background: var(--color-lightblue-100);
+  box-shadow: 0px 8px 8px 0px rgba(0, 0, 0, 0.30);
+  grid-column: span 5;
+  min-height: 100%;
+  height: auto;
+  position: relative;
+}
+
+#Generate::before {
+  content: '';
+  position: absolute;
+  left: -9999px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #90BDBD;
+  z-index: 0;
+}
+
+#Gallery {
+  background: var(--color-darkslategray-100);
+  grid-column-start: 6;
+  grid-column-end: 13;
+  min-height: 100%;
+  position: relative;
+}
+
+#Gallery .content {
+  color: var(--color-lightblue-100);
+  left: 100px;
+}
+
+#Gallery h2,
+#Gallery p {
+  color: var(--color-lightblue-100);
+}
+
+.content .placeholder-square {
+  border: 1px solid var(--color-darkslategray-100);
+  background: var(--color-darkslategray-200);
+  width: 380px;
+  height: 380px;
+}
+
+.product-images {
+  display: flex;
+  margin: auto;
+}
+
+.product-images img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  clear: left;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+  box-shadow: 1px 4px 4px 0px rgba(30, 40, 34, 0.242);
+}
+
+.generationDropdowns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 380px;
+  justify-content: space-between;
+  margin-bottom: 36px;
+}
+
+.feature-container {
+  position: relative;
+  width: calc(50% - 10px);
+  flex-shrink: 0;
+  margin-bottom: -10px;
+}
+
+.feature-container select {
+  cursor: pointer;
+}
+
+.feature-label {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background-color: var(--color-lightblue-100);
+  padding: 0 5px;
+  font-size: 12px;
+  color: var(--color-darkslategray-100);
+  transition: all 0.3s ease;
+}
+
+.generationSylting {
+  width: 100%;
+  /* Make dropdown take full width of its container */
+  height: 42px;
+  border-radius: 10px;
+  border: 1px solid var(--color-darkslategray-100);
+  background: rgba(255, 255, 255, 0.30);
+  padding-left: 10px;
+  padding-top: 15px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  z-index: 1;
+}
+
+.cart {
+  position: absolute;
+  right: 0px;
+  top: 40px;
+
+}
+
+.icon-cart {
+  background-image: url("/images/cart.svg");
+}
+
+.icon-cart:hover,
+.icon-cartfocus {
+  background-image: url("/images/cart-hover.svg");
+}
+
+.cart img {
+  width: 30px;
+  height: auto;
+  margin-right: 10px;
+}
+
+#galleryImageContainer {
+  display: flex;
+  gap: 20px;
+}

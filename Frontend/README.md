@@ -1,3 +1,10 @@
+# tbd
+- Integrate Cart Service
+- Integrate Cart timer
+- Integrate Authentification
+- Integrate Transactions
+- Change API calls to Gateway
+
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
