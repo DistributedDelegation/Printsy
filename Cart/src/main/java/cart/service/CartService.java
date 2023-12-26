@@ -6,7 +6,6 @@ import cart.queue.CartItemTask;
 import cart.queue.CartQueue;
 import cart.repository.CartRepository;
 import cart.repository.ProductRepository;
-import cart.service.TaskSchedulerService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,28 +45,77 @@ public class CartService {
         .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .build();
 
-    // Needs a Query in TransactionGateway to get the count of transactions for an image
-    public boolean getTransactionImageAvailability(Long imageId) {
-        //Integer response = webClient.post()
-            // .uri("/graphql")
-            // .bodyValue("{ \"query\": \"query GetTransactionsForImage($imageId: String!) { getTransactionsForImage(imageId: $imageId) { sender receiver imageId } }\", \"variables\": { \"imageId\": \"" + imageId + "\" } }")
-            // .retrieve()
-            // .bodyToMono(Integer.class)
-            // .block();
-        
-        Integer transactionCount = 0;
-    
-        return isImageAvailable(imageId, transactionCount);
-    }
-
     public boolean isImageAvailable(Long imageId, Integer transactionCount) {
         // Check the total count of the image in carts and transactions
         Integer countInCarts = cartRepository.checkImagesInCart(imageId);
         Integer total = countInCarts + transactionCount;
-    
         // Determine availability (assuming a threshold of 10)
         return total < 10;
     }
+
+    // Needs a Query in TransactionGateway to get the count of transactions for an image
+    public boolean getTransactionImageAvailability(Long imageId) {
+        //Integer response = webClient.post()
+            // .uri("/graphql")
+            // .bodyValue("{ \"query\": \"query getTransactionCountForImage($imageId: ID!) { getTransactionCountForImage(imageId: $imageId) { sender receiver imageId } }\", \"variables\": { \"imageId\": \"" + imageId + "\" } }")
+            // .retrieve()
+            // .bodyToMono(Integer.class)
+            // .block();
+        Integer transactionCount = 0;
+        return isImageAvailable(imageId, transactionCount);
+    }
+
+    // checked with: {"query": "mutation CompletePurchase($userId: ID!) { completePurchase(userId: $userId) }","variables": { "userId": "1" }}
+    public Boolean completePurchase(Long userId) {
+        // Cancel the scheduled task
+        taskSchedulerService.cancelScheduledTask();
+        // Retrieve items from the user's cart
+        List<Cart> cartItems = getCartItemsByUserId(userId);
+        if (cartItems.isEmpty()) {
+            LOGGER.info("No items in the cart for user ID " + userId);
+            return false;
+        }
+        // Send cart items to Transaction-Gateway
+    //    cartItems.forEach(item -> sendItemsToTransactionGateway(item));
+        // Optionally clear the cart after successful purchase
+        deleteCartItemsByUserId(userId);
+        return true;
+    }
+
+    // private String constructPayload(Cart cartItem) {
+    //     // GraphQL mutation format
+    //     String mutationFormat = "{\"query\": \"mutation processCartItem($userId: ID!, $productId: ID!, $expirationTime: String!) { processCartItem(userId: $userId, productId: $productId, expirationTime: $expirationTime) { success } }\", \"variables\": { \"userId\": \"%d\", \"productId\": \"%d\", \"expirationTime\": \"%s\" } }";
+    //     // Format the string with actual cart item values
+    //     return String.format(mutationFormat, 
+    //                          cartItem.getUserId(), 
+    //                          cartItem.getProductId(), 
+    //                          cartItem.getExpirationTime().toString());
+    // }    
+
+    // private void sendItemsToTransactionGateway(Cart cartItem) {
+    //     // Construct the GraphQL request payload for Transaction-Gateway
+    //     String payload = constructPayload(cartItem);
+    //     if (payload == null) {
+    //         LOGGER.severe("Payload construction failed for User ID: " + cartItem.getUserId() + ", Product ID: " + cartItem.getProductId());
+    //         return;
+    //     }
+    //     // Send the request to Transaction-Gateway
+    //     try {
+    //         Boolean response = webClient.post()
+    //                 .uri("/graphql")
+    //                 .bodyValue(payload)
+    //                 .retrieve()
+    //                 .bodyToMono(Boolean.class)
+    //                 .block();
+    //         if (response == null || !response) {    
+    //             LOGGER.severe("Failed to send cart item to Transaction-Gateway for User ID: " + cartItem.getUserId() + ", Product ID: " + cartItem.getProductId());
+    //         } else {
+    //             LOGGER.info("Successfully sent cart item to Transaction-Gateway for User ID: " + cartItem.getUserId() + ", Product ID: " + cartItem.getProductId());
+    //         }
+    //     } catch (Exception e) {
+    //         LOGGER.severe("Error while sending request to Transaction-Gateway: " + e.getMessage());
+    //     }
+    // }
 
     // ----------------- Cart Service -----------------
     // checked with: {"query": "query findImageByImageId($imageId: ID!) { findImageByImageId(imageId: $imageId) }","variables": { "imageId": "1" }}
@@ -123,14 +171,14 @@ public class CartService {
     }
 
     // ----------------- Product Creation & Enqueuing -----------------
-    // checked with: {"query": "mutation AddProductToProducts($imageId: ID!, $stockId: ID!, $price: Int!, $userId: ID!) { addProductToProducts(imageId: $imageId, stockId: $stockId, price: $price, userId: $userId) }","variables": {"imageId": "1", "stockId": "1", "price": 100, "userId": "1" } }
-    public Boolean addProductToProducts(Long imageId, Long stockId, Integer price, Long userId) {
+    // checked with: {"query": "mutation addItemtoCart($imageId: ID!, $stockId: ID!, $price: Int!, $userId: ID!) { addItemtoCart(imageId: $imageId, stockId: $stockId, price: $price, userId: $userId) }","variables": {"imageId": "1", "stockId": "1", "price": 100, "userId": "1" } }
+    public String addItemtoCart(Long imageId, Long stockId, Integer price, Long userId) {
         LOGGER.info("Attempting to create product with Image ID: " + imageId + ", Stock ID: " + stockId + ", Price: " + price);
         // Check if image is available
         if (!getTransactionImageAvailability(imageId)) {
             String errorMessage = "Image with ID " + imageId + " is not available";
             LOGGER.warning(errorMessage);
-            throw new RuntimeException(errorMessage);
+            return "limit exceeded";
         }
         // Create product and add to Products table
         Product newProduct = new Product();
@@ -141,13 +189,13 @@ public class CartService {
         if (savedProduct == null || savedProduct.getProductId() == null) {
             String errorMessage = "Failed to save product in the database for Image ID: " + imageId;
             LOGGER.severe(errorMessage);
-            throw new IllegalStateException(errorMessage);
+            return "error occurred";
         }
         // Add product to cart queue
         LOGGER.info("Product created with Product ID: " + savedProduct.getProductId() + ". Enqueuing to add to cart.");
         CartItemTask task = new CartItemTask(userId, savedProduct.getProductId(), imageId);
         cartQueue.enqueue(task);
-        return true;
+        return "successfully added";
     }    
 
     // ----------------- Scheduled Task -----------------
@@ -156,7 +204,6 @@ public class CartService {
             System.out.println("Running scheduled cart cleanup for user ID: " + userId);
             deleteCartItemsByUserId(userId);
         };
-
         taskSchedulerService.scheduleTask(cleanupTask);
     }
 
@@ -182,7 +229,7 @@ public class CartService {
         cartRepository.updateCartItem(task.getUserId(), task.getProductId(), new Date());  // date logic?
     }  
 
-    @Scheduled(fixedDelay = 10000) // 10 seconds
+    @Scheduled(fixedDelay = 10000) // 10 second
     public void processQueue() {
         CartItemTask task;
         while ((task = cartQueue.dequeue()) != null) {
@@ -190,7 +237,7 @@ public class CartService {
                 // Add new cart item
                 addCartItem(task);
             } else {
-                // Update existing cart item
+               // Update existing cart item
                 updateCartItem(task);
             }
             scheduleCartCleanup(task.getUserId());  // Schedule delete task

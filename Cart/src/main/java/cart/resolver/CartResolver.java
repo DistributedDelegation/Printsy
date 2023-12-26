@@ -73,10 +73,13 @@ public class CartResolver {
     }
 
     @MutationMapping
-    public Boolean addProductToProducts(@Argument Long imageId, @Argument Long stockId, @Argument Integer price, @Argument Long userId) {
-        return cartService.addProductToProducts(imageId, stockId, price, userId);
+    public String addItemtoCart(@Argument Long imageId, @Argument Long stockId, @Argument Integer price, @Argument Long userId) {
+        return cartService.addItemtoCart(imageId, stockId, price, userId);
     }
 
-    
+    @MutationMapping
+    public Boolean completePurchase(@Argument Long userId) {
+        return cartService.completePurchase(userId);
+    }
 
 }

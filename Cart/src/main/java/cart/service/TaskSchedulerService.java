@@ -17,7 +17,7 @@ public class TaskSchedulerService {
     private Instant scheduledTime;
 
     // Needs to be changed for final demo
-    private final Duration delay = Duration.ofSeconds(60);
+    private final Duration delay = Duration.ofSeconds(120);
 
     @Autowired
     public TaskSchedulerService(TaskScheduler taskScheduler) {
@@ -29,7 +29,7 @@ public class TaskSchedulerService {
             scheduledFuture.cancel(true);
             System.out.println("Existing scheduled delete task cancelled to reschedule...");
         }
-        Instant scheduledTime = Instant.now().plus(delay);
+        scheduledTime = Instant.now().plus(delay);
         scheduledFuture = taskScheduler.schedule(task, scheduledTime);
         System.out.println("New delete task scheduled to run at " + scheduledTime);
     }

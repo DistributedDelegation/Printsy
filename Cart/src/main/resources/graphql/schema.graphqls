@@ -33,5 +33,7 @@ type Query {
 type Mutation {
     deleteCartItemsByUserId(userId: ID!): String
     
-    addProductToProducts(imageId: ID!, stockId: ID!, price: Int!, userId: ID!): Boolean
+    addItemtoCart(imageId: ID!, stockId: ID!, price: Int!, userId: ID!): String
+
+    completePurchase(userId: ID!): Boolean
 }
