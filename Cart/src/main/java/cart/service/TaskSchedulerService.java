@@ -14,9 +14,10 @@ public class TaskSchedulerService {
 
     private final TaskScheduler taskScheduler;
     private ScheduledFuture<?> scheduledFuture;
+    private Instant scheduledTime;
 
     // Needs to be changed for final demo
-    private final Duration delay = Duration.ofSeconds(30);
+    private final Duration delay = Duration.ofSeconds(60);
 
     @Autowired
     public TaskSchedulerService(TaskScheduler taskScheduler) {
@@ -38,5 +39,12 @@ public class TaskSchedulerService {
             scheduledFuture.cancel(true);
             System.out.println("Existing delete scheduled task cancelled without rescheduling.");
         }
+    }
+
+    public Duration getRemainingTime() {
+        if (scheduledFuture != null && !scheduledFuture.isDone() && scheduledTime != null) {
+            return Duration.between(Instant.now(), scheduledTime);
+        }
+        return Duration.ZERO;
     }
 }

@@ -2,6 +2,7 @@ package cart.resolver;
 
 import cart.model.Cart;
 import cart.model.Product;
+import cart.queue.CartItemTask;
 import cart.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -9,6 +10,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 import java.util.Optional;
+import java.time.Duration;
 import java.util.List;
 
 @Controller
@@ -52,6 +54,17 @@ public class CartResolver {
         return cartService.getAllProducts();
     }
 
+    @QueryMapping
+    public Long getRemainingCleanupTime() {
+        Duration remainingTime = cartService.getRemainingCleanupTime();
+        return remainingTime.getSeconds();
+    }
+
+    @QueryMapping
+    public CartItemTask peekQueue() {
+        return cartService.peekQueue();
+    }
+
     // ----------------- Mutations -----------------
     @MutationMapping
     public String deleteCartItemsByUserId(@Argument Long userId) {
@@ -59,16 +72,11 @@ public class CartResolver {
         return "Cart items deleted successfully for user ID: " + userId;
     }
 
+    @MutationMapping
+    public Boolean addProductToProducts(@Argument Long imageId, @Argument Long stockId, @Argument Integer price, @Argument Long userId) {
+        return cartService.addProductToProducts(imageId, stockId, price, userId);
+    }
 
-
-    //@MutationMapping
-    //public RequestStatus addItemToCart(@Argument Long userId, @Argument Long productId, @Argument String expirationTime) {
-    //    return cartService.addItemToCart(userId, productId, expirationTime);
-    //}
-
-    //@MutationMapping
-    //public String deleteCartItems(@Argument Long productId, @Argument Long userId) {
-    //    return cartService.deleteCartItems(productId, userId);
-    //}
+    
 
 }

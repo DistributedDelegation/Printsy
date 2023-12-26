@@ -11,6 +11,12 @@ type Product {
     price: Int
 }
 
+type CartItemTask {
+    userId: ID!
+    productId: ID!
+    imageId: ID!
+}
+
 type Query {
     findImageAvailability(imageId: ID!): Boolean    # TransactionGateway
 
@@ -19,10 +25,13 @@ type Query {
     findCartItemsByUserId(userId: ID!): [Cart] 
     findProductById(productId: ID!): Product
     findAllProducts: [Product]
+
+    getRemainingCleanupTime: Int
+    peekQueue: CartItemTask
 }
 
 type Mutation {
     deleteCartItemsByUserId(userId: ID!): String
-
-    #    addItemToCart(productId: ID!, userId: ID!, expirationTime: String!): String
+    
+    addProductToProducts(imageId: ID!, stockId: ID!, price: Int!, userId: ID!): Boolean
 }

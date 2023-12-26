@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
+import java.util.Date;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
@@ -22,4 +23,17 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query("DELETE FROM Cart c WHERE c.userId = ?1")
     void deleteByUserId(Long userId);
 
+
+
+    boolean existsByUserIdAndProductId(Long userId, Long productId);
+
+    @Modifying
+    @Transactional
+    @Query("INSERT INTO Cart (userId, productId, expirationTime) VALUES (?1, ?2, ?3)")
+    void insertCartItem(Long userId, Long productId, Date expirationTime);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Cart SET expirationTime = ?3 WHERE userId = ?1 AND productId = ?2")
+    void updateCartItem(Long userId, Long productId, Date expirationTime);
 }

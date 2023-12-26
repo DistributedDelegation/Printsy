@@ -20,9 +20,6 @@ public class Product {
     @Column(name = "price")
     private Integer price;
 
-    @Transient  // creates non-persistent field for computations
-    private Integer quantity;
-
 //---------------Getters and Setters-----------------
 
     public Product() {
@@ -66,11 +63,4 @@ public class Product {
         this.price = price;
     }
 
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
 }
