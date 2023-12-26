@@ -1,0 +1,97 @@
+syntax = "proto3";
+package worker;
+option java_package = "worker";
+option java_outer_classname = "WorkerMessages";
+
+// The Blockchain service definition.
+service TransactionService {
+  rpc CheckImageCount (ImageCountRequest) returns (ImageCountResponse){}
+
+  // Sends a transaction to the node.
+  rpc SubmitTransaction (TransactionRequest) returns (TransactionResponse) {}
+
+  // Retrieves a block's information.
+  rpc GetBlockInfo (BlockInfoRequest) returns (BlockInfoResponse) {}
+
+  // Registers a new node in the network.
+  rpc RegisterNode (NodeRequest) returns (NodeResponse) {}
+
+  // Broadcasts a new block to other nodes.
+  rpc BroadcastBlock (Block) returns (BroadcastResponse) {}
+
+  // Synchronizes the blockchain when a new node registers.
+  rpc SyncBlockchain (SyncRequest) returns (SyncResponse) {}
+}
+
+// The request message containing the image details.
+message ImageCountRequest {
+  int64 imageId = 1;
+}
+
+// The request message containing the image count.
+message ImageCountResponse {
+  int64 imageId = 1;
+  int32 imageCount = 2;
+}
+
+// The request message containing the transaction details.
+message TransactionRequest {
+  int64 userId = 1;
+  int64 imageId = 2;
+  int64 timestamp = 3;
+  int32 imageCount = 4;
+}
+
+// The response message for a transaction request.
+message TransactionResponse {
+  string status = 1;
+  string detail = 2;
+}
+
+// The request message for block information.
+message BlockInfoRequest {
+  int32 sequenceNo = 1;
+}
+
+// The response message containing block information.
+message BlockInfoResponse {
+  int32 sequenceNo = 1;
+  string hash = 2;
+  string previousHash = 3;
+  int32 nonce = 4;
+  TransactionRequest transaction = 5;
+}
+
+// A message representing a block.
+message Block {
+  int32 sequenceNo = 1;
+  string hash = 2;
+  string previousHash = 3;
+  int32 nonce = 4;
+  TransactionRequest transaction = 5;
+}
+
+// The request message for node registration.
+message NodeRequest {
+  string nodeId = 1;
+}
+
+// The response message for node registration.
+message NodeResponse {
+  string status = 1;
+}
+
+// The response message for broadcasting a block.
+message BroadcastResponse {
+  string status = 1;
+}
+
+// The request message for syncing the blockchain.
+message SyncRequest {
+  string nodeId = 1;
+}
+
+// The response message containing the current state of the blockchain.
+message SyncResponse {
+  repeated Block blocks = 1;
+}
