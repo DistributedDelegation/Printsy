@@ -1,36 +1,85 @@
-//import com.coxautodev.graphql.tools.GraphQLMutationResolver;
-//import com.coxautodev.graphql.tools.GraphQLQueryResolver;
-//
-//import cart.service.cart.CartStorage;
-//import servive.cart.cart.service.CartService;
-//
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.stereotype.Component;
-//
-//@Component
-//public class CartResolver implements GraphQLQueryResolver, GraphQLMutationResolver {
-//    private final cart.service.CartService cartService;
-//
-//    @Autowired
-//    public CartResolver(cart.service.CartService cartService) {
-//        this.cartService = cartService; // Dependency injection
-//    }
-//
-//    // Mutation Resolvers
-//    public CartStorage addToCart(String userId, String itemId, int quantity) {
-//        return cartService.addToCart(userId, itemId, quantity);
-//    }
-//
-//    public CartStorage removeFromCart(String userId, String itemId) {
-//        return cartService.removeFromCart(userId, itemId);
-//    }
-//
-//    public CartStorage resetCartTimer(String userId) {
-//        return cartService.resetCartTimer(userId);
-//    }
-//
-//    // Query Resolvers
-//    public CartStorage cartTimer(String userId) {
-//        return cartService.getCartTimer(userId);
-//    }
-//}
+package cart.resolver;
+
+import cart.model.Cart;
+import cart.model.Product;
+import cart.queue.CartItemTask;
+import cart.service.CartService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
+import java.util.Optional;
+import java.time.Duration;
+import java.util.List;
+
+@Controller
+public class CartResolver {
+
+    private final CartService cartService;
+
+    @Autowired
+    public CartResolver(CartService cartService) {
+        this.cartService = cartService;
+    }
+
+    // ----------------- Queries -----------------
+    @QueryMapping
+    public Boolean findImageAvailability(@Argument Long imageId) {
+        return cartService.getTransactionImageAvailability(imageId);
+    }
+
+    @QueryMapping
+    public Integer findImageByImageId(@Argument Long imageId) {
+        return cartService.getImageByImageId(imageId);
+    }
+
+    @QueryMapping
+    public Integer findCartItemsByProductId(@Argument Long productId) {
+        return cartService.getCartItemsByProductId(productId);
+    }
+
+    @QueryMapping
+    public List<Cart> findCartItemsByUserId(@Argument Long userId) {
+        return cartService.getCartItemsByUserId(userId);
+    }
+
+    @QueryMapping
+    public Optional<Product> findProductById(@Argument Long productId) {
+        return cartService.getProductById(productId);
+    }
+
+    @QueryMapping
+    public List<Product> findAllProducts() {
+        return cartService.getAllProducts();
+    }
+
+    @QueryMapping
+    public Long getRemainingCleanupTime() {
+        Duration remainingTime = cartService.getRemainingCleanupTime();
+        return remainingTime.getSeconds();
+    }
+
+    @QueryMapping
+    public CartItemTask peekQueue() {
+        return cartService.peekQueue();
+    }
+
+    // ----------------- Mutations -----------------
+    @MutationMapping
+    public String deleteCartItemsByUserId(@Argument Long userId) {
+        cartService.deleteCartItemsByUserId(userId);
+        return "Cart items deleted successfully for user ID: " + userId;
+    }
+
+    @MutationMapping
+    public String addItemtoCart(@Argument Long imageId, @Argument Long stockId, @Argument Integer price, @Argument Long userId) {
+        return cartService.addItemtoCart(imageId, stockId, price, userId);
+    }
+
+    @MutationMapping
+    public Boolean completePurchase(@Argument Long userId) {
+        return cartService.completePurchase(userId);
+    }
+
+}
