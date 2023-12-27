@@ -9,7 +9,7 @@ import {
 //import viteLogo from '/vite.svg'
 import './App.css'
 import Gallery from './components/Gallery'
-import Generation from './components/Generation'
+//import Generation from './components/Generation'
 import Home from "./pages/Home";
 import SelectedImage from './pages/SelectedImage';
 import Cart from './pages/Cart';

@@ -39,7 +39,6 @@ const SelectedImage = () => {
       price: "9.99",
       sizes: ["Onesize"],
       overlayPosition: { top: '172px', left: '113px', widthHeight: '110px' }
-      // Add other product details
     },
     {
       name: "T-Shirt",
@@ -47,7 +46,6 @@ const SelectedImage = () => {
       price: "29.99",
       sizes: ["S", "M", "L"],
       overlayPosition: { top: '105px', left: '124px', widthHeight: '130px' }
-      // Add other product details
     },
     {
       name: "Polo-Shirt",
@@ -55,7 +53,6 @@ const SelectedImage = () => {
       price: "29.99",
       sizes: ["S", "M", "L"],
       overlayPosition: { top: '100px', left: '207px', widthHeight: '45px' }
-      // Add other product details
     },
     // ... more products
   ];

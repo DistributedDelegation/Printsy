@@ -1,9 +1,11 @@
 # tbd
 - Integrate Cart Service
 - Integrate Cart timer
+-  If "add to cart" is called for image that is not in gallery 
 - Integrate Authentification
 - Integrate Transactions
 - Change API calls to Gateway
+- Remove "components/Generation.jsx"s - currently not in use
 
 # React + Vite
 
