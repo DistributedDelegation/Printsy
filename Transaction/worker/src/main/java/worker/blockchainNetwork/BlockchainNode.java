@@ -43,7 +43,7 @@ public class BlockchainNode {
         blockchainRepository.save(blockRecord);
     }
 
-    public List<Transaction> getTransactionByUserId(long userId) {
+    public List<Transaction> getTransactionsByUserId(long userId) {
         List<BlockRecord> blockRecords = blockchainRepository.findAllByUserId(userId);
 
         List<Transaction> transactions = new ArrayList<Transaction>();

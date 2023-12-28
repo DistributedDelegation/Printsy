@@ -5,24 +5,22 @@ option java_outer_classname = "WorkerMessages";
 
 // The Blockchain service definition.
 service TransactionService {
-  rpc checkImageCount (ImageCountRequest) returns (ImageCountResponse){}
-
-  rpc validateTransaction (ValidateTransactionRequest) returns (ValidateTransactionResponse){}
+  rpc CheckImageCount (ImageCountRequest) returns (ImageCountResponse){}
 
   // Sends a transaction to the node.
-  rpc submitTransaction (TransactionRequest) returns (TransactionResponse) {}
+  rpc SubmitTransaction (TransactionRequest) returns (TransactionResponse) {}
 
   // Retrieves a block's information.
-  rpc getBlockInfo (BlockInfoRequest) returns (BlockInfoResponse) {}
+  rpc GetBlockInfo (BlockInfoRequest) returns (BlockInfoResponse) {}
 
   // Registers a new node in the network.
-  rpc registerNode (NodeRequest) returns (NodeResponse) {}
+  rpc RegisterNode (NodeRequest) returns (NodeResponse) {}
 
   // Broadcasts a new block to other nodes.
-  rpc broadcastBlock (Block) returns (BroadcastResponse) {}
+  rpc BroadcastBlock (Block) returns (BroadcastResponse) {}
 
   // Synchronizes the blockchain when a new node registers.
-  rpc syncBlockchain (SyncRequest) returns (SyncResponse) {}
+  rpc SyncBlockchain (SyncRequest) returns (SyncResponse) {}
 }
 
 // The request message containing the image details.
@@ -36,20 +34,12 @@ message ImageCountResponse {
   int32 imageCount = 2;
 }
 
-message ValidateTransactionRequest {
-  int64 userId = 1;
-  int64 imageId = 2;
-}
-
-message ValidateTransactionResponse {
-  bool isValid = 1;
-}
-
 // The request message containing the transaction details.
 message TransactionRequest {
   int64 userId = 1;
   int64 imageId = 2;
   int64 timestamp = 3;
+  int32 imageCount = 4;
 }
 
 // The response message for a transaction request.

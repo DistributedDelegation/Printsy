@@ -1,11 +1,13 @@
 package worker.service;
 
+import org.springframework.stereotype.Service;
 import worker.model.Block;
 import worker.model.Transaction;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@Service
 public class BlockchainMiner {
     public Block mineBlock(Transaction t, Block lastBlock) throws NoSuchAlgorithmException {
         Block newBlock = new Block();
@@ -28,7 +30,7 @@ public class BlockchainMiner {
     }
 
 
-    private String calculateHash(Block block, int nonce) throws NoSuchAlgorithmException {
+    public String calculateHash(Block block, int nonce) throws NoSuchAlgorithmException {
         String input = block.getPreviousHash()
                 + block.getTransaction().toString()
                 + nonce;

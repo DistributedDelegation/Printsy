@@ -1,4 +1,4 @@
-package worker.model;
+package gateway.model;
 
 import java.util.Date;
 

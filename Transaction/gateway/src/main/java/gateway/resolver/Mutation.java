@@ -1,7 +1,7 @@
-package TransactionGateway.resolver;
+package gateway.resolver;
 
-import TransactionGateway.dto.TransactionResult;
-import TransactionGateway.service.ClientNodeService;
+import gateway.dto.TransactionResult;
+import gateway.service.ClientNodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
@@ -20,8 +20,13 @@ public class Mutation {
     }
 
     @MutationMapping
-    public List<TransactionResult> validateTransaction(@Argument String sender, @Argument String receiver, @Argument String imageId) {
-        return clientNodeService.makeTestRequest(sender, receiver, imageId);
+    public List<TransactionResult> validateTransaction(@Argument Long imageId) {
+        return clientNodeService.vali(imageId);
+    }
+
+    @MutationMapping
+    public int checkImageTransactionCount(@Argument Long imageId) {
+        return clientNodeService.checkImageCount(imageId);
     }
 
 }

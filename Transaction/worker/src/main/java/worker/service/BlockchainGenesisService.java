@@ -1,0 +1,53 @@
+package worker.service;
+
+import org.springframework.stereotype.Service;
+import worker.model.Transaction;
+import worker.model.Block;
+import worker.model.BlockRecord;
+import worker.repository.BlockchainRepository;
+
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+
+@Service
+public class BlockchainGenesisService {
+
+    private final BlockchainRepository blockchainRepository;
+    private final BlockchainMiner blockchainMiner;
+
+    public BlockchainGenesisService(BlockchainRepository blockchainRepository, BlockchainMiner blockchainMiner) {
+        this.blockchainRepository = blockchainRepository;
+        this.blockchainMiner = blockchainMiner;
+    }
+
+    public void initializeBlockchain() {
+        if (blockchainRepository.count() == 0) {
+            try {
+                createGenesisBlock();
+            } catch (Exception e){
+                System.out.println("Failed to initialize blockchain: " + e);
+            }
+        }
+    }
+
+    private void createGenesisBlock() throws NoSuchAlgorithmException {
+        // Initializing the transaction for the genesis block
+        Transaction genesisTransaction = new Transaction();
+        genesisTransaction.setUserId(0L);
+        genesisTransaction.setImageId(0L);
+        genesisTransaction.setTimestamp(new Date());
+
+        // Initializing the genesis block
+        Block genesisBlock = new Block();
+        genesisBlock.setSequenceNo(0); // Genesis block is the first block so sequence number is 0
+        genesisBlock.setPreviousHash("0"); // No preceding block, so set to 0
+        genesisBlock.setNonce(0);
+        genesisBlock.setHash(blockchainMiner.calculateHash(genesisBlock, 0));
+        genesisBlock.setTransaction(genesisTransaction);
+
+        BlockRecord genesisRecord = new BlockRecord(genesisBlock);
+        blockchainRepository.save(genesisRecord);
+    }
+
+
+}

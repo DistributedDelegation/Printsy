@@ -1,9 +1,11 @@
 package worker.service;
 
+import org.springframework.stereotype.Service;
 import worker.model.Block;
 import worker.model.Transaction;
 import worker.repository.BlockchainRepository;
 
+@Service
 public class BlockchainValidator {
 
     private BlockchainRepository blockchainRepository;

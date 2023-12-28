@@ -11,13 +11,13 @@ import worker.WorkerMessages.ImageCountResponse;
 import java.util.logging.Logger;
 
 @Service
-public class WorkerImpl extends TransactionServiceImplBase {
+public class TransactionServiceImpl extends TransactionServiceImplBase {
 
     public Logger logger;
     public BlockchainNode node;
 
     @Autowired
-    public WorkerImpl(BlockchainNode node) {
+    public TransactionServiceImpl(BlockchainNode node) {
         this.logger = Logger.getLogger(WorkerNodeServer.class.getName());
         this.node = node;
     }
@@ -26,8 +26,11 @@ public class WorkerImpl extends TransactionServiceImplBase {
     public void checkImageCount(ImageCountRequest request, StreamObserver<ImageCountResponse> responseObserver){
         logger.info("Got request from client:" + request);
 
+//        int imageCount = 0;
         int imageCount = node.getImageTransactionCount(request.getImageId());
         ImageCountResponse response = ImageCountResponse.newBuilder().setImageId(request.getImageId()).setImageCount(imageCount).build();
+
+        logger.info("Response is "+ response.toString());
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();

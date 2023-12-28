@@ -4,6 +4,7 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import worker.service.BlockchainGenesisService;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -13,17 +14,24 @@ import java.io.IOException;
 public class WorkerNodeServer {
 
 
-    private WorkerImpl worker;
+    private final TransactionServiceImpl worker;
+    private final BlockchainGenesisService blockchainGenesisService;
     private Server server;
 
     @Autowired
-    public WorkerNodeServer(WorkerImpl worker){
+    public WorkerNodeServer(TransactionServiceImpl worker, BlockchainGenesisService blockchainGenesisService){
         this.worker = worker;
+        this.blockchainGenesisService = blockchainGenesisService;
     }
 
     @PostConstruct
     public void start() throws IOException {
         int port = 50051;
+
+        worker.logger.info("Starting server on " + port);
+
+        blockchainGenesisService.initializeBlockchain();
+
         server = ServerBuilder.forPort(port).
                 addService(worker).
                 build().start();

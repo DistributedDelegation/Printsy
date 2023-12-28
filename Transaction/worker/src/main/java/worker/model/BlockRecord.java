@@ -1,49 +1,47 @@
 package worker.model;
 
-import java.util.Date;
-import java.util.UUID;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
+@Document
 public class BlockRecord {
 
-    private UUID blockId;
+    @Id
+    private ObjectId id;
     private Block block;
-    private Integer userId;
-    private Integer imageId;
+    private Long userId;
+    private Long imageId;
     private Date timestamp;
 
     public BlockRecord(Block block) {
         this.block = block;
+        this.userId = block.getTransaction().getUserId();
+        this.imageId = block.getTransaction().getImageId();
+        this.timestamp = new Date();
+    }
+
+    public ObjectId getId() {
+        return id;
     }
 
     public Block getBlock() {
         return block;
     }
 
-    public void setBlock(Block block) {
-        this.block = block;
-    }
-
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getImageId() {
+    public Long getImageId() {
         return imageId;
-    }
-
-    public void setImageId(Integer imageId) {
-        this.imageId = imageId;
     }
 
     public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
 }
+

@@ -1,24 +1,25 @@
 package worker;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.util.Map;
 
 @SpringBootApplication
 public class Application {
 
-    public static void main(String[] args) {
-        // Boot up the Spring context
-        ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
+    private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-        WorkerNodeServer server = context.getBean(WorkerNodeServer.class);
-        try {
-            server.start();
-            server.blockUntilShutdown();
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
     }
+
 }

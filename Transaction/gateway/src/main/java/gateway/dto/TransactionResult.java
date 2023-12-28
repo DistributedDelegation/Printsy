@@ -1,4 +1,4 @@
-package TransactionGateway.dto;
+package gateway.dto;
 
 public class TransactionResult {
     private boolean success;
