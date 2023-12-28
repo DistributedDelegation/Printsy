@@ -72,17 +72,17 @@ services:
     ports:
       - "8086:8080"
 
-  transaction-gateway:
-    build: ./Transaction/gateway
-    env_file: .env
-    ports:
-    - "8087:8080"
+  # transaction-gateway:
+  #   build: ./Transaction/gateway
+  #   env_file: .env
+  #   ports:
+  #   - "8087:8080"
 
-  transaction-worker-1:
-    build: ./Transaction/worker
-    env_file: .env
+  # transaction-worker-1:
+  #   build: ./Transaction/worker
+  #   env_file: .env
 
-  transaction-worker-2:
-    build: ./Transaction/worker
-    env_file: .env
+  # transaction-worker-2:
+  #   build: ./Transaction/worker
+  #   env_file: .env
 

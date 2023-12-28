@@ -161,6 +161,14 @@ public class CartService {
         return cartRepository.checkCartItemsByUserId(userId);
     }
 
+    // checked with: {"query": "query checkCartProductsByUserId($userId: ID!) { checkCartProductsByUserId(userId: $userId) { productId imageId stockId price } }","variables": {"userId": "1"}}
+    public List<Product> checkCartProductsByUserId(Long userId) {
+        if (productRepository.checkCartProductsByUserId(userId).isEmpty()) {
+           throw new RuntimeException("No cart items found for user with ID " + userId);
+        }
+        return productRepository.checkCartProductsByUserId(userId);
+    }
+
     // checked with: {"query": "query findProductById($productId: ID!) { findProductById(productId: $productId) { productId imageId stockId price } }","variables": { "productId": "1" }}
     public Optional<Product> getProductById(Long productId) {
         if (productRepository.existsById(productId)) {

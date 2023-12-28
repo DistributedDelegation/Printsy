@@ -46,6 +46,11 @@ public class CartResolver {
     }
 
     @QueryMapping
+    public List<Product> checkCartProductsByUserId(@Argument Long userId) {
+        return cartService.checkCartProductsByUserId(userId);
+    }
+
+    @QueryMapping
     public Optional<Product> findProductById(@Argument Long productId) {
         return cartService.getProductById(productId);
     }
