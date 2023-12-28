@@ -74,15 +74,26 @@ services:
 
   transaction-gateway:
     build: ./Transaction/gateway
-    env_file: .env
+    env_file: ./Transaction/data/.env
+    depends_on:
+      - transaction-worker-1
     ports:
-    - "8087:8080"
+      - "8087:8080"
 
+  # ----------------Blockchain ----------------
   transaction-worker-1:
     build: ./Transaction/worker
-    env_file: .env
+    depends_on:
+      - transaction-db-1
+    restart: always
 
-  transaction-worker-2:
-    build: ./Transaction/worker
-    env_file: .env
+
+  transaction-db-1:
+    image: mongo:latest
+    hostname: transaction-db-1
+    env_file: ./Transaction/data/.env
+    volumes:
+      - ./Transaction/data/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./Transaction/data/mongo-transaction-db1:/data/db
+    restart: always
 

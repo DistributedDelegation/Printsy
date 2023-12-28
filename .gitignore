@@ -30,8 +30,10 @@ package-lock.json
 # Ignore everything in the data directories except .gitkeep
 /data/mongodb/*
 /data/mysql/*
+/Transaction/data/mongo-transaction-db*
 !/data/mongodb/.gitkeep
 !/data/mysql/.gitkeep
+!/Transaction/data/mongo-transaction-db*/.gitkeep
 
 
 # API Key

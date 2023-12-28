@@ -32,6 +32,8 @@ public class WorkerNodeServer {
 
         blockchainGenesisService.initializeBlockchain();
 
+        worker.logger.info("Initialized blockchain");
+
         server = ServerBuilder.forPort(port).
                 addService(worker).
                 build().start();

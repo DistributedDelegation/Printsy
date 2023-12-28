@@ -1,18 +1,27 @@
 type Query {
-  getTransactionsForImage(imageId: String!): [Transaction]!
+  checkImageTransactionCount(imageId: Float!): CountResult!
 }
 
 type Mutation {
-  validateTransaction(sender: String!, receiver: String!, imageId: String!): [TransactionResult]!
+  completeTransaction(transactions: [TransactionInput!]!): TransactionResult!
+}
+
+input TransactionInput {
+  userId: Float!
+  productId: Float!
+  imageId: Float!
+}
+
+type Transaction {
+  userId: Float!
+  productId: Float!
+  imageId: Float!
+}
+
+type CountResult {
+  count: Int!
 }
 
 type TransactionResult {
   success: Boolean!
-  result: Int!
-}
-
-type Transaction {
-  sender: String!
-  receiver: String!
-  imageId: String!
 }

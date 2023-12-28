@@ -8,6 +8,7 @@
         <option value="$PROJECT_DIR$/manager/pom.xml" />
         <option value="$PROJECT_DIR$/miner/untitled/pom.xml" />
         <option value="$PROJECT_DIR$/miner/pom.xml" />
+        <option value="$PROJECT_DIR$/worker/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
