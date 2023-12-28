@@ -12,7 +12,7 @@ public class Product {
     private Long productId;
 
     @Column(name = "image_id")
-    private Long imageId;
+    private String imageId;
 
     @Column(name = "stock_id")
     private Long stockId;
@@ -25,7 +25,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(Long imageId, Long stockId, Integer price) {
+    public Product(String imageId, Long stockId, Integer price) {
         this.imageId = imageId;
         this.stockId = stockId;
         this.price = price;
@@ -39,11 +39,11 @@ public class Product {
         this.productId = productId;
     }
 
-    public Long getImageId() {
+    public String getImageId() {
         return imageId;
     }
 
-    public void setImageId(Long imageId) {
+    public void setImageId(String imageId) {
         this.imageId = imageId;
     }
 

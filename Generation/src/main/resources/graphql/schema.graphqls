@@ -3,6 +3,15 @@ type Image {
   imageURL: String! # URL of image
 }
 
+type ImageMongo {
+  imageId: ID! # Unique identifier for the image (non-nullable)
+  imageUrl: String! # URL of the image
+  imageName: String # Name of the image
+  imageDescription: String # Description of the image
+  isImagePublishedYN: Boolean # Published status
+  imageTimestamp: String # Timestamp of the image
+}
+
 type Feature {
     name: String!
     options: [String!]
@@ -10,6 +19,7 @@ type Feature {
 
 type Query {
   fetchFeatures: [Feature] # Returns a list of feature elements for dropdown
+  getImageByUrl(imageUrl: String!): ImageMongo
 }
 
 type Mutation {

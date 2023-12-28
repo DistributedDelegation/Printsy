@@ -61,6 +61,7 @@ const Home = () => {
               <div id="total-cart-container">
                 <span id="total-cart">Total</span>
                 <span className="total-price">€40</span>
+                <button className="purchase-button" /*onClick={handlePurchase}*/>Complete Purchase</button>
               </div>
             </div>
           </div>

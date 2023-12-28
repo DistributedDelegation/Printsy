@@ -2,7 +2,9 @@ package generation.resolver;
 
 import generation.model.Image;
 import generation.model.Feature;
+import generation.model.ImageMongo;
 import generation.repository.ImageMySQLRepository;
+import generation.repository.ImageMongoRepository;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -23,10 +25,12 @@ public class Query {
     // This top part initializes the repository class and "autowires" (essentially
     // injects them) into this class.
     private final ImageMySQLRepository sqlRepository;
+    private final ImageMongoRepository mongoRepository;
 
     @Autowired
-    public Query(ImageMySQLRepository sqlRepository) {
+    public Query(ImageMySQLRepository sqlRepository, ImageMongoRepository mongoRepository) {
         this.sqlRepository = sqlRepository;
+        this.mongoRepository = mongoRepository;
     }
 
     @QueryMapping
@@ -43,5 +47,16 @@ public class Query {
             new Feature("Cultural Influence", Arrays.asList("Asian", "Western", "African", "Indigenous")),
             new Feature("Graphic Elements", Arrays.asList("Geometric Shapes", "Floral Patterns", "Gradients", "Line Art"))
         );
+    }
+    
+    // checked with: {"query": "query getImageByUrl($imageUrl: String!) { getImageByUrl(imageUrl: $imageUrl) { imageId imageUrl imageName imageDescription isImagePublishedYN imageTimestamp } }","variables": {"imageUrl": "https://s3.eu-de.cloud-object-storage.appdomain.cloud/printsy-images/c09af5ff-d1bf-4f56-a934-059912a34f00.png"}}
+    @QueryMapping
+    public ImageMongo getImageByUrl(@Argument String imageUrl) {
+        Optional<ImageMongo> imageMongo = mongoRepository.findByImageUrl(imageUrl);
+        if (imageMongo.isPresent()) {
+            return imageMongo.get();
+        } else {
+            throw new RuntimeException("Image with Url " + imageUrl + " not found");
+        }
     }
 }

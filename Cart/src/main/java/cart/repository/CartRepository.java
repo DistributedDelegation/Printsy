@@ -1,6 +1,8 @@
 package cart.repository;
 
 import cart.model.Cart;
+import cart.model.TransactionInput;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +15,9 @@ import java.util.Date;
 public interface CartRepository extends JpaRepository<Cart, Long> {
     
     @Query("SELECT COUNT(c) FROM Cart c JOIN Product p ON c.productId = p.productId WHERE p.imageId = ?1")
-    Integer checkImagesInCart(Long imageId);
+    Integer checkImagesInCart(String imageId);
 
-    @Query("SELECT c FROM Cart c WHERE c.userId = ?1")
+    @Query("SELECT c FROM Cart c JOIN Product p ON c.productId = p.productId WHERE c.userId = ?1")
     List<Cart> checkCartItemsByUserId(Long userId);
 
     @Modifying
@@ -23,6 +25,9 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Query("DELETE FROM Cart c WHERE c.userId = ?1")
     void deleteByUserId(Long userId);
 
+
+    @Query("SELECT new cart.model.TransactionInput(c.userId, c.productId, p.imageId) FROM Cart c JOIN Product p ON c.productId = p.productId WHERE c.userId = ?1")
+    List<TransactionInput> checkCartItemsByUserIdForPurchase(Long userId);
 
 
     boolean existsByUserIdAndProductId(Long userId, Long productId);

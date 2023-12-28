@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import useMatchHeight from '../components/useMatchHeight';
+//import CheckoutProducts from '../components/CheckoutProducts';
 import "./Secondary.css";
 
 const Home = () => {
