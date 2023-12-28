@@ -42,13 +42,13 @@ services:
 
   # ----------------Microservices ----------------
   authentication:
-    build: ./authentication
+    build: ./Authentication
     env_file: .env
     ports:
       - "8085:8080"
   
   gallery:
-    build: ./gallery
+    build: ./Gallery
     depends_on:
       - mongodb
       - mysql
@@ -58,7 +58,7 @@ services:
       - "8088:8080"
 
   generation:
-    build: ./generation
+    build: ./Generation
     env_file: 
       - .env
       - .env.api
@@ -66,23 +66,23 @@ services:
     ports:
       - "8089:8080"
 
-  # cart:
-  #   build: ./cart
-  #   env_file: .env
-  #   ports:
-  #     - "8086:8080"
+  cart:
+    build: ./Cart
+    env_file: .env
+    ports:
+      - "8086:8080"
 
   transaction-gateway:
-    build: ./transaction/gateway
+    build: ./Transaction/gateway
     env_file: .env
     ports:
     - "8087:8080"
 
   transaction-worker-1:
-    build: ./transaction/worker
+    build: ./Transaction/worker
     env_file: .env
 
   transaction-worker-2:
-    build: ./transaction/worker
+    build: ./Transaction/worker
     env_file: .env
 
