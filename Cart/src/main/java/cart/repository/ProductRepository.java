@@ -1,5 +1,6 @@
 package cart.repository;
 
+import cart.model.Cart;
 import cart.model.Product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p")
     List<Product> checkAllProducts();
     
+    @Query("SELECT p FROM Product p JOIN Cart c ON p.productId = c.productId WHERE c.userId = ?1")
+    List<Product> checkCartProductsByUserId(Long userId);
 }

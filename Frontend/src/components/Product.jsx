@@ -41,40 +41,46 @@ const Product = ({ imageUrl, product }) => {
         }
       };
 
-    const handleAddToCart = async (event, price) => {
+      const handleAddToCart = async (event, price) => {
         event.preventDefault();
-        const selectedSize = event.target[0][0].value;
+        const selectedSize = event.target[0].value; // Corrected to directly access the value
         const stockId = mapToStockId(name, selectedSize);
         console.log("Selected stockId:", stockId);
-        // Assuming userId is obtained from user's session or context
         const userId = 1; // Replace with actual logic to get userId
-        // Build the query
         const image = await fetchImageByURL(imageUrl);
+        if (!image) {
+            console.error("Failed to fetch image details.");
+            return;
+        }
         const imageId = image.imageId;
         console.log("Sending to cart: imageId: ", imageId, ", stockId: ", stockId, ", price: ", price, ", userId: ", userId);
         const query_message = JSON.stringify({
-            query: `mutation addItemToCart($imageId: ID!, $stockId: ID!, $price: Int!, $userId: ID!) {addItemToCart(imageId: $imageId, stockId: $stockId, price: $price, userId: $userId)}`,
+            query: `mutation addItemtoCart($imageId: ID!, $stockId: ID!, $price: Int!, $userId: ID!) { addItemtoCart(imageId: $imageId, stockId: $stockId, price: $price, userId: $userId) }`,
             variables: {
                 imageId: imageId,
-                stockId: stockId,
+                stockId: stockId.toString(),
                 price: price,
-                userId: userId
+                userId: userId.toString()
             }
         });
-        // Sending query
+        console.log("Query message:", query_message);
         try {
             const response = await fetch('http://localhost:8086/graphql', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: query_message
+            body: query_message
             });
             const data = await response.json();
-            console.log("Add to cart response:", data);
-            // Handle response and update UI accordingly
+            if (data.errors) {
+                console.error("GraphQL Errors:", data.errors);
+            } else {
+                console.log("Add to cart response:", data);
+            }
         } catch (error) {
             console.error('Error adding item to cart:', error);
         }
     };
+    
 
     return (
         <div className="product-container">

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import useMatchHeight from '../components/useMatchHeight';
-//import CheckoutProducts from '../components/CheckoutProducts';
+import CheckoutProducts from '../components/CheckoutProducts';
 import "./Secondary.css";
 
 const Home = () => {
@@ -90,19 +90,7 @@ const Home = () => {
             <div className="content-left">
               <h2>Cart</h2>
               <div className="divider"></div>
-              {/* Add your placeholder elements here */}
-              <div className="product-in-cart">
-                <img src="/images/polo.png" alt="Placeholder" className="placeholder-square" />
-                <span className="product-name">PRODUCT NAME</span>
-                <span className="product-option">OPTION</span>
-                <span className="product-price">€20</span>
-              </div>
-              {/* Repeat for each product */}
-              <div className="divider"></div>
-              <div id="total-cart-container">
-                <span id="total-cart">Total</span>
-                <span className="total-price">€40</span>
-              </div>
+              <CheckoutProducts />
             </div>
             <div className="content-right">
               <h2>To Checkout</h2>
