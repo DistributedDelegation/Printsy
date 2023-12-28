@@ -2,6 +2,7 @@ package cart.resolver;
 
 import cart.model.Cart;
 import cart.model.Product;
+import cart.model.TransactionInput;
 import cart.queue.CartItemTask;
 import cart.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +26,19 @@ public class CartResolver {
 
     // ----------------- Queries -----------------
     @QueryMapping
-    public Boolean findImageAvailability(@Argument Long imageId) {
+    public Boolean findImageAvailability(@Argument String imageId) {
         return cartService.getTransactionImageAvailability(imageId);
     }
 
     @QueryMapping
-    public Integer findImageByImageId(@Argument Long imageId) {
+    public Integer findImageByImageId(@Argument String imageId) {
         return cartService.getImageByImageId(imageId);
     }
 
-    @QueryMapping
-    public Integer findCartItemsByProductId(@Argument Long productId) {
-        return cartService.getCartItemsByProductId(productId);
-    }
+    // @QueryMapping
+    // public Integer findCartItemsByProductId(@Argument Long productId) {
+    //     return cartService.getCartItemsByProductId(productId);
+    // }
 
     @QueryMapping
     public List<Cart> findCartItemsByUserId(@Argument Long userId) {
@@ -65,6 +66,11 @@ public class CartResolver {
         return cartService.peekQueue();
     }
 
+    @QueryMapping   
+    public List<TransactionInput> findCartItemsByUserIdForPurchase(@Argument Long userId) {
+        return cartService.getCartItemsByUserIdForPurchase(userId);
+    }
+
     // ----------------- Mutations -----------------
     @MutationMapping
     public String deleteCartItemsByUserId(@Argument Long userId) {
@@ -73,7 +79,7 @@ public class CartResolver {
     }
 
     @MutationMapping
-    public String addItemtoCart(@Argument Long imageId, @Argument Long stockId, @Argument Integer price, @Argument Long userId) {
+    public String addItemtoCart(@Argument String imageId, @Argument Long stockId, @Argument Integer price, @Argument Long userId) {
         return cartService.addItemtoCart(imageId, stockId, price, userId);
     }
 

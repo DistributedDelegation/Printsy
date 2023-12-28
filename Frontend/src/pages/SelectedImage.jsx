@@ -36,25 +36,24 @@ const SelectedImage = () => {
     {
       name: "Mug",
       productImageUrl: "/images/mug.png",
-      price: "9.99",
-      sizes: ["Onesize"],
+      price: 10,
+      sizes: ["onesize"],
       overlayPosition: { top: '172px', left: '113px', widthHeight: '110px' }
     },
     {
       name: "T-Shirt",
       productImageUrl: "/images/shirt.png",
-      price: "29.99",
+      price: 20,
       sizes: ["S", "M", "L"],
       overlayPosition: { top: '105px', left: '124px', widthHeight: '130px' }
     },
     {
       name: "Polo-Shirt",
       productImageUrl: "/images/polo.png",
-      price: "29.99",
+      price: 30,
       sizes: ["S", "M", "L"],
       overlayPosition: { top: '100px', left: '207px', widthHeight: '45px' }
     },
-    // ... more products
   ];
 
   if (!imageURL) {

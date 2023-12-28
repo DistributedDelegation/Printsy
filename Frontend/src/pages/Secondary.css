@@ -130,3 +130,23 @@
 .content-right .product-in-cart .product-option {
     left: 5px;
 }
+
+.purchase-button {
+    border-radius: var(--br-3xs);
+    border: 1px solid var(--color-darkslategray-100);
+    background: var(--color-darkslategray-100);
+    color: var(--color-lightblue-100);
+    text-align: center;
+    font-weight: 700;
+    width: 380px;
+    height: 42px;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 60px;
+    position: relative;
+    font-family: var(--font-roboto);
+}
+
+.purchase-button:hover {
+    /* transparancy     
+}

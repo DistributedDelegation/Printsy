@@ -17,17 +17,25 @@ type CartItemTask {
     imageId: ID!
 }
 
+type TransactionInput {
+    userId: ID!
+    productId: ID!
+    imageId: ID!
+}
+
 type Query {
     findImageAvailability(imageId: ID!): Boolean    # TransactionGateway
 
     findImageByImageId(imageId: ID!): Int           # MySQL
-    findCartItemsByProductId(productId: ID!): Int   
+    # findCartItemsByProductId(productId: ID!): Int   
     findCartItemsByUserId(userId: ID!): [Cart] 
     findProductById(productId: ID!): Product
     findAllProducts: [Product]
 
     getRemainingCleanupTime: Int
     peekQueue: CartItemTask
+
+    findCartItemsByUserIdForPurchase(userId: ID!): [TransactionInput] 
 }
 
 type Mutation {
