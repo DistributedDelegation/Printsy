@@ -49,7 +49,6 @@ public class BlockchainGenesisService {
         genesisBlock.setTransaction(genesisTransaction);
         genesisBlock.setHash(blockchainMiner.calculateHash(genesisBlock, 0));
 
-
         BlockRecord genesisRecord = new BlockRecord(genesisBlock);
         blockchainRepository.save(genesisRecord);
 
