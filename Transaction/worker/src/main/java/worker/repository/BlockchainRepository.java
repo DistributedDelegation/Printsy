@@ -11,8 +11,8 @@ public interface BlockchainRepository extends MongoRepository<BlockRecord, Objec
 
     public List<BlockRecord> findAllByUserId(long userId);
 
-    public List<BlockRecord> findAllByImageId(long imageId);
+    public List<BlockRecord> findAllByImageId(String imageId);
 
     public BlockRecord findTopByOrderByTimestampDesc();
-    public int countByImageId(long imageId);
+    public int countByImageId(String imageId);
 }

@@ -38,7 +38,7 @@ public class BlockchainGenesisService {
         // Initializing the transaction for the genesis block
         Transaction genesisTransaction = new Transaction();
         genesisTransaction.setUserId(0L);
-        genesisTransaction.setImageId(0L);
+        genesisTransaction.setImageId("0");
         genesisTransaction.setTimestamp(new Date());
 
         // Initializing the genesis block

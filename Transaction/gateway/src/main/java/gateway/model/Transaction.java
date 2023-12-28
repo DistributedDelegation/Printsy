@@ -5,7 +5,7 @@ import java.util.Date;
 public class Transaction {
 
     private Long userId;
-    private Long imageId;
+    private String imageId;
     private Date timestamp;
 
     public Long getUserId() {
@@ -16,11 +16,11 @@ public class Transaction {
         this.userId = userId;
     }
 
-    public Long getImageId() {
+    public String getImageId() {
         return imageId;
     }
 
-    public void setImageId(Long imageId) {
+    public void setImageId(String imageId) {
         this.imageId = imageId;
     }
 

@@ -13,7 +13,7 @@ public class BlockRecord {
     private ObjectId id;
     private Block block;
     private Long userId;
-    private Long imageId;
+    private String imageId;
     private Date timestamp;
 
     public BlockRecord(Block block) {
@@ -35,7 +35,7 @@ public class BlockRecord {
         return userId;
     }
 
-    public Long getImageId() {
+    public String getImageId() {
         return imageId;
     }
 

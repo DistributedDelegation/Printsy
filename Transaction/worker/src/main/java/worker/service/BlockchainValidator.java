@@ -8,7 +8,7 @@ import worker.repository.BlockchainRepository;
 @Service
 public class BlockchainValidator {
 
-    private BlockchainRepository blockchainRepository;
+    private final BlockchainRepository blockchainRepository;
 
 	public BlockchainValidator(BlockchainRepository blockchainRepository) {
             this.blockchainRepository = blockchainRepository;

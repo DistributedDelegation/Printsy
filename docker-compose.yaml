@@ -40,6 +40,13 @@ services:
     env_file: .env
     restart: always
 
+  # ----------------Api Gateway ----------------
+  api-gateway:
+    build: ./Api-Gateway
+    env_file: .env
+    ports:
+      - "8080:8080"
+  
   # ----------------Microservices ----------------
   authentication:
     build: ./Authentication

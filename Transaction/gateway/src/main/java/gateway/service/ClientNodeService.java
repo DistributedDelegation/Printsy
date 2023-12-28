@@ -36,7 +36,7 @@ public class ClientNodeService {
         blockingStub = TransactionServiceGrpc.newBlockingStub(channel1);
     }
 
-    public int checkImageCount(Long imageId) {
+    public int checkImageCount(String imageId) {
         logger.info("Creating request to check image count on the blockchain for " + imageId);
         ImageCountRequest request = ImageCountRequest.newBuilder().setImageId(imageId).build();
         logger.info("Sending request to server at port " + serverAddress + ": " + request);

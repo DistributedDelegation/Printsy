@@ -53,7 +53,7 @@ public class BlockchainNode {
         return transactions;
     }
 
-    public List<Transaction> getTransactionsByImageId(long imageId) {
+    public List<Transaction> getTransactionsByImageId(String imageId) {
         List<BlockRecord> blockRecords = blockchainRepository.findAllByImageId(imageId);
 
         List<Transaction> transactions = new ArrayList<Transaction>();
@@ -63,7 +63,7 @@ public class BlockchainNode {
         return transactions;
     }
 
-    public int getImageTransactionCount(long imageId){
+    public int getImageTransactionCount(String imageId){
         return blockchainRepository.countByImageId(imageId);
     }
 

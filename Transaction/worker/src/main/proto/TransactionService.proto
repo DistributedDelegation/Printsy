@@ -27,18 +27,18 @@ service TransactionService {
 
 // The request message containing the image details.
 message ImageCountRequest {
-  int64 imageId = 1;
+  string imageId = 1;
 }
 
 // The request message containing the image count.
 message ImageCountResponse {
-  int64 imageId = 1;
+  string imageId = 1;
   int32 imageCount = 2;
 }
 
 message ValidateTransactionRequest {
   int64 userId = 1;
-  int64 imageId = 2;
+  string imageId = 2;
 }
 
 message ValidateTransactionResponse {
@@ -48,7 +48,7 @@ message ValidateTransactionResponse {
 // The request message containing the transaction details.
 message TransactionRequest {
   int64 userId = 1;
-  int64 imageId = 2;
+  string imageId = 2;
   int64 timestamp = 3;
 }
 

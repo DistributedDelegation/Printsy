@@ -5,7 +5,7 @@ import gateway.model.Transaction;
 public class TransactionInput {
 
     private Long userId;
-    private Long imageId;
+    private String imageId;
 
     public Long getUserId() {
         return userId;
@@ -15,11 +15,11 @@ public class TransactionInput {
         this.userId = userId;
     }
 
-    public Long getImageId() {
+    public String getImageId() {
         return imageId;
     }
 
-    public void setImageId(Long imageId) {
+    public void setImageId(String imageId) {
         this.imageId = imageId;
     }
 
