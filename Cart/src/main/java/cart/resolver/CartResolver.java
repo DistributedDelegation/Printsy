@@ -2,9 +2,10 @@ package cart.resolver;
 
 import cart.model.Cart;
 import cart.model.Product;
-import cart.model.TransactionInput;
+import cart.dto.TransactionInput;
 import cart.queue.CartItemTask;
 import cart.service.CartService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -27,12 +28,12 @@ public class CartResolver {
     // ----------------- Queries -----------------
     @QueryMapping
     public Boolean findImageAvailability(@Argument String imageId) {
-        return cartService.getTransactionImageAvailability(imageId);
+        return cartService.isImageAvailable(imageId);
     }
 
     @QueryMapping
     public Integer findImageByImageId(@Argument String imageId) {
-        return cartService.getImageByImageId(imageId);
+        return cartService.getImageCountByImageId(imageId);
     }
 
     // @QueryMapping
@@ -47,11 +48,11 @@ public class CartResolver {
 
     @QueryMapping
     public List<Product> checkCartProductsByUserId(@Argument Long userId) {
-        return cartService.getCartItemsByUserId(userId);
+        return cartService.checkCartProductsByUserId(userId);
     }
 
     @QueryMapping
-    public Optional<Product> findProductById(@Argument Long productId) {
+    public Product findProductById(@Argument Long productId) {
         return cartService.getProductById(productId);
     }
 
@@ -61,8 +62,8 @@ public class CartResolver {
     }
 
     @QueryMapping
-    public Long getRemainingCleanupTime() {
-        Duration remainingTime = cartService.getRemainingCleanupTime();
+    public Long getRemainingCleanupTime(Long userId) {
+        Duration remainingTime = cartService.getRemainingCleanupTime(userId);
         return remainingTime.getSeconds();
     }
 
@@ -85,11 +86,11 @@ public class CartResolver {
 
     @MutationMapping
     public String addItemtoCart(@Argument String imageId, @Argument Long stockId, @Argument Integer price, @Argument Long userId) {
-        return cartService.addItemtoCart(imageId, stockId, price, userId);
+        return cartService.addItemToCart(imageId, stockId, price, userId);
     }
 
     @MutationMapping
-    public Boolean completePurchase(@Argument Long userId) {
+    public Boolean completePurchase(@Argument Long userId) throws JsonProcessingException {
         return cartService.completePurchase(userId);
     }
 

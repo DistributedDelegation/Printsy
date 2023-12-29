@@ -7,11 +7,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.logging.Logger;
 
+@Service
 public class TransactionGatewayService {
 
     private static final Logger LOGGER = Logger.getLogger(CartService.class.getName());
@@ -60,6 +62,7 @@ public class TransactionGatewayService {
 
             if (response == null || !response.getSuccess()) {
                 LOGGER.severe("Failed to send transaction inputs to Transaction-Gateway");
+                return false;
             } else {
                 LOGGER.info("Successfully sent transaction inputs to Transaction-Gateway");
                 return response.getSuccess();
@@ -68,7 +71,7 @@ public class TransactionGatewayService {
             LOGGER.severe("Error while sending request to Transaction-Gateway: " + e.getMessage());
             return false;
         }
-        
+
 
     }
     

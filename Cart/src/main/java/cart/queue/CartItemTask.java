@@ -1,42 +1,54 @@
 package cart.queue;
 
+import cart.model.Product;
+
 public class CartItemTask {
-    private Long userId;
-    private Long productId;
     private String imageId;
+    private Long stockId;
+    private Integer price;
+    private Long userId;
     
 
     public CartItemTask() {
     }
 
-    public CartItemTask(Long userId, Long productId, String imageId) {
-        this.userId = userId;
-        this.productId = productId;
+    public CartItemTask(String imageId, Long stockId, Integer price, Long userId) {
         this.imageId = imageId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public Long getProductId() {
-        return productId;
+        this.stockId = stockId;
+        this.price = price;
+        this.userId = userId;
     }
 
     public String getImageId() {
         return imageId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
     public void setImageId(String imageId) {
         this.imageId = imageId;
+    }
+
+    public Long getStockId() {
+        return stockId;
+    }
+
+    public void setStockId(Long stockId) {
+        this.stockId = stockId;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
 }

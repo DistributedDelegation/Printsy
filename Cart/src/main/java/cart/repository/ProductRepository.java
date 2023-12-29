@@ -16,4 +16,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("SELECT p FROM Product p JOIN Cart c ON p.productId = c.productId WHERE c.userId = ?1")
     List<Product> checkCartProductsByUserId(Long userId);
+
+
 }

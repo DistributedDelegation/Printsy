@@ -25,16 +25,19 @@ public class CartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final TaskSchedulerService taskSchedulerService;
+    private final CartQueueService cartQueueService;
     private final CartQueue cartQueue;
     private final TransactionGatewayService transactionGatewayService;
 
+
     @Autowired
-    public CartService(CartRepository cartRepository, ProductRepository productRepository, TaskSchedulerService taskSchedulerService, CartQueue cartQueue, TransactionGatewayService transactionGatewayService) {
+    public CartService(CartRepository cartRepository, ProductRepository productRepository, TaskSchedulerService taskSchedulerService, CartQueue cartQueue, TransactionGatewayService transactionGatewayService, CartQueueService cartQueueService) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.taskSchedulerService = taskSchedulerService;
         this.cartQueue = cartQueue;
         this.transactionGatewayService = transactionGatewayService;
+        this.cartQueueService = cartQueueService;
     }
 
     // ----------------- Transaction Service -----------------
@@ -48,9 +51,9 @@ public class CartService {
     }
 
     // checked with: {"query": "mutation CompletePurchase($userId: ID!) { completePurchase(userId: $userId) }","variables": { "userId": "1" }}
-    public Boolean completePurchase(Long userId) throws JsonProcessingException {
+    public Boolean completePurchase(Long userId) {
         // Cancel the scheduled task
-        taskSchedulerService.cancelScheduledTask();
+        taskSchedulerService.cancelScheduledTask(userId);
         List<Cart> cartItems = cartRepository.findAllByUserId(userId);
         List<TransactionInput> transactionInputs = cartItems.stream() // Convert list to stream
                 .map(Cart::toTransactionInput) // Map each cart item to a TransactionInput
@@ -60,19 +63,27 @@ public class CartService {
             LOGGER.info("No items in the cart for user ID " + userId);
             return false;
         }
-        boolean success = transactionGatewayService.completeTransaction(transactionInputs);
-        if (success) {
-            cartRepository.deleteAll(cartItems);
+        try {
+            boolean success = transactionGatewayService.completeTransaction(transactionInputs);
+            if (success) {
+                cartRepository.deleteAll(cartItems);
+            }
+            return success;
+        } catch (Exception e) {
+            LOGGER.severe("Failed to execute transaction");
+            return false;
         }
-        return success;
     }
 
 
     // ----------------- Cart Service -----------------
     // checked with: {"query": "query findImageByImageId($imageId: ID!) { findImageByImageId(imageId: $imageId) }","variables": { "imageId": "1" }}
-    public Integer getImageByImageId(String imageId) {
-        if (cartRepository.checkImagesInCart(imageId) != null) {
-            return cartRepository.checkImagesInCart(imageId);
+    public Integer getImageCountByImageId(String imageId) {
+
+        Integer imageCount = cartRepository.checkImagesInCart(imageId);
+
+        if (imageCount != null) {
+            return imageCount;
         } else {
             throw new RuntimeException("Image with ID " + imageId + " not found");
         }
@@ -98,10 +109,16 @@ public class CartService {
 
     // checked with: {"query": "query checkCartProductsByUserId($userId: ID!) { checkCartProductsByUserId(userId: $userId) { productId imageId stockId price } }","variables": {"userId": "1"}}
     public List<Product> checkCartProductsByUserId(Long userId) {
-        if (productRepository.checkCartProductsByUserId(userId).isEmpty()) {
-           throw new RuntimeException("No cart items found for user with ID " + userId);
+        List<Cart> cart = getCartItemsByUserId(userId);
+
+        List<Product> products = cart.stream() // Convert list to stream
+                .map(Cart::getProduct) // get product for each cart item
+                .toList(); // Convert the stream back into a list
+
+        if (products.isEmpty()) {
+            throw new RuntimeException("No products found for user with ID " + userId);
         }
-        return productRepository.checkCartProductsByUserId(userId);
+        return products;
     }
 
     // checked with: {"query": "query findProductById($productId: ID!) { findProductById(productId: $productId) { productId imageId stockId price } }","variables": { "productId": "1" }}
@@ -139,32 +156,20 @@ public class CartService {
 
     // ----------------- Product Creation & Enqueuing -----------------
     // checked with: {"query": "mutation addItemtoCart($imageId: ID!, $stockId: ID!, $price: Int!, $userId: ID!) { addItemtoCart(imageId: $imageId, stockId: $stockId, price: $price, userId: $userId) }","variables": {"imageId": "1", "stockId": "1", "price": 100, "userId": "1" } }
-    public String addItemtoCart(String imageId, Long stockId, Integer price, Long userId) {
+    public String addItemToCart(String imageId, Long stockId, Integer price, Long userId) {
         LOGGER.info("Attempting to create product with Image ID: " + imageId + ", Stock ID: " + stockId + ", Price: " + price);
+
         // Check if image is available
         if (!isImageAvailable(imageId)) {
             String errorMessage = "Image with ID " + imageId + " is not available";
             LOGGER.warning(errorMessage);
             return "limit exceeded";
         }
-        // Create product and add to Products table
-        Product newProduct = new Product();
-        newProduct.setImageId(imageId);
-        newProduct.setStockId(stockId);
-        newProduct.setPrice(price);
-        Product savedProduct = productRepository.save(newProduct);
-
-        if (savedProduct.getProductId() == null) {
-            String errorMessage = "Failed to save product in the database for Image ID: " + imageId;
-            LOGGER.severe(errorMessage);
-            return "error occurred";
+        CartItemTask task = new CartItemTask(imageId, stockId, price, userId);
+        Boolean success = cartQueueService.addToQueue(imageId, task);
+        if (success) {
+            scheduleCartCleanup(userId);
         }
-        // Add product to cart queue
-        LOGGER.info("Product created with Product ID: " + savedProduct.getProductId() + ". Enqueuing to add to cart.");
-
-        Runnable cleanupTask = cleanupTasksByUser.get()
-        CartItemTask task = new CartItemTask(userId, savedProduct.getProductId(), imageId);
-        cartQueue.enqueue(task);
         return "successfully added";
     }    
 
@@ -174,12 +179,12 @@ public class CartService {
             System.out.println("Running scheduled cart cleanup for user ID: " + userId);
             deleteCartItemsByUserId(userId);
         };
-        taskSchedulerService.scheduleTask(cleanupTask);
+        taskSchedulerService.scheduleTask(userId, cleanupTask);
     }
 
     // checked with: {"query": "{ getRemainingCleanupTime }"}
-    public Duration getRemainingCleanupTime() {
-        return taskSchedulerService.getRemainingTime();
+    public Duration getRemainingCleanupTime(Long userId) {
+        return taskSchedulerService.getRemainingTime(userId);
     }
 
     // ----------------- Queue Tasks -----------------
@@ -198,26 +203,5 @@ public class CartService {
 //        LOGGER.info("Updating existing cart item for User ID: " + task.getUserId() + ", Product ID: " + task.getProductId());
 //        cartRepository.updateCartItem(task.getUserId(), task.getProductId(), new Date());  // date logic?
 //    }
-
-    @Scheduled(fixedDelay = 100) // 0.1 seconds
-    public void processQueue() {
-        CartItemTask task;
-        while ((task = cartQueue.dequeue()) != null) {
-
-            Optional<Cart> cartItem = cartRepository.findByUserIdAndProductId(task.getUserId(), task.getProductId());
-            Optional<Product> product = productRepository.findByProductId(task.getProductId());
-
-            if (cartItem.isEmpty() && product.isPresent()) {
-                Cart newCartItem = new Cart(task.getUserId(), product.get(), new Date());
-                cartRepository.save(newCartItem);
-            } else if (cartItem.isPresent()) {
-                Cart updatedCartItem = cartItem.get();
-                updatedCartItem.setExpirationTime(new Date());
-                cartRepository.save(updatedCartItem);
-            }
-
-            scheduleCartCleanup(task.getUserId());  // Schedule delete task
-        }
-    }
 
 }
