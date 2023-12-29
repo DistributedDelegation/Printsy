@@ -47,7 +47,7 @@ public class CartResolver {
 
     @QueryMapping
     public List<Product> checkCartProductsByUserId(@Argument Long userId) {
-        return cartService.checkCartProductsByUserId(userId);
+        return cartService.getCartItemsByUserId(userId);
     }
 
     @QueryMapping
@@ -72,8 +72,8 @@ public class CartResolver {
     }
 
     @QueryMapping   
-    public List<TransactionInput> findCartItemsByUserIdForPurchase(@Argument Long userId) {
-        return cartService.getCartItemsByUserIdForPurchase(userId);
+    public List<Cart> findCartItemsByUserIdForPurchase(@Argument Long userId) {
+        return cartService.getCartItemsByUserId(userId);
     }
 
     // ----------------- Mutations -----------------

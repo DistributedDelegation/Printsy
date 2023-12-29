@@ -1,8 +1,8 @@
 package cart.repository;
 
 import cart.model.Cart;
-import cart.model.TransactionInput;
 
+import cart.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Date;
+import java.util.Optional;
 
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long> {
@@ -18,19 +19,15 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     Integer checkImagesInCart(String imageId);
 
     @Query("SELECT c FROM Cart c JOIN Product p ON c.productId = p.productId WHERE c.userId = ?1")
-    List<Cart> checkCartItemsByUserId(Long userId);
+    List<Cart> getCartItemsByUserId(Long userId);
 
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Cart c WHERE c.userId = ?1")
-    void deleteByUserId(Long userId);
-
-
-    @Query("SELECT new cart.model.TransactionInput(c.userId, c.productId, p.imageId) FROM Cart c JOIN Product p ON c.productId = p.productId WHERE c.userId = ?1")
-    List<TransactionInput> checkCartItemsByUserIdForPurchase(Long userId);
+    List<Cart> findAllByUserId(Long userId);
 
 
     boolean existsByUserIdAndProductId(Long userId, Long productId);
+
+
+    Optional<Cart> findByUserIdAndProductId(Long userId, Long productId);
 
     @Modifying
     @Transactional

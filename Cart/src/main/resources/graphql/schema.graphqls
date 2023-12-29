@@ -36,7 +36,7 @@ type Query {
     peekQueue: CartItemTask
     checkCartProductsByUserId(userId: ID!): [Product]
 
-    findCartItemsByUserIdForPurchase(userId: ID!): [TransactionInput] 
+    findCartItemsByUserIdForPurchase(userId: ID!): [Cart]
 }
 
 type Mutation {

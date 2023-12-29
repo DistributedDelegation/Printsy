@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.time.Duration;
 import java.time.Instant;
@@ -15,6 +16,7 @@ public class TaskSchedulerService {
     private final TaskScheduler taskScheduler;
     private ScheduledFuture<?> scheduledFuture;
     private Instant scheduledTime;
+    private HashMap<Long, Runnable> cleanupTasksByUser = new HashMap<>();
 
     // Needs to be changed for final demo
     private final Duration delay = Duration.ofSeconds(120);
@@ -46,5 +48,11 @@ public class TaskSchedulerService {
             return Duration.between(Instant.now(), scheduledTime);
         }
         return Duration.ZERO;
+    }
+
+
+
+    public void updateScheduledTask(){
+
     }
 }

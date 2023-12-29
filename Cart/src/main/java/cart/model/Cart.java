@@ -2,6 +2,7 @@ package cart.model;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import cart.dto.TransactionInput;
 
 @Entity
 @Table(name = "Cart")
@@ -14,8 +15,9 @@ public class Cart {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id") // foreign key
+    private Product product;
 
     @Column(name = "expiration_time")
     @Temporal(TemporalType.TIMESTAMP)
@@ -23,12 +25,12 @@ public class Cart {
 
 //---------------Getters and Setters-----------------
 
-    public Cart() {  
+    public Cart() {
     }
 
-    public Cart(Long userId, Long productId, Date expirationTime) {
+    public Cart(Long userId, Product product, Date expirationTime) {
         this.userId = userId;
-        this.productId = productId;
+        this.product = product;
         this.expirationTime = expirationTime;
     }
 
@@ -48,12 +50,12 @@ public class Cart {
         this.userId = userId;
     }
     
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
     
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
     
     public Date getExpirationTime() {
@@ -62,6 +64,11 @@ public class Cart {
     
     public void setExpirationTime(Date expirationTime) {
         this.expirationTime = expirationTime;
+    }
+
+
+    public TransactionInput toTransactionInput(){
+        return new TransactionInput(this.userId, this.product.getProductId(), this.product.getImageId());
     }
   
 }
