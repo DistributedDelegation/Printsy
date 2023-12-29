@@ -46,6 +46,7 @@ services:
     env_file: .env
     ports:
       - "8080:8080"
+    restart: always
   
   # ----------------Microservices ----------------
   authentication:
@@ -53,6 +54,7 @@ services:
     env_file: .env
     ports:
       - "8085:8080"
+    restart: always
   
   gallery:
     build: ./Gallery
@@ -78,6 +80,7 @@ services:
     env_file: .env
     ports:
       - "8086:8080"
+    restart: always
 
   transaction-gateway:
     build: ./Transaction/gateway
@@ -86,6 +89,7 @@ services:
       - transaction-worker-1
     ports:
       - "8087:8080"
+    restart: always
 
   # ----------------Blockchain ----------------
   transaction-worker-1:
@@ -93,7 +97,6 @@ services:
     depends_on:
       - transaction-db-1
     restart: always
-
 
   transaction-db-1:
     image: mongo:latest
