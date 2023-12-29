@@ -3,12 +3,19 @@ type Image {
   data: String! # Byte array for encoded image
 }
 
+type PublishedImage {
+  imageId: String!
+  imageUrl: String!
+  likeCount: Int!
+}
+
 type Query {
-  getAllPublishedImages: [String!]!
+  getAllPublishedImages: [PublishedImage!]!
 }
 
 type Mutation {
   saveToImageAndGalleryTable(imageUrl: String!, imageNameInput: String!, imageDescriptionInput: String!, imagePublishedYN: Boolean!, usrId: String!): ID! # Returns image ID if the save operation was successful, false otherwise.
+  saveIncreasedLikeCount(imageId: String!): Int!
 }
 
 schema {

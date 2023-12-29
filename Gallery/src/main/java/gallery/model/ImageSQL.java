@@ -15,6 +15,9 @@ public class ImageSQL {
     @Column(columnDefinition = "BOOLEAN")
     private Boolean isImagePublishedYN;
 
+    @Column(columnDefinition = "INT")
+    private Integer likeCount;
+
     public String getImageId() {
         return imageId;
     }
@@ -37,5 +40,13 @@ public class ImageSQL {
 
     public void setIsImagePublishedYN(Boolean isImagePublishedYN) {
         this.isImagePublishedYN = isImagePublishedYN;
+    }
+
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 }

@@ -2,13 +2,19 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Gallery = () => {
-    const [imageUrls, setImageUrls] = useState([]);
+    const [images, setImages] = useState([]);
     let galleryGraphqlEndpoint = "http://localhost:8088/graphql";
     const navigate = useNavigate();
 
     const getAllPublishedImages = () => {
         const query = JSON.stringify({
-          query: "{ getAllPublishedImages }",
+          query: `{
+            getAllPublishedImages {
+              imageId
+              imageUrl
+              likeCount
+            }
+          }`,
         });
 
         fetch(galleryGraphqlEndpoint, {
@@ -21,7 +27,7 @@ const Gallery = () => {
         .then(response => response.json())
         .then(data => {
           if (data && data.data.getAllPublishedImages) {
-            setImageUrls(data.data.getAllPublishedImages);
+            setImages(data.data.getAllPublishedImages);
           }
         })
         .catch(error => {
@@ -38,13 +44,41 @@ const Gallery = () => {
       navigate('/selected-image', { state: { imageURL: url, uploadedImage: true } });
     };
 
+    const handleLikeClick = (imageId) => {
+      const mutation = JSON.stringify({
+        query: `mutation(
+          $imageId: String!
+          ) {
+            saveIncreasedLikeCount(imageId: $imageId)
+        }`,
+        variables: {
+          imageId: imageId,
+        }
+      });
+
+      fetch(galleryGraphqlEndpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: mutation
+      })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById(imageId).getElementsByClassName("likesCount")[0].innerHTML = data.data.saveIncreasedLikeCount;
+        })
+        .catch(error => {
+            console.error('Error saving the image:', error);
+        });
+    };
+
     return (
       <div id="galleryImageContainer">
-        {imageUrls.map((url, index) => (
-          <div key={index} className="galleryImagesElement">
-            <img className="galleryImages" src={url} alt="Gallery" onClick={() => handleImageClick(url)}/>
-            <span className="icon heart-icon"></span>
-            <span className="likesCount">10</span>
+        {images.map(({imageId, imageUrl, likeCount}) => (
+          <div key={imageId} id={imageId} className="galleryImagesElement">
+            <img className="galleryImages" src={imageUrl} alt="Gallery" onClick={() => handleImageClick(imageUrl)}/>
+            <span className="icon heart-icon" onClick={() => handleLikeClick(imageId)}></span>
+            <span className="likesCount">{likeCount}</span>
             <span className="imageCount">3/10</span>
           </div>
         ))}
