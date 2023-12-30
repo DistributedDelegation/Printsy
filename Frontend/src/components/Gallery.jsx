@@ -3,8 +3,45 @@ import { useNavigate } from 'react-router-dom';
 
 const Gallery = () => {
     const [images, setImages] = useState([]);
+    const [imageIds, setImageIds] = useState([]);
+    const [imageCount, setImageCount] = useState({});
     let galleryGraphqlEndpoint = "http://localhost:8088/graphql";
+    let cartGraphqlEndpoint = "http://localhost:8086/graphql";
+    let transactionGatewayGraphqlEndpoint = "http://localhost:8087/graphql";
     const navigate = useNavigate();
+
+    
+    const getAllPublishedImageCount = () => {
+      // Waiting until Cart uses Alphanumeric imageId, issue with connecting to Transaction Gateway due to CORS, will be fixed by API Gateway
+      // for (let imageId in imageIds) {
+      //   console.log(imageIds[imageId]);
+      //   const query = JSON.stringify({
+      //     query: `query(
+      //       $imageId: String!
+      //       ) {
+      //         saveIncreasedLikeCount(imageId: $imageId)
+      //     }`,
+      //     variables: {
+      //       imageId: imageIds[imageId],
+      //     }
+      //   });
+  
+      //   fetch(transactionGatewayGraphqlEndpoint, {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json'
+      //     },
+      //     body: query
+      //   })
+      //   .then(response => response.json())
+      //   .then(data => {
+      //     console.log(data);
+      //   })
+      //   .catch(error => {
+      //     console.error('Error fetching the image:', error);
+      //   });
+      // }
+    }
 
     const getAllPublishedImages = () => {
         const query = JSON.stringify({
@@ -28,6 +65,8 @@ const Gallery = () => {
         .then(data => {
           if (data && data.data.getAllPublishedImages) {
             setImages(data.data.getAllPublishedImages);
+            setImageIds(data.data.getAllPublishedImages.map(({imageId}) => imageId));
+            getAllPublishedImageCount();
           }
         })
         .catch(error => {
