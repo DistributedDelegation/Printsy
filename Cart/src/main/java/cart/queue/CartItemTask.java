@@ -2,11 +2,14 @@ package cart.queue;
 
 import cart.model.Product;
 
+import java.time.Instant;
+
 public class CartItemTask {
     private String imageId;
     private Long stockId;
     private Integer price;
     private Long userId;
+    private Instant expirationTime;
     
 
     public CartItemTask() {
@@ -51,4 +54,11 @@ public class CartItemTask {
         this.userId = userId;
     }
 
+    public Instant getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(Instant expirationTime) {
+        this.expirationTime = expirationTime;
+    }
 }

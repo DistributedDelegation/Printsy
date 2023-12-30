@@ -1,17 +1,18 @@
 package cart.resolver;
 
-import cart.model.Cart;
+import cart.dto.CartResult;
+import cart.dto.ProductResult;
 import cart.model.Product;
-import cart.dto.TransactionInput;
 import cart.queue.CartItemTask;
 import cart.service.CartService;
+import cart.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import java.util.Optional;
+
 import java.time.Duration;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class CartResolver {
     private final CartService cartService;
 
     @Autowired
-    public CartResolver(CartService cartService) {
+    public CartResolver(CartService cartService, ProductService productService) {
         this.cartService = cartService;
     }
 
@@ -42,22 +43,23 @@ public class CartResolver {
     // }
 
     @QueryMapping
-    public List<Cart> findCartItemsByUserId(@Argument Long userId) {
+    public List<CartResult> findCartItemsByUserId(@Argument Long userId) {
         return cartService.getCartItemsByUserId(userId);
     }
 
     @QueryMapping
-    public List<Product> checkCartProductsByUserId(@Argument Long userId) {
+    public List<ProductResult> checkCartProductsByUserId(@Argument Long userId) {
         return cartService.checkCartProductsByUserId(userId);
     }
 
     @QueryMapping
-    public Product findProductById(@Argument Long productId) {
+    public ProductResult findProductById(@Argument Long productId) {
         return cartService.getProductById(productId);
+
     }
 
     @QueryMapping
-    public List<Product> findAllProducts() {
+    public List<ProductResult> findAllProducts() {
         return cartService.getAllProducts();
     }
 
@@ -73,7 +75,7 @@ public class CartResolver {
     }
 
     @QueryMapping   
-    public List<Cart> findCartItemsByUserIdForPurchase(@Argument Long userId) {
+    public List<CartResult> findCartItemsByUserIdForPurchase(@Argument Long userId) {
         return cartService.getCartItemsByUserId(userId);
     }
 

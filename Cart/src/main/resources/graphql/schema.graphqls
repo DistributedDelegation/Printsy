@@ -1,12 +1,19 @@
-type Cart {         
-    productId: ID!
-    userId: ID!
+type CartResult {
+    productId: ID
+    userId: ID
     expirationTime: String
+}
+
+type ProductResult {
+    imageId: ID
+    imageUrl: String
+    stockId: ID
+    price: Int
 }
 
 type Product {
     productId: ID
-    imageId: ID
+    imageId: ID!
     stockId: ID
     price: Int
 }
@@ -25,18 +32,17 @@ type TransactionInput {
 
 type Query {
     findImageAvailability(imageId: ID!): Boolean    # TransactionGateway
-
     findImageByImageId(imageId: ID!): Int           # MySQL
     # findCartItemsByProductId(productId: ID!): Int   
-    findCartItemsByUserId(userId: ID!): [Cart] 
-    findProductById(productId: ID!): Product
-    findAllProducts: [Product]
+    findCartItemsByUserId(userId: ID!): [CartResult]
+    findProductById(productId: ID!): ProductResult
+    findAllProducts: [ProductResult]
 
     getRemainingCleanupTime: Int
     peekQueue: CartItemTask
-    checkCartProductsByUserId(userId: ID!): [Product]
+    checkCartProductsByUserId(userId: ID!): [ProductResult]
 
-    findCartItemsByUserIdForPurchase(userId: ID!): [Cart]
+    findCartItemsByUserIdForPurchase(userId: ID!): [CartResult]
 }
 
 type Mutation {

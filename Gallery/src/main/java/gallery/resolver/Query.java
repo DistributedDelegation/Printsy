@@ -12,6 +12,7 @@ import gallery.repository.ImageMySQLRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,5 +40,21 @@ public class Query {
                                 .stream()
                                 .map(ImageMongo::getImageUrl)
                                 .collect(Collectors.toList());
+    }
+
+    @QueryMapping String getImageUrlByImageId(@Argument String imageId){
+        Optional<ImageMongo> image = mongoRepository.findById(imageId);
+        if (image.isEmpty()){
+            return "No image found for imageId :" + imageId;
+        }
+        return image.get().getImageUrl();
+    }
+
+    @QueryMapping List<String> getImageUrlsByImageIds(@Argument List<String> imageIds){
+        List<String> imageUrls = new ArrayList<>();
+        for (String imageId : imageIds) {
+            imageUrls.add(getImageUrlByImageId(imageId));
+        }
+        return imageUrls;
     }
 }

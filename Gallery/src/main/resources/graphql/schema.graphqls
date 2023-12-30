@@ -5,6 +5,8 @@ type Image {
 
 type Query {
   getAllPublishedImages: [String!]!
+  getImageUrlByImageId(imageId: String!): String!
+  getImageUrlsByImageIds(imageIds: [String]!): [String]!
 }
 
 type Mutation {

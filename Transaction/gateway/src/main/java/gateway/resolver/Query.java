@@ -7,10 +7,13 @@ import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
+import java.util.logging.Logger;
+
 @Controller
 public class Query {
 
     private final ClientNodeService clientNodeService;
+    private final Logger LOGGER = Logger.getLogger(Query.class.getName());
 
     @Autowired
     public Query(ClientNodeService clientNodeService) {
@@ -19,6 +22,8 @@ public class Query {
 
     @QueryMapping
     public CountResult checkImageTransactionCount(@Argument String imageId) {
-        return new CountResult(clientNodeService.checkImageCount(imageId));
+        CountResult result = new CountResult(clientNodeService.checkImageCount(imageId));
+        LOGGER.info("Result of query: " + result);
+        return result;
     }
 }

@@ -1,11 +1,32 @@
 package cart.dto;
 
-public class CountResult {
-    // Define the structure as per the GraphQL response
-    private Integer count;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    // Add getters and setters
-    public Integer getCount() {
+public class CountResult {
+
+    private int count;
+
+    public CountResult() {
+    }
+
+    public CountResult(int count) {
+        this.count = count;
+    }
+
+    @JsonProperty("count")
+    public int getCount() {
         return count;
+    }
+
+    @JsonProperty("count")
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    @Override
+    public String toString() {
+        return "CountResult{" +
+                "count=" + count +
+                '}';
     }
 }

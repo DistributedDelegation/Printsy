@@ -1,7 +1,11 @@
 package cart.model;
 
+import cart.dto.CartResult;
 import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.util.Date;
+
 import cart.dto.TransactionInput;
 
 @Entity
@@ -21,27 +25,28 @@ public class Cart {
 
     @Column(name = "expiration_time")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date expirationTime;
+    private Instant expirationTime;
 
 //---------------Getters and Setters-----------------
 
     public Cart() {
+        this.expirationTime = Instant.now();
     }
 
-    public Cart(Long userId, Product product, Date expirationTime) {
+    public Cart(Long userId, Product product, Instant expirationTime) {
         this.userId = userId;
         this.product = product;
-        this.expirationTime = expirationTime;
+        this.expirationTime = Instant.now();
     }
 
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public Long getUserId() {
         return userId;
     }
@@ -58,11 +63,11 @@ public class Cart {
         this.product = product;
     }
     
-    public Date getExpirationTime() {
+    public Instant getExpirationTime() {
         return expirationTime;
     }
     
-    public void setExpirationTime(Date expirationTime) {
+    public void setExpirationTime(Instant expirationTime) {
         this.expirationTime = expirationTime;
     }
 
@@ -70,5 +75,18 @@ public class Cart {
     public TransactionInput toTransactionInput(){
         return new TransactionInput(this.userId, this.product.getProductId(), this.product.getImageId());
     }
-  
+
+    public CartResult toCartResult(){
+        return new CartResult(this.userId, this.product.getProductId(), this.expirationTime);
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", product=" + product +
+                ", expirationTime=" + expirationTime +
+                '}';
+    }
 }

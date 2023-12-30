@@ -5,6 +5,8 @@ import cart.dto.TransactionResult;
 import cart.dto.TransactionInput;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -18,31 +20,34 @@ public class TransactionGatewayService {
 
     private static final Logger LOGGER = Logger.getLogger(CartService.class.getName());
 
-    // checked with: {"query": "query FindImageAvailability($imageId: ID!) { findImageAvailability(imageId: $imageId) }","variables": { "imageId": "1" } }
-    private WebClient webClient = WebClient.builder()
-        .baseUrl("http://transaction-gateway")
-        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .build();
+    private final WebClient webClient;
 
-        public int getTransactionImageAvailability(String imageId){
+    @Autowired
+    public TransactionGatewayService(@Qualifier("transactionWebClient") WebClient webClient) {
+        this.webClient = webClient;
+    }
+
+    // checked with: {"query": "query FindImageAvailability($imageId: ID!) { findImageAvailability(imageId: $imageId) }","variables": { "imageId": "1" } }
+    public int getTransactionImageAvailability(String imageId) {
         String query = "{ \"query\": \"query checkImageTransactionCount($imageId: String!) { checkImageTransactionCount(imageId: $imageId) { count } }\", \"variables\": { \"imageId\": \"" + imageId + "\" } }";
-        
+
         // Make a post request and retrieve the result
         CountResult response = webClient.post()
-            .uri("/graphql")
-            .bodyValue(query)
-            .retrieve()
-            .bodyToMono(CountResult.class)
-            .block();
+                .uri("/graphql")
+                .bodyValue(query)
+                .retrieve()
+                .bodyToMono(CountResult.class)
+                .block();
 
         if (response == null) {
             LOGGER.severe("Failed to send image count query to transaction-gateway");
             return -1;
         } else {
-            LOGGER.info("Successfully sent image count query to transaction-gateway");
+            LOGGER.info("Successfully sent image count query to transaction-gateway: " + response);
             return response.getCount();
         }
     }
+
 
     // checked with: {"query": "mutation completeTransaction($transactions: [TransactionInput!]!) { completeTransaction(transactions: $transactions) { success } }","variables": {"transactions": [{"userId": 123, "productId": 456, "imageId": "image123"}]}}    
     public Boolean completeTransaction(List<TransactionInput> transactions) throws JsonProcessingException {

@@ -58,9 +58,9 @@ const Product = ({ imageUrl, product }) => {
             query: `mutation addItemtoCart($imageId: ID!, $stockId: ID!, $price: Int!, $userId: ID!) { addItemtoCart(imageId: $imageId, stockId: $stockId, price: $price, userId: $userId) }`,
             variables: {
                 imageId: imageId,
-                stockId: stockId.toString(),
+                stockId: stockId,
                 price: price,
-                userId: userId.toString()
+                userId: userId
             }
         });
         console.log("Query message:", query_message);
