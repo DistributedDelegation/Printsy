@@ -10,10 +10,13 @@ import {
 import './App.css'
 import Gallery from './components/Gallery'
 //import Generation from './components/Generation'
-import Home from "./pages/Home";
+import {AuthProvider} from './AuthContext';
+import Generation from "./pages/Generation";
 import SelectedImage from './pages/SelectedImage';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout'
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 
 function App() {
   const action = useNavigationType();
@@ -35,6 +38,10 @@ function App() {
         title = "Printsy";
         metaDescription = "";
         break;
+      case "/generation":
+        title = "";
+        metaDescription = "";
+        break;
       case "/cart":
         title = "";
         metaDescription = "";
@@ -44,6 +51,14 @@ function App() {
         metaDescription = "";
         break;
       case "/checkout":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/signin":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/signup":
         title = "";
         metaDescription = "";
         break;
@@ -64,12 +79,17 @@ function App() {
   }, [pathname]);
 
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/cart" element={<Cart />} />
-      <Route path="/selected-image" element={<SelectedImage />} />
-      <Route path="/checkout" element={<Checkout />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path="/generation" element={<Generation />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/selected-image" element={<SelectedImage />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 export default App;
