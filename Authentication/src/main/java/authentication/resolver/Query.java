@@ -24,10 +24,10 @@ public class Query {
     }
 
     @QueryMapping
-    public User currentUser(@Argument String bearer) {
+    public User currentUser(@Argument String bearerToken) {
         try {
-            System.out.println("Bearer: " + bearer);
-            Long id = jwtService.parseTokenGetUserID(controllerUtils.getTokenFromBearer(bearer));
+            System.out.println("Bearer: " + bearerToken);
+            Long id = jwtService.parseTokenGetUserID(controllerUtils.getTokenFromBearer(bearerToken));
             return userService.getUserById(id);
         } catch (Exception ex) {
             throw new RuntimeException("Error retrieving current user: " + ex.getMessage());

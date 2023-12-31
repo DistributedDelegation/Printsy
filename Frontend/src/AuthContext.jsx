@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }) => {
                   ) {
                     currentUser(bearerToken: $bearerToken) {
                         userID
+                        emailAddress
                     }
                 }`,
                 variables: {
