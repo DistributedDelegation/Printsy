@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext'; // replace with the actual path to your AuthContext
 
 const Gallery = () => {
     const [images, setImages] = useState([]);
@@ -10,6 +11,12 @@ const Gallery = () => {
     let transactionGatewayGraphqlEndpoint = "http://localhost:8087/graphql";
     const navigate = useNavigate();
 
+    const authContext = useContext(AuthContext);
+    const userID = authContext.userID; // Use authContext.userID directly
+
+    const test = () => {
+        console.log("userID: " + userID);
+    }
     
     const getAllPublishedImageCount = () => {
       // Waiting until Cart uses Alphanumeric imageId, issue with connecting to Transaction Gateway due to CORS, will be fixed by API Gateway
@@ -113,6 +120,7 @@ const Gallery = () => {
 
     return (
       <div id="galleryImageContainer">
+        <button onClick={() => test()}>Run Test</button>
         {images.map(({imageId, imageUrl, likeCount}) => (
           <div key={imageId} id={imageId} className="galleryImagesElement">
             <img className="galleryImages" src={imageUrl} alt="Gallery" onClick={() => handleImageClick(imageUrl)}/>

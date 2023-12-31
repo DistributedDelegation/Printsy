@@ -27,8 +27,8 @@ const SignIn = () => {
 
       const variables = {
         input: {
-          emailAddress: email,
-          password: password,
+          emailAddress: signInEmail,
+          password: signInPassword,
         },
       };
 
@@ -38,10 +38,11 @@ const SignIn = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ query, variables }),
         });
-        const data = await response.data.jwt;
-        localStorage.setItem('user', data);
-        Cookies.set('user', data, { expires: 7, secure: true }); // Store the cookies
-        console.log("saved cookies when login in", Cookies.get('user'));
+        const data = await response.json();
+        const token = data.data.authenticate;
+        localStorage.setItem('user', token);
+        Cookies.set('user', token, { expires: 7, secure: true }); // Store the cookies
+        console.log("saved cookies when signin in", Cookies.get('user'));
         setIsSigningIn(false);
 
         setTimeout(() => {
@@ -51,7 +52,7 @@ const SignIn = () => {
           navigate(redirectPath || '/generation');
           // then remove the redirect path from session storage
           sessionStorage.removeItem('redirectAfterLogin');
-        }, 3000);
+        }, 1000);
 
       } catch (error) {
         // Handle error

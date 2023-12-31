@@ -11,6 +11,16 @@ const SignUp = () => {
   const [isSigningUp, setIsSigningUp] = useState(false);
 
   const handleSignUp = async () => {
+
+    if (checkPasswordValidity(signUpPassword)) {
+      console.log("Password is valid");
+    } else {
+      alert(
+        "At least 8 characters long\nAt least one uppercase letter\nAt least one lowercase letter\nAt least one special character"
+      )
+      return;
+    }
+
     setIsSigningUp(true);
     const query = `
         mutation($input: UserCredentialInput!) {
@@ -36,14 +46,22 @@ const SignUp = () => {
       setSignUpPassword('');  // reset password
       setIsSigningUp(false);
       setTimeout(() => {
-        navigate('/login');
-        }, 3000);
+        navigate('/signin');
+        }, 1000);
       // Handle the confirmation message from the API
     } catch (error) {
       // Handle error
       console.error('Error during sign up:', error);
       setIsSigningUp(false);
     }
+  };
+
+  const checkPasswordValidity = (pass) => {
+    const hasUpperCase = /[A-Z]/.test(pass);
+    const hasLowerCase = /[a-z]/.test(pass);
+    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(pass);
+    const hasMinLength = pass.length >= 8;
+    return hasUpperCase && hasLowerCase && hasSpecialChar && hasMinLength
   };
 
 

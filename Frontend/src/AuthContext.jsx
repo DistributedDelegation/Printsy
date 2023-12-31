@@ -6,37 +6,58 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [userID, setUserID] = useState(null);
-    const [token, setToken] = useState(null); //const a token 
+    const [userID, setUserID] = useState("");
+    const [token, setToken] = useState(""); //const a token 
     const navigate = useNavigate(); 
     const location = useLocation();
+    let authenticationGraphqlEndpoint = "http://localhost:8085/graphql";
 
     const login = () => {
         setIsAuthenticated(true);
+        navigate('/generation');
     };
 
     const logout=() =>{
         setIsAuthenticated(false);
-        setUserID(null);
-        setToken(null);
+        setUserID("");
+        setToken("");
         localStorage.removeItem('user');
-        navigate('/');
+        navigate('/sigin');
     }
 
     useEffect(() => {
         if (localStorage.getItem('user')) {
             //authorization is true
-            const user = localStorage.getItem('user');
-            setToken(user); //
-            axios.get(process.env.REACT_APP_BACKEND_URL + '/auth/current-user', {
-                headers: {
-                    'Authorization': `Bearer ${user}`,
+            const bearerToken = localStorage.getItem('user');
+            setToken(bearerToken);
+            console.log("bearerToken", bearerToken);
+            
+            const query = JSON.stringify({
+                query: `query(
+                  $bearerToken: String!
+                  ) {
+                    currentUser(bearerToken: $bearerToken) {
+                        userID
+                    }
+                }`,
+                variables: {
+                    bearerToken: bearerToken,
                 }
+            });
+            console.log("query: ", query);
+      
+            fetch(authenticationGraphqlEndpoint, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: query
             })
-            .then(respond => {
-                // console.log(respond.data.userID);
+            .then(response => response.json()) // Convert the response to JSON
+            .then(data => {
+                console.log("data:", data);
                 setIsAuthenticated(true);
-                setUserID(respond.data.userID);
+                setUserID(data.currentUser); // Access the userID from the data
             })
             .catch(error => {
                 console.log("error:", error);
@@ -44,11 +65,11 @@ export const AuthProvider = ({ children }) => {
                 if (error.response && error.response.status === 400) {
                     setIsAuthenticated(false);
                     localStorage.removeItem('user'); 
-                    setToken(null);
+                    setToken("");
                     alert("Your session has expired. Please log in again."); // Notify user
                     // save the current path to redirect back to it after login
                     sessionStorage.setItem('redirectAfterLogin', location.pathname);
-                    navigate('/login'); // Navigate to login page
+                    navigate('/signin'); // Navigate to login page
                 } else {
                     console.log(error);
                 }
@@ -57,9 +78,9 @@ export const AuthProvider = ({ children }) => {
     }, [navigate,location]); // <-- Add navigate as a dependency
 
     useEffect(() => {
-        // console.log(userID);  //log the updated userID value
-    }, [userID]);
-    
+        // log the updated userID value
+        // userID.json().then(data => console.log(data));
+    }, [userID]);    
 
     return (
         <AuthContext.Provider value={{ isAuthenticated, login , logout, userID, token}}>

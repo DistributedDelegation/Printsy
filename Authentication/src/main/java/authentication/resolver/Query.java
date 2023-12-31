@@ -26,6 +26,7 @@ public class Query {
     @QueryMapping
     public User currentUser(@Argument String bearer) {
         try {
+            System.out.println("Bearer: " + bearer);
             Long id = jwtService.parseTokenGetUserID(controllerUtils.getTokenFromBearer(bearer));
             return userService.getUserById(id);
         } catch (Exception ex) {
