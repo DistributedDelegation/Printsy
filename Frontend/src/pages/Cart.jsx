@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import useMatchHeight from '../components/useMatchHeight';
 import CheckoutProducts from '../components/CheckoutProducts';
 import "./Secondary.css";
+import Timer from '../components/Timer';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ const Home = () => {
   const [signUpPassword, setSignUpPassword] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const [initialTime, setInitialTime] = useState(0);
+  const [showTimer, setShowTimer] = useState(false);
 
   const handleSignIn = async () => {
     setIsSigningIn(true);
@@ -78,6 +81,34 @@ const Home = () => {
     }
   };
 
+   // ------ Timer ------
+   const fetchRemainingTime = async () => {
+    const response = await fetch('http://localhost:8086/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: "{ getRemainingCleanupTime }" }),
+    });
+    const data = await response.json();
+    const time = data.data.getRemainingCleanupTime;
+    setInitialTime(time);
+    setShowTimer(time > 0);
+  };
+
+  const handleTimerEnd = () => {
+    // Logic when timer ends
+    setShowTimer(false);
+    fetchRemainingTime().then(() => {
+      window.location.reload();
+    });
+  };
+
+  useEffect(() => {
+    fetchRemainingTime();
+  }, []);
+
+  const handleNavigateCheckout = () => {
+    navigate('/Checkout');
+  };
 
   return (
     <div id="gridTemplate">
@@ -94,7 +125,9 @@ const Home = () => {
             </div>
             <div className="content-right">
               <h2>To Checkout</h2>
-              <div className="signIn">
+              {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}
+              <button className="purchase-button" onClick={handleNavigateCheckout}>Proceed with Purchase</button>
+              {/* <div className="signIn">
                 <p>If you already have an account:</p>
                 <input
                   type="email"
@@ -141,8 +174,8 @@ const Home = () => {
                   <button className="secondary-button" disabled>Loading..</button>
                 ) : (
                   <button className="secondary-button" onClick={handleSignUp}>Sign-Up</button>
-                )}
-              </div>
+                )} 
+              </div> */}
             </div>
           </div>
         </div>

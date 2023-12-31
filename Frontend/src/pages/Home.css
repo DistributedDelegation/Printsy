@@ -128,6 +128,14 @@
   margin-right: 10px;
 }
 
+.timer-next-to-icon {
+  position: absolute;
+  top: -25px;
+  right: 40px;
+  width: 75px;
+  height: 75px;
+}
+
 #galleryImageContainer {
   display: flex;
   gap: 20px;

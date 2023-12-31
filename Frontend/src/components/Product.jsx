@@ -1,5 +1,9 @@
-const Product = ({ imageUrl, product }) => {
+import React, { useState } from 'react';
+
+const Product = ({ imageUrl, product, onCartChange }) => {
     const { name, productImageUrl, price, sizes, overlayPosition } = product;
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupMessage, setPopupMessage] = useState('');
 
     // Handling => stockId
     const mapToStockId = (productName, size) => {
@@ -22,26 +26,30 @@ const Product = ({ imageUrl, product }) => {
           variables: { imageUrl: url }
         });
         try {
-          const response = await fetch("http://localhost:8089/graphql", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: query
-          });
-          const data = await response.json();
-          if (data.errors) {
-            console.error('GraphQL Errors:', data.errors);
+            const response = await fetch("http://localhost:8089/graphql", {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: query
+            });
+            const data = await response.json();
+            if (data.errors) {
+              console.error('GraphQL Errors:', data.errors);
+              return null;
+            }
+            return data.data.getImageByUrl;
+          } catch (error) {
+            console.error('Network Error:', error);
             return null;
           }
-          return data.data.getImageByUrl;
-        } catch (error) {
-          console.error('Network Error:', error);
-          return null;
-        }
-      };
+        };
 
-      const handleAddToCart = async (event, price) => {
+    const closePopup = () => {
+        setShowPopup(false);
+    };
+
+    const handleAddToCart = async (event, price) => {
         event.preventDefault();
         const selectedSize = event.target[0].value; // Corrected to directly access the value
         const stockId = mapToStockId(name, selectedSize);
@@ -73,8 +81,21 @@ const Product = ({ imageUrl, product }) => {
             const data = await response.json();
             if (data.errors) {
                 console.error("GraphQL Errors:", data.errors);
+                if (data.errors[0].message === "limit exceeded") {
+                    setPopupMessage("This image is currently unavailable or sold out.");
+                    setShowPopup(true);
+                }
             } else {
                 console.log("Add to cart response:", data);
+                if (data.data.addItemtoCart === "successfully added") {
+                    onCartChange();
+                } else if (data.data.addItemtoCart === "limit exceeded") {
+                    setPopupMessage("This image is currently unavailable or sold out.");
+                    setShowPopup(true);
+                } else if (data.data.addItemtoCart === "error occurred") {
+                    setPopupMessage("An unknown error occurred. Please try again.");
+                    setShowPopup(true);
+                }
             }
         } catch (error) {
             console.error('Error adding item to cart:', error);
@@ -111,6 +132,12 @@ const Product = ({ imageUrl, product }) => {
                 </select>
                 <button type="submit" className="secondary-button">Add to Cart</button>
             </form>
+            {showPopup && (
+                <div className="popup">
+                    <p className="popup-text">{popupMessage}</p>
+                    <button onClick={closePopup}>Close</button>
+                </div>
+            )}
         </div>
     );
 };

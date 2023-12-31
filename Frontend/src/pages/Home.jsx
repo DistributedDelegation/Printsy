@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import Gallery from "../components/Gallery";
 import GenerationStyling from "../components/GenerationStyling";
 import useMatchHeight from '../components/useMatchHeight';
+import Timer from '../components/Timer';
 
 const Home = () => {
   const [prompt, setPrompt] = useState('');
@@ -11,6 +12,8 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { generateRef } = useMatchHeight('generateRef');
+  const [initialTime, setInitialTime] = useState(0);
+  const [showTimer, setShowTimer] = useState(false);
 
   const handlePromptChange = (e) => {
     setPrompt(e.target.value);
@@ -56,6 +59,29 @@ const Home = () => {
       });
   };
 
+  // ------ Timer ------
+  const fetchRemainingTime = async () => {
+    const response = await fetch('http://localhost:8086/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: "{ getRemainingCleanupTime }" }),
+    });
+    const data = await response.json();
+    const time = data.data.getRemainingCleanupTime;
+    setInitialTime(time);
+    setShowTimer(time > 0);
+  };
+
+  const handleTimerEnd = () => {
+    // Logic when timer ends
+    setShowTimer(false);
+    fetchRemainingTime();
+  };
+
+  useEffect(() => {
+    fetchRemainingTime();
+  }, []);
+
   // Cart icon link
   const handleNavigateCart = () => {
     navigate('/Cart');
@@ -88,6 +114,7 @@ const Home = () => {
       </div>
       <div id="Gallery">
         <div className="cart">
+          <span className="timer-next-to-icon"> {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}</span>
           <span className="icon icon-cart" onClick={handleNavigateCart}></span>
         </div>
         <div className="content">

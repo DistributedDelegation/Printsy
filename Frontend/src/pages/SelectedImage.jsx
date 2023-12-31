@@ -4,6 +4,7 @@ import Product from '../components/Product';
 import useMatchHeight from '../components/useMatchHeight';
 import "./Home.css";
 import "../components/ProdcutStyle.css";
+import Timer from '../components/Timer';
 
 const SelectedImage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,6 +14,9 @@ const SelectedImage = () => {
   const prompt = location.state?.prompt ? location.state.prompt : "Gallery";
   const navigate = useNavigate();
   const { generateRef } = useMatchHeight('generateRef');
+  const [initialTime, setInitialTime] = useState(0);
+  const [showTimer, setShowTimer] = useState(false);
+  const [cartItemsChanged, setCartItemsChanged] = useState(false);
 
   // Gallery Images are deactivating upload button
   useEffect(() => {
@@ -24,6 +28,33 @@ const SelectedImage = () => {
   // Back to home link
   const handleNavigateHome = () => {
     navigate('/');
+  };
+
+  // ------ Timer ------
+  const fetchRemainingTime = async () => {
+    const response = await fetch('http://localhost:8086/graphql', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: "{ getRemainingCleanupTime }" }),
+    });
+    const data = await response.json();
+    const time = data.data.getRemainingCleanupTime;
+    setInitialTime(time);
+    setShowTimer(time > 0);
+  };
+
+  const handleTimerEnd = () => {
+    // Logic when timer ends
+    setShowTimer(false);
+    fetchRemainingTime();
+  };
+
+  useEffect(() => {
+    fetchRemainingTime();
+  }, [cartItemsChanged]);
+
+  const onCartChange = () => {
+    setCartItemsChanged(!cartItemsChanged);
   };
 
   // Cart icon link
@@ -189,13 +220,14 @@ const SelectedImage = () => {
         </div>
       </div><div id="Gallery">
         <div className="cart">
+          <span className="timer-next-to-icon"> {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}</span>
           <span className="icon icon-cart" onClick={handleNavigateCart}></span>
         </div>
         <div className="content">
           <h2>Products</h2>
           <div className="prodcut-preview">
             {products.map((product, index) => (
-              <Product key={index} imageUrl={imageURL} product={product} />
+              <Product key={index} imageUrl={imageURL} product={product} onCartChange={onCartChange} />
             ))}
           </div>
         </div>
