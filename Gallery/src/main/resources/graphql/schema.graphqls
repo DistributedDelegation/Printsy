@@ -3,8 +3,18 @@ type Image {
   data: String! # Byte array for encoded image
 }
 
+input ImageIdList {
+  imageIds: [String]!
+}
+
+type ImageUrlList {
+  imageUrls: [String]!
+}
+
 type Query {
   getAllPublishedImages: [String!]!
+  getImageUrlByImageId(imageId: String!): String!
+  getImageUrlsByImageIds(imageIds: ImageIdList!): ImageUrlList!
 }
 
 type Mutation {

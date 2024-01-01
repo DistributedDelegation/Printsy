@@ -1,4 +1,4 @@
-package cart.model;
+package cart.dto;
 
 public class TransactionInput {
     private Long userId;

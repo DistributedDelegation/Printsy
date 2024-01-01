@@ -1,5 +1,7 @@
 package cart.model;
 
+import cart.dto.CartResult;
+import cart.dto.ProductResult;
 import jakarta.persistence.*;
 
 @Entity
