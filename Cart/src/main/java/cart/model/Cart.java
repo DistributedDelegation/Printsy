@@ -76,10 +76,6 @@ public class Cart {
         return new TransactionInput(this.userId, this.product.getProductId(), this.product.getImageId());
     }
 
-    public CartResult toCartResult(){
-        return new CartResult(this.userId, this.product.getProductId(), this.expirationTime);
-    }
-
     @Override
     public String toString() {
         return "Cart{" +

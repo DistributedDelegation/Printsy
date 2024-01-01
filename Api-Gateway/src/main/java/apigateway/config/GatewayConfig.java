@@ -24,7 +24,7 @@ public class GatewayConfig {
 						.uri("http://generation:8080"))
 				.route("transaction-service", r -> r.path("/transaction/**")
 						.filters(f -> f.rewritePath("/transaction/(?<remaining>.*)", "/${remaining}"))
-						.uri("http://transaction:8080"))
+						.uri("http://transaction-gateway:8080"))
 				.build();
 	}
 

@@ -44,6 +44,7 @@ public class CleanUpService {
     public void deleteCartAndProductEntitiesByUser(Long userId){
         List<Cart> cartItems = cartRepository.findAllByUserId(userId);
         deleteCartsAndProducts(cartItems);
+        deleteOrphanProducts();
     }
 
 

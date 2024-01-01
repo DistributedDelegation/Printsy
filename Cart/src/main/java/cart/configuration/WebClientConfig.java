@@ -12,7 +12,7 @@ public class WebClientConfig {
     @Bean
     public WebClient transactionWebClient() {
         return WebClient.builder()
-                .baseUrl("http://transaction-gateway:8080")
+                .baseUrl("http://api-gateway:8080/transaction")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }
@@ -20,7 +20,7 @@ public class WebClientConfig {
     @Bean
     public WebClient galleryWebClient() {
         return WebClient.builder()
-                .baseUrl("http://gallery:8080")
+                .baseUrl("http://api-gateway:8080/gallery")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .build();
     }

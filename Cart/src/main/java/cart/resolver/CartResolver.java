@@ -28,7 +28,7 @@ public class CartResolver {
 
     // ----------------- Queries -----------------
     @QueryMapping
-    public Boolean findImageAvailability(@Argument String imageId) {
+    public boolean findImageAvailability(@Argument String imageId) {
         return cartService.isImageAvailable(imageId);
     }
 
@@ -36,11 +36,6 @@ public class CartResolver {
     public Integer findImageByImageId(@Argument String imageId) {
         return cartService.getImageCountByImageId(imageId);
     }
-
-    // @QueryMapping
-    // public Integer findCartItemsByProductId(@Argument Long productId) {
-    //     return cartService.getCartItemsByProductId(productId);
-    // }
 
     @QueryMapping
     public List<CartResult> findCartItemsByUserId(@Argument Long userId) {
@@ -66,13 +61,13 @@ public class CartResolver {
     @QueryMapping
     public Long getRemainingCleanupTime(Long userId) {
         Duration remainingTime = cartService.getRemainingCleanupTime(userId);
-        return remainingTime.getSeconds();
+        return (Long) remainingTime.getSeconds();
     }
 
-    @QueryMapping
-    public CartItemTask peekQueue() {
-        return cartService.peekQueue();
-    }
+//    @QueryMapping
+//    public CartItemTask peekQueue() {
+//        return cartService.peekQueue();
+//    }
 
     @QueryMapping   
     public List<CartResult> findCartItemsByUserIdForPurchase(@Argument Long userId) {
@@ -92,7 +87,7 @@ public class CartResolver {
     }
 
     @MutationMapping
-    public Boolean completePurchase(@Argument Long userId) throws JsonProcessingException {
+    public boolean completePurchase(@Argument Long userId) throws JsonProcessingException {
         return cartService.completePurchase(userId);
     }
 

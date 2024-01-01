@@ -1,22 +1,29 @@
 package cart.dto;
 
+import cart.model.Cart;
+
 import java.time.Instant;
 
 public class CartResult {
 
     private Long userId;
 
-    private Long product_id;
+    private ProductResult productResult;
 
     private Instant expirationTime;
 
     public CartResult() {
     }
 
-    public CartResult(Long userId, Long product_id, Instant expirationTime) {
+    public CartResult(Long userId, ProductResult productResult, Instant expirationTime) {
         this.userId = userId;
-        this.product_id = product_id;
+        this.productResult = productResult;
         this.expirationTime = expirationTime;
+    }
+
+    public CartResult(Cart cart){
+        this.userId = cart.getUserId();
+        this.expirationTime = cart.getExpirationTime();
     }
 
     public Long getUserId() {
@@ -27,12 +34,12 @@ public class CartResult {
         this.userId = userId;
     }
 
-    public Long getProduct_id() {
-        return product_id;
+    public ProductResult getProductResult() {
+        return productResult;
     }
 
-    public void setProduct_id(Long product_id) {
-        this.product_id = product_id;
+    public void setProductResult(ProductResult productResult) {
+        this.productResult = productResult;
     }
 
     public Instant getExpirationTime() {

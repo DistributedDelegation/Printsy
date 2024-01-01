@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.logging.Logger;
 import java.time.Duration;
+import java.util.stream.Collectors;
 
 @Service
 public class CartService {
@@ -30,12 +31,13 @@ public class CartService {
     private final CartQueueService cartQueueService;
     private final CartQueue cartQueue;
     private final TransactionGatewayService transactionGatewayService;
+    private final GalleryService galleryService;
 
 
     @Autowired
     public CartService(CartRepository cartRepository, ProductRepository productRepository, ProductService productService, CleanUpService  cleanUpService,
                        TaskSchedulerService taskSchedulerService, CartQueue cartQueue,
-                       TransactionGatewayService transactionGatewayService, CartQueueService cartQueueService) {
+                       TransactionGatewayService transactionGatewayService, CartQueueService cartQueueService, GalleryService galleryService) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.productService = productService;
@@ -44,20 +46,21 @@ public class CartService {
         this.cartQueue = cartQueue;
         this.transactionGatewayService = transactionGatewayService;
         this.cartQueueService = cartQueueService;
+        this.galleryService = galleryService;
     }
 
     // ----------------- Transaction Service -----------------
     public boolean isImageAvailable(String imageId) {
         // Check the total count of the image in carts and transactions
-        Integer countInCarts = cartRepository.countByProductImageId(imageId);
-        Integer countInTransactions = transactionGatewayService.getTransactionImageAvailability(imageId);
-        Integer total = countInCarts + countInTransactions;
+        int countInCarts = cartRepository.countByProductImageId(imageId);
+        int countInTransactions = transactionGatewayService.getTransactionImageAvailability(imageId);
+        int total = countInCarts + countInTransactions;
         // Determine availability (assuming a threshold of 10)
         return total < 10;
     }
 
     // checked with: {"query": "mutation CompletePurchase($userId: ID!) { completePurchase(userId: $userId) }","variables": { "userId": "1" }}
-    public Boolean completePurchase(Long userId) {
+    public boolean completePurchase(Long userId) {
         // Cancel the scheduled task
         taskSchedulerService.cancelScheduledTask(userId);
         List<Cart> cartItems = cartRepository.findAllByUserId(userId);
@@ -104,13 +107,10 @@ public class CartService {
     //     }
     // }
 
-    // checked with: {"query": "query findCartItemsByUserId($userId: ID!) { findCartItemsByUserId(userId: $userId) { productId userId expirationTime } }","variables": { "userId": "1" }}
+    // checked with: {"query": "query getCartItemsByUserId($userId: ID!) { getCartItemsByUserId(userId: $userId) { product userId expirationTime } }","variables": { "userId": "1" }}
     public List<CartResult> getCartItemsByUserId(Long userId) {
         List<Cart> cartItems = cartRepository.findAllByUserId(userId);
-
-        return cartItems.stream() // Convert list to stream
-                .map(Cart::toCartResult) // get product for each cart item
-                .toList();
+        return convertToCartResults(cartItems);
     }
 
     // checked with: {"query": "query checkCartProductsByUserId($userId: ID!) { checkCartProductsByUserId(userId: $userId) { productId imageId stockId price } }","variables": {"userId": "1"}}
@@ -179,21 +179,27 @@ public class CartService {
         return taskSchedulerService.getRemainingTime(userId);
     }
 
-    // ----------------- Queue Tasks -----------------
     // checked with: {"query": "{ peekQueue { userId productId imageId } }"}
-    public CartItemTask peekQueue() {
-        return cartQueue.peekQueue();
-    }
+//    public CartItemTask peekQueue() {
+//        return cartQueueService..peekQueue();
+//    }
 
-//    private void addCartItem(CartItemTask task) {
-//        LOGGER.info("Adding new cart item for User ID: " + task.getUserId() + ", Product ID: " + task.getProductId());
-//        cartRepository.insertCartItem(task.getUserId(), task.getProductId(), new Date());  // date logic?
-//    }
-//
-//    // Update logic exists but due to time constraints, not implemented
-//    private void updateCartItem(CartItemTask task) {
-//        LOGGER.info("Updating existing cart item for User ID: " + task.getUserId() + ", Product ID: " + task.getProductId());
-//        cartRepository.updateCartItem(task.getUserId(), task.getProductId(), new Date());  // date logic?
-//    }
+
+    public List<CartResult> convertToCartResults(List<Cart> cartItems) {
+        // Fetch all imageUrls at once if possible to minimize calls
+        List<Product> products = cartItems.stream()
+                .map(Cart::getProduct)
+                .toList();
+        List<ProductResult> productResults = productService.convertToProductResults(products);
+
+        List<CartResult> cartResults = new ArrayList<>();
+        // Convert each product to ProductResult and collect into a list
+        for (int i = 0; i < cartItems.size(); i++) {
+            CartResult cartResult = new CartResult(cartItems.get(i));
+            cartResult.setProductResult(productResults.get(i));
+            cartResults.add(cartResult);
+        }
+        return cartResults;
+    }
 
 }

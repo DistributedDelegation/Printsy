@@ -106,7 +106,7 @@ const SelectedImage = () => {
 
           // Define the GraphQL mutation
           const mutation = JSON.stringify({
-            query: `mutation(
+            query: `mutation (
               $imageUrl: String!, 
               $imageNameInput: String!, 
               $imageDescriptionInput: String!, 
@@ -128,8 +128,10 @@ const SelectedImage = () => {
             }
           });
 
+          console.log(mutation)
+
           // Define GraphQL endpoint
-          let galleryGraphqlEndpoint = "http://localhost:8088/graphql";
+          let galleryGraphqlEndpoint = "http://localhost:8080/gallery/graphql";
 
           // Send the request to the GraphQL endpoint
           fetch(galleryGraphqlEndpoint, {

@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 @Service
 public class CartQueueService {
 
-    private static final Logger LOGGER = Logger.getLogger(CartService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(CartQueueService.class.getName());
 
     // Use ConcurrentHashMap for thread-safe operations
     private final Map<String, CartQueue> queueMap = new ConcurrentHashMap<>();
@@ -47,7 +47,7 @@ public class CartQueueService {
     public void addToQueue(String imageId, CartItemTask cartItemTask) {
         // Compute if absent will run the lambda function is the key is not in the Queue Map
         CartQueue cartQueue = queueMap.computeIfAbsent(imageId, k -> new CartQueue());
-        System.out.println("Added to queue: " + imageId);
+        LOGGER.info("Added to queue: " + imageId);
         if (cartQueue.enqueue(cartItemTask)){
             LOGGER.info("success");
         }
@@ -126,7 +126,7 @@ public class CartQueueService {
     public void scheduleCartCleanup(Long userId, Instant scheduledTime) {
         LOGGER.info("Scheduling cleanup task for used ID: " + userId);
         Runnable cleanupTask = () -> {
-            System.out.println("Running scheduled cart cleanup for user ID: " + userId);
+            LOGGER.info("Running scheduled cart cleanup for user ID: " + userId);
             List<Cart> cartItems = cartRepository.findAllByUserId(userId);
             if (cartItems.isEmpty()) {
                 throw new RuntimeException("No cart items found for user with ID " + userId);

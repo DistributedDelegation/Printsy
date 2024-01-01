@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 @Service
 public class TransactionGatewayService {
 
-    private static final Logger LOGGER = Logger.getLogger(CartService.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(TransactionGatewayService.class.getName());
 
     private final WebClient webClient;
 
@@ -30,6 +30,7 @@ public class TransactionGatewayService {
     // checked with: {"query": "query FindImageAvailability($imageId: ID!) { findImageAvailability(imageId: $imageId) }","variables": { "imageId": "1" } }
     public int getTransactionImageAvailability(String imageId) {
         String query = "{ \"query\": \"query checkImageTransactionCount($imageId: String!) { checkImageTransactionCount(imageId: $imageId) { count } }\", \"variables\": { \"imageId\": \"" + imageId + "\" } }";
+        LOGGER.info("Query: "+ query);
 
         // Make a post request and retrieve the result
         CountResult response = webClient.post()
@@ -50,7 +51,7 @@ public class TransactionGatewayService {
 
 
     // checked with: {"query": "mutation completeTransaction($transactions: [TransactionInput!]!) { completeTransaction(transactions: $transactions) { success } }","variables": {"transactions": [{"userId": 123, "productId": 456, "imageId": "image123"}]}}    
-    public Boolean completeTransaction(List<TransactionInput> transactions) throws JsonProcessingException {
+    public boolean completeTransaction(List<TransactionInput> transactions) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         
         String transactionJson = objectMapper.writeValueAsString(transactions);
@@ -59,7 +60,7 @@ public class TransactionGatewayService {
         
         try {
             TransactionResult response = webClient.post()
-                .uri("transaction-gateway/graphql")
+                .uri("/graphql")
                 .bodyValue(payload)
                 .retrieve()
                 .bodyToMono(TransactionResult.class)

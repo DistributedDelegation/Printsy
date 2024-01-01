@@ -1,5 +1,5 @@
 type CartResult {
-    productId: ID
+    productResult: ProductResult
     userId: ID
     expirationTime: String
 }

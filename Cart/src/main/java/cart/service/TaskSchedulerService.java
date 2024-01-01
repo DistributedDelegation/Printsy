@@ -47,7 +47,7 @@ public class TaskSchedulerService {
         // Schedule task, add to hashmap
         ScheduledFuture<?> scheduledFuture = taskScheduler.schedule(task, scheduledTime);
         cleanupTasksByUser.put(userId, scheduledFuture);  // Store the new task
-        System.out.println("New delete task for user " + userId + " scheduled to run at " + scheduledTime);
+        LOGGER.info("New delete task for user " + userId + " scheduled to run at " + scheduledTime);
     }
 
     public void cancelScheduledTask(Long userId) {

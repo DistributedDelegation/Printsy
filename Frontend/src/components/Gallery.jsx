@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Gallery = () => {
     const [imageUrls, setImageUrls] = useState([]);
-    let galleryGraphqlEndpoint = "http://localhost:8088/graphql";
+    let galleryGraphqlEndpoint = "http://localhost:8080/gallery/graphql";
     const navigate = useNavigate();
 
     const getAllPublishedImages = () => {
