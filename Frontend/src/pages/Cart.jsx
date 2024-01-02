@@ -9,71 +9,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const { generateRef } = useMatchHeight('generateRef');
   const [initialTime, setInitialTime] = useState(0);
-  const [showTimer, setShowTimer] = useState(false);
-
-  const handleSignIn = async () => {
-    setIsSigningIn(true);
-
-    const query = `
-        mutation($input: UserCredentialInput!) {
-          authenticate(userCredentialInput: $input)
-        }
-      `;
-
-    const variables = {
-      input: {
-        emailAddress: email,
-        password: password,
-      },
-    };
-
-    try {
-      const response = await fetch('http://localhost:8080/authentication/graphql', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, variables }),
-      });
-      const data = await response.json();
-      // Handle the JWT token received from the API
-      // For example, storing it in localStorage/sessionStorage
-      setIsSigningIn(false);
-    } catch (error) {
-      // Handle error
-      console.error('Error during sign in:', error);
-      setIsSigningIn(false);
-    }
-  };
-
-  const handleSignUp = async () => {
-    setIsSigningUp(true);
-    const query = `
-        mutation($input: UserCredentialInput!) {
-          register(userCredentialInput: $input)
-        }
-      `;
-
-    const variables = {
-      input: {
-        emailAddress: signUpEmail,
-        password: signUpPassword,
-      },
-    };
-
-    try {
-      const response = await fetch('http://localhost:8080/authentication/graphql', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query, variables }),
-      });
-      const data = await response.json();
-      // Handle the confirmation message from the API
-      setIsSigningUp(false);
-    } catch (error) {
-      // Handle error
-      console.error('Error during sign up:', error);
-      setIsSigningUp(false);
-    }
-  };
+  const [showTimer, setShowTimer] = useState(true);
 
    // ------ Timer ------
    const fetchRemainingTime = async (userId) => {

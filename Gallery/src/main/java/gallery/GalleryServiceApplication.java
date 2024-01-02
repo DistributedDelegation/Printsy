@@ -13,14 +13,4 @@ public class GalleryServiceApplication {
         SpringApplication.run(GalleryServiceApplication.class, args); // Boots up the Spring context and starts the application
     }
 
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**").allowedMethods("*").allowedOrigins("*");
-//            }
-//        };
-//    }
-
 }
