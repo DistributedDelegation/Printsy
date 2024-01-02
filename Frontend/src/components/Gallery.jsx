@@ -120,7 +120,7 @@ const Gallery = () => {
 
     return (
       <div id="galleryImageContainer">
-        <button onClick={() => test()}>Run Test</button>
+        {/* <button onClick={() => test()}>Run Test</button> */}
         {images.map(({imageId, imageUrl, likeCount}) => (
           <div key={imageId} id={imageId} className="galleryImagesElement">
             <img className="galleryImages" src={imageUrl} alt="Gallery" onClick={() => handleImageClick(imageUrl)}/>

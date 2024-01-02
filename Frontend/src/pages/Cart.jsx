@@ -9,7 +9,7 @@ const Cart = () => {
   const navigate = useNavigate();
   const { generateRef } = useMatchHeight('generateRef');
   const [initialTime, setInitialTime] = useState(0);
-  const [showTimer, setShowTimer] = useState(true);
+  const [showTimer, setShowTimer] = useState(false);
 
    // ------ Timer ------
    const fetchRemainingTime = async (userId) => {
@@ -59,9 +59,15 @@ const Cart = () => {
               <CheckoutProducts />
             </div>
             <div className="content-right">
-              <h2>To Checkout</h2>
-              {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}
+              <div className='checkout-title-and-timer'>
+                <h2>To Checkout</h2>
+                {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}
+              </div>
+              <div className="delivery-address">
+                <p> </p>
+              </div>
               <button className="purchase-button" onClick={handleNavigateCheckout}>Proceed with Purchase</button>
+              
             </div>
           </div>
         </div>

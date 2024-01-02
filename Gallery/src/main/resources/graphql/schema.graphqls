@@ -12,9 +12,9 @@ type ImageUrlList {
 }
 
 type PublishedImage {
-  imageId: String!
-  imageUrl: String!
-  likeCount: Int!
+  imageId: String
+  imageUrl: String
+  likeCount: Int
 }
 
 type Query {

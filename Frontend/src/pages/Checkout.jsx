@@ -57,9 +57,16 @@ const Home = () => {
             <img src="/images/printsyLogo.svg" alt="Logo" className="logo" />
           </a>
           <div className="content content-secondary">
-            <div className="content-left">
+          <div className="content-left">
+              <h2>Selected Products</h2>
+              <div className="divider"></div>
+              <CheckoutProducts/>
+            </div>
+            <div className="content-right">
+            <div className='checkout-title-and-timer'>
               <h2>Checkout</h2>
               {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}
+              </div>
               <div className="delivery-address">
                 <p>Delivery Address</p>
                 <input
@@ -85,18 +92,14 @@ const Home = () => {
                 />
               </div>
               <button className="purchase-button" /*onClick={handlePurchase}*/>Complete Purchase</button>
+              
             </div>
-            <div className="content-right">
-              <h2>Selected Products</h2>
-              <div className="divider"></div>
-              <CheckoutProducts/>
-              </div>
 
-              {showPopup && (
-                <div className="popup">
-                    <p className="popup-text">{popupMessage}</p>
-                    <button onClick={closePopup}>Close</button>
-                </div>
+            {showPopup && (
+              <div className="popup">
+                  <p className="popup-text">{popupMessage}</p>
+                  <button onClick={closePopup}>Close</button>
+              </div>
             )}
           </div>
         </div>
