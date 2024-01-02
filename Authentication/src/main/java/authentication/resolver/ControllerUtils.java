@@ -33,6 +33,7 @@ public class ControllerUtils {
         return successResponse;
     }
 
+    // Not used but left for reference, can be safely deleted if needed
     public String getTokenFromBearer(String bearerToken) {
         return bearerToken.split(" ")[1];
     }

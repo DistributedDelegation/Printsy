@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../AuthContext'; // replace with the actual path to your AuthContext
+import { AuthContext } from '../AuthContext';
 
 const Gallery = () => {
     const [images, setImages] = useState([]);
