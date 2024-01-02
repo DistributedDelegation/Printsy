@@ -46,7 +46,7 @@ input UserCredentialInput {
 
 ### Accessing the Service
 
-The service can be accessed at `http://localhost:8085/graphql`.
+The service can be accessed at `http://localhost:8080/authentication/graphql`.
 
 ### GraphQL Operations
 
@@ -76,7 +76,7 @@ The service can be accessed at `http://localhost:8085/graphql`.
 
 ## How to Use
 
-To perform GraphQL operations, send HTTP POST requests to `http://localhost:8085/graphql` with the appropriate query or mutation structure in the request body.
+To perform GraphQL operations, send HTTP POST requests to `http://localhost:8080/authentication/graphql` with the appropriate query or mutation structure in the request body.
 
 ### Example Request
 

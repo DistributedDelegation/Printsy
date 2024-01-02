@@ -38,7 +38,7 @@ type Query {
     findProductById(productId: ID!): ProductResult
     findAllProducts: [ProductResult]
 
-    getRemainingCleanupTime: Int
+    getRemainingCleanupTime(userId: ID!): Int
     peekQueue: CartItemTask
     checkCartProductsByUserId(userId: ID!): [ProductResult]
 

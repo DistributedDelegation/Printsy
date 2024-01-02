@@ -59,9 +59,8 @@ public class CartResolver {
     }
 
     @QueryMapping
-    public Long getRemainingCleanupTime(Long userId) {
-        Duration remainingTime = cartService.getRemainingCleanupTime(userId);
-        return (Long) remainingTime.getSeconds();
+    public Long getRemainingCleanupTime(@Argument Long userId) {
+        return cartService.getRemainingCleanupTime(userId);
     }
 
 //    @QueryMapping

@@ -32,12 +32,10 @@ public class Query {
     // This top part initializes the repository class and "autowires" (essentially
     // injects them) into this class.
     private final ImageMongoRepository mongoRepository;
-    private final ImageMySQLRepository sqlRepository;
 
     @Autowired
-    public Query(ImageMySQLRepository sqlRepository, ImageMongoRepository mongoRepository) {
+    public Query(ImageMongoRepository mongoRepository) {
         this.mongoRepository = mongoRepository;
-        this.sqlRepository = sqlRepository;
     }
 
     @QueryMapping
