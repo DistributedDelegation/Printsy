@@ -5,7 +5,6 @@ import { AuthContext } from '../AuthContext';
 const Gallery = () => {
     const [images, setImages] = useState([]);
     const [imageIds, setImageIds] = useState([]);
-    const [imageCount, setImageCount] = useState({});
     let galleryGraphqlEndpoint = "http://localhost:8080/gallery/graphql";
     let cartGraphqlEndpoint = "http://localhost:8080/cart/graphql";
     let transactionGatewayGraphqlEndpoint = "http://localhost:8080/transaction/graphql";
@@ -14,40 +13,70 @@ const Gallery = () => {
     const authContext = useContext(AuthContext);
     const userID = authContext.userID; // Use authContext.userID directly
 
-    const test = () => {
-        console.log("userID: " + userID);
-    }
-    
     const getAllPublishedImageCount = () => {
-      // Waiting until Cart uses Alphanumeric imageId, issue with connecting to Transaction Gateway due to CORS, will be fixed by API Gateway
-      // for (let imageId in imageIds) {
-      //   console.log(imageIds[imageId]);
-      //   const query = JSON.stringify({
-      //     query: `query(
-      //       $imageId: String!
-      //       ) {
-      //         saveIncreasedLikeCount(imageId: $imageId)
-      //     }`,
-      //     variables: {
-      //       imageId: imageIds[imageId],
-      //     }
-      //   });
+     
+      for (let i=0; i<imageIds.length; i++) {
+        let imageId = imageIds[i];
+        let count = 10
+
+        const cartQuery = JSON.stringify({
+          query: `query(
+            $imageId: ID!
+            ) {
+              findImageByImageId(imageId: $imageId)
+          }`,
+          variables: {
+            imageId: imageId,
+          }
+        });
+
+        const transactionQuery = JSON.stringify({
+          query: `query(
+            $imageId: String!
+            ) {
+              checkImageTransactionCount(imageId: $imageId) {
+                count
+              }
+          }`,
+          variables: {
+            imageId: imageId,
+          }
+        });
   
-      //   fetch(transactionGatewayGraphqlEndpoint, {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json'
-      //     },
-      //     body: query
-      //   })
-      //   .then(response => response.json())
-      //   .then(data => {
-      //     console.log(data);
-      //   })
-      //   .catch(error => {
-      //     console.error('Error fetching the image:', error);
-      //   });
-      // }
+        fetch(cartGraphqlEndpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: cartQuery
+        })
+        .then(response => response.json())
+        .then(data => {
+          count = count - data.data.findImageByImageId;
+    
+          fetch(transactionGatewayGraphqlEndpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: transactionQuery
+          })
+          .then(response => response.json())
+          .then(data => {
+            count = count - data.data.checkImageTransactionCount.count;
+            console.log("imageCount: " + count);
+            document.getElementById(imageId).getElementsByClassName("imageCount")[0].innerText = count + "/10";
+
+          })
+          .catch(error => {
+            console.error('Error fetching the image:', error);
+          });
+
+        })
+        .catch(error => {
+          console.error('Error fetching the image:', error);
+        });
+      }
     }
 
     const getAllPublishedImages = () => {
@@ -85,6 +114,10 @@ const Gallery = () => {
       getAllPublishedImages();
     }, []);
 
+    setTimeout(() => {
+      getAllPublishedImageCount();
+    }, 500);
+
     const handleImageClick = (url) => {
       console.log("/selectimage imageURL: " + url)
       navigate('/selected-image', { state: { imageURL: url, uploadedImage: true } });
@@ -120,13 +153,12 @@ const Gallery = () => {
 
     return (
       <div id="galleryImageContainer">
-        {/* <button onClick={() => test()}>Run Test</button> */}
         {images.map(({imageId, imageUrl, likeCount}) => (
           <div key={imageId} id={imageId} className="galleryImagesElement">
             <img className="galleryImages" src={imageUrl} alt="Gallery" onClick={() => handleImageClick(imageUrl)}/>
             <span className="icon heart-icon" onClick={() => handleLikeClick(imageId)}></span>
             <span className="likesCount">{likeCount}</span>
-            <span className="imageCount">3/10</span>
+            <span className="imageCount">10/10</span>
           </div>
         ))}
       </div>
