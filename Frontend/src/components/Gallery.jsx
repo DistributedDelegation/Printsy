@@ -14,8 +14,6 @@ const Gallery = () => {
     const userID = authContext.userID;
 
     const getUserLikedImages = () => {
-      console.log(userID);
-
       const query = JSON.stringify({
         query: `query(
           $userId: String!
@@ -37,7 +35,6 @@ const Gallery = () => {
       .then(response => response.json())
       .then(data => {
         if (data && data.data.getUserLikedImages) {
-          console.log(data.data);
           for (let i=0; i<data.data.getUserLikedImages.length; i++) {
             let imageId = data.data.getUserLikedImages[i];
             
@@ -101,7 +98,6 @@ const Gallery = () => {
           .then(response => response.json())
           .then(data => {
             count = count - data.data.checkImageTransactionCount.count;
-            console.log("imageCount: " + count);
             document.getElementById(imageId).getElementsByClassName("imageCount")[0].innerText = count + "/10";
 
           })
@@ -163,7 +159,6 @@ const Gallery = () => {
     }, 3000);
 
     const handleImageClick = (url) => {
-      console.log("/selectimage imageURL: " + url)
       navigate('/selected-image', { state: { imageURL: url, uploadedImage: true } });
     };
 
