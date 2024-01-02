@@ -1,7 +1,12 @@
 package cart.model;
 
+import cart.dto.CartResult;
 import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.util.Date;
+
+import cart.dto.TransactionInput;
 
 @Entity
 @Table(name = "Cart")
@@ -14,32 +19,34 @@ public class Cart {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "product_id")
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "product_id") // foreign key
+    private Product product;
 
     @Column(name = "expiration_time")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date expirationTime;
+    private Instant expirationTime;
 
 //---------------Getters and Setters-----------------
 
-    public Cart() {  
+    public Cart() {
+        this.expirationTime = Instant.now();
     }
 
-    public Cart(Long userId, Long productId, Date expirationTime) {
+    public Cart(Long userId, Product product, Instant expirationTime) {
         this.userId = userId;
-        this.productId = productId;
-        this.expirationTime = expirationTime;
+        this.product = product;
+        this.expirationTime = Instant.now();
     }
 
     public Long getId() {
         return id;
     }
-    
+
     public void setId(Long id) {
         this.id = id;
     }
-    
+
     public Long getUserId() {
         return userId;
     }
@@ -48,20 +55,34 @@ public class Cart {
         this.userId = userId;
     }
     
-    public Long getProductId() {
-        return productId;
+    public Product getProduct() {
+        return product;
     }
     
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setProduct(Product product) {
+        this.product = product;
     }
     
-    public Date getExpirationTime() {
+    public Instant getExpirationTime() {
         return expirationTime;
     }
     
-    public void setExpirationTime(Date expirationTime) {
+    public void setExpirationTime(Instant expirationTime) {
         this.expirationTime = expirationTime;
     }
-  
+
+
+    public TransactionInput toTransactionInput(){
+        return new TransactionInput(this.userId, this.product.getProductId(), this.product.getImageId());
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", product=" + product +
+                ", expirationTime=" + expirationTime +
+                '}';
+    }
 }

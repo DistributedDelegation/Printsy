@@ -5,9 +5,14 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class CartQueue {
     private Queue<CartItemTask> queue = new ConcurrentLinkedQueue<>();
+    private static final int MAX_SIZE = 10; // there will be a maximum of 10 objects in the queue
 
-    public void enqueue(CartItemTask task) {
+    public boolean enqueue(CartItemTask task) {
+        if (queue.size() >= MAX_SIZE) {
+            return false;
+        }
         queue.add(task);
+        return true;
     }
 
     public CartItemTask dequeue() {

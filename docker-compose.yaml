@@ -80,6 +80,7 @@ services:
     env_file: .env
     ports:
       - "8086:8080"
+      - "5006:5005" # for debugging
     restart: always
 
   transaction-gateway:

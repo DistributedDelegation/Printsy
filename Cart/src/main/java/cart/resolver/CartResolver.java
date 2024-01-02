@@ -1,16 +1,18 @@
 package cart.resolver;
 
-import cart.model.Cart;
+import cart.dto.CartResult;
+import cart.dto.ProductResult;
 import cart.model.Product;
-import cart.model.TransactionInput;
 import cart.queue.CartItemTask;
 import cart.service.CartService;
+import cart.service.ProductService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import java.util.Optional;
+
 import java.time.Duration;
 import java.util.List;
 
@@ -20,60 +22,56 @@ public class CartResolver {
     private final CartService cartService;
 
     @Autowired
-    public CartResolver(CartService cartService) {
+    public CartResolver(CartService cartService, ProductService productService) {
         this.cartService = cartService;
     }
 
     // ----------------- Queries -----------------
     @QueryMapping
-    public Boolean findImageAvailability(@Argument String imageId) {
-        return cartService.getTransactionImageAvailability(imageId);
+    public boolean findImageAvailability(@Argument String imageId) {
+        return cartService.isImageAvailable(imageId);
     }
 
     @QueryMapping
     public Integer findImageByImageId(@Argument String imageId) {
-        return cartService.getImageByImageId(imageId);
+        return cartService.getImageCountByImageId(imageId);
     }
 
-    // @QueryMapping
-    // public Integer findCartItemsByProductId(@Argument Long productId) {
-    //     return cartService.getCartItemsByProductId(productId);
-    // }
-
     @QueryMapping
-    public List<Cart> findCartItemsByUserId(@Argument Long userId) {
+    public List<CartResult> findCartItemsByUserId(@Argument Long userId) {
         return cartService.getCartItemsByUserId(userId);
     }
 
     @QueryMapping
-    public List<Product> checkCartProductsByUserId(@Argument Long userId) {
+    public List<ProductResult> checkCartProductsByUserId(@Argument Long userId) {
         return cartService.checkCartProductsByUserId(userId);
     }
 
     @QueryMapping
-    public Optional<Product> findProductById(@Argument Long productId) {
+    public ProductResult findProductById(@Argument Long productId) {
         return cartService.getProductById(productId);
+
     }
 
     @QueryMapping
-    public List<Product> findAllProducts() {
+    public List<ProductResult> findAllProducts() {
         return cartService.getAllProducts();
     }
 
     @QueryMapping
-    public Long getRemainingCleanupTime() {
-        Duration remainingTime = cartService.getRemainingCleanupTime();
-        return remainingTime.getSeconds();
+    public Long getRemainingCleanupTime(Long userId) {
+        Duration remainingTime = cartService.getRemainingCleanupTime(userId);
+        return (Long) remainingTime.getSeconds();
     }
 
-    @QueryMapping
-    public CartItemTask peekQueue() {
-        return cartService.peekQueue();
-    }
+//    @QueryMapping
+//    public CartItemTask peekQueue() {
+//        return cartService.peekQueue();
+//    }
 
     @QueryMapping   
-    public List<TransactionInput> findCartItemsByUserIdForPurchase(@Argument Long userId) {
-        return cartService.getCartItemsByUserIdForPurchase(userId);
+    public List<CartResult> findCartItemsByUserIdForPurchase(@Argument Long userId) {
+        return cartService.getCartItemsByUserId(userId);
     }
 
     // ----------------- Mutations -----------------
@@ -85,11 +83,11 @@ public class CartResolver {
 
     @MutationMapping
     public String addItemtoCart(@Argument String imageId, @Argument Long stockId, @Argument Integer price, @Argument Long userId) {
-        return cartService.addItemtoCart(imageId, stockId, price, userId);
+        return cartService.addItemToCart(imageId, stockId, price, userId);
     }
 
     @MutationMapping
-    public Boolean completePurchase(@Argument Long userId) {
+    public boolean completePurchase(@Argument Long userId) throws JsonProcessingException {
         return cartService.completePurchase(userId);
     }
 

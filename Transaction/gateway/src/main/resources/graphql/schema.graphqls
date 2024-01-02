@@ -1,5 +1,5 @@
 type Query {
-  checkImageTransactionCount(imageId: Float!): CountResult!
+  checkImageTransactionCount(imageId: String!): CountResult!
 }
 
 type Mutation {
@@ -9,13 +9,13 @@ type Mutation {
 input TransactionInput {
   userId: Float!
   productId: Float!
-  imageId: Float!
+  imageId: String!
 }
 
 type Transaction {
   userId: Float!
   productId: Float!
-  imageId: Float!
+  imageId: String!
 }
 
 type CountResult {

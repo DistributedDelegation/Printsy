@@ -1,10 +1,13 @@
-package gateway.dto;
+package cart.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CountResult {
 
     private int count;
+
+    public CountResult() {
+    }
 
     public CountResult(int count) {
         this.count = count;
