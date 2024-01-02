@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../AuthContext';
 
 const HandlePurchase = async () => {
     // GraphQL mutation to cancel the scheduled task
@@ -8,7 +9,8 @@ const HandlePurchase = async () => {
       }
     `;
   
-    const userId = 1; // Replace with actual logic to get userId
+    const authContext = useContext(AuthContext);
+    const userId = authContext.userID;
     const variables = { userId };
 
     const sendCartItemsToTransactionGateway = () => {

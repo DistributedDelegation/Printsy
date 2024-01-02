@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import useMatchHeight from '../components/useMatchHeight';
 import "./Secondary.css";
 import CheckoutProducts from '../components/CheckoutProducts';
 import Timer from '../components/Timer';
+import { AuthContext } from '../AuthContext';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ const Home = () => {
   const [showTimer, setShowTimer] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
+  const authContext = useContext(AuthContext);
+  const userId = authContext.userID;
 
   // ------ Timer ------
   const fetchRemainingTime = async (userId) => {
@@ -23,7 +26,7 @@ const Home = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
           query: `query($userId: ID!) { getRemainingCleanupTime(userId: $userId) }`,
-          variables: { userId: 1 } 
+          variables: { userId: userId } 
       }),
     });
     const data = await response.json();
@@ -36,13 +39,13 @@ const Home = () => {
   const handleTimerEnd = () => {
     // Logic when timer ends
     setShowTimer(false);
-    fetchRemainingTime().then(() => {
+    fetchRemainingTime(userId).then(() => {
       window.location.reload();
     });
   };
 
   useEffect(() => {
-    fetchRemainingTime();
+    fetchRemainingTime(userId);
   }, []);
 
   const closePopup = () => {
@@ -57,9 +60,16 @@ const Home = () => {
             <img src="/images/printsyLogo.svg" alt="Logo" className="logo" />
           </a>
           <div className="content content-secondary">
-            <div className="content-left">
+          <div className="content-left">
+              <h2>Selected Products</h2>
+              <div className="divider"></div>
+              <CheckoutProducts/>
+            </div>
+            <div className="content-right">
+            <div className='checkout-title-and-timer'>
               <h2>Checkout</h2>
               {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}
+              </div>
               <div className="delivery-address">
                 <p>Delivery Address</p>
                 <input
@@ -85,18 +95,14 @@ const Home = () => {
                 />
               </div>
               <button className="purchase-button" /*onClick={handlePurchase}*/>Complete Purchase</button>
+              
             </div>
-            <div className="content-right">
-              <h2>Selected Products</h2>
-              <div className="divider"></div>
-              <CheckoutProducts/>
-              </div>
 
-              {showPopup && (
-                <div className="popup">
-                    <p className="popup-text">{popupMessage}</p>
-                    <button onClick={closePopup}>Close</button>
-                </div>
+            {showPopup && (
+              <div className="popup">
+                  <p className="popup-text">{popupMessage}</p>
+                  <button onClick={closePopup}>Close</button>
+              </div>
             )}
           </div>
         </div>

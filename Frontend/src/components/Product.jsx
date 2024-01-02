@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../AuthContext';
 
 const Product = ({ imageUrl, product, onCartChange }) => {
     const { name, productImageUrl, price, sizes, overlayPosition } = product;
     const [showPopup, setShowPopup] = useState(false);
     const [popupMessage, setPopupMessage] = useState('');
+    const authContext = useContext(AuthContext);
+    const userId = authContext.userID;
 
     // Handling => stockId
     const mapToStockId = (productName, size) => {
@@ -54,7 +57,7 @@ const Product = ({ imageUrl, product, onCartChange }) => {
         const selectedSize = event.target[0].value; // Corrected to directly access the value
         const stockId = mapToStockId(name, selectedSize);
         console.log("Selected stockId:", stockId);
-        const userId = 1; // Replace with actual logic to get userId
+        //const userId = 1; 
         const image = await fetchImageByURL(imageUrl);
         if (!image) {
             console.error("Failed to fetch image details.");
@@ -71,7 +74,7 @@ const Product = ({ imageUrl, product, onCartChange }) => {
                 userId: userId
             }
         });
-        console.log("Query message:", query_message);
+        //console.log("Query message:", query_message);
         try {
             const response = await fetch('http://localhost:8080/cart/graphql', {
                 method: 'POST',

@@ -76,4 +76,17 @@ public class ImageMongo {
     public void setLikeCount(Integer likeCount) {
         this.likeCount = likeCount;
     }
+
+    @Override
+    public String toString() {
+        return "ImageMongo{" +
+                "imageId='" + imageId + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", imageName='" + imageName + '\'' +
+                ", imageDescription='" + imageDescription + '\'' +
+                ", isImagePublishedYN=" + isImagePublishedYN +
+                ", imageTimestamp='" + imageTimestamp + '\'' +
+                ", likeCount=" + likeCount +
+                '}';
+    }
 }

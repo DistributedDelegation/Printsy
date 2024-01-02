@@ -8,8 +8,6 @@ services:
     volumes:
       - ./data/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./data/mongodb:/data/db
-    ports:
-      - "8082:27017"
     restart: always
 
   mongo-express:
@@ -27,8 +25,6 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
     env_file: .env
-    ports:
-      - "8084:3306"
     restart: always
 
   phpmyadmin:
@@ -52,8 +48,6 @@ services:
   authentication:
     build: ./Authentication
     env_file: .env
-    ports:
-      - "8085:8080"
     restart: always
   
   gallery:
@@ -63,8 +57,6 @@ services:
       - mysql
     env_file: .env
     restart: always
-    ports:
-      - "8088:8080"
 
   generation:
     build: ./Generation
@@ -72,15 +64,10 @@ services:
       - .env
       - .env.api
     restart: always
-    ports:
-      - "8089:8080"
 
   cart:
     build: ./Cart
     env_file: .env
-    ports:
-      - "8086:8080"
-      - "5006:5005" # for debugging
     restart: always
 
   transaction-gateway:
@@ -88,8 +75,6 @@ services:
     env_file: ./Transaction/data/.env
     depends_on:
       - transaction-worker-1
-    ports:
-      - "8087:8080"
     restart: always
 
   # ----------------Blockchain ----------------

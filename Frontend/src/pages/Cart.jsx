@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import useMatchHeight from '../components/useMatchHeight';
 import CheckoutProducts from '../components/CheckoutProducts';
 import "./Secondary.css";
 import Timer from '../components/Timer';
+import { AuthContext } from '../AuthContext';
 
 const Cart = () => {
   const navigate = useNavigate();
   const { generateRef } = useMatchHeight('generateRef');
   const [initialTime, setInitialTime] = useState(0);
   const [showTimer, setShowTimer] = useState(true);
+  const authContext = useContext(AuthContext);
+  const userId = authContext.userID;
 
    // ------ Timer ------
    const fetchRemainingTime = async (userId) => {
@@ -18,7 +21,7 @@ const Cart = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
           query: `query($userId: ID!) { getRemainingCleanupTime(userId: $userId) }`,
-          variables: { userId: 1 } 
+          variables: { userId: userId } 
       }),
     });
     const data = await response.json();
@@ -32,13 +35,13 @@ const Cart = () => {
   const handleTimerEnd = () => {
     // Logic when timer ends
     setShowTimer(false);
-    fetchRemainingTime(1).then(() => {
+    fetchRemainingTime(userId).then(() => {
       window.location.reload();
     });
   };
 
   useEffect(() => {
-    fetchRemainingTime(1);
+    fetchRemainingTime(userId);
   }, []);
 
   const handleNavigateCheckout = () => {
@@ -59,9 +62,15 @@ const Cart = () => {
               <CheckoutProducts />
             </div>
             <div className="content-right">
-              <h2>To Checkout</h2>
-              {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}
+              <div className='checkout-title-and-timer'>
+                <h2>To Checkout</h2>
+                {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}
+              </div>
+              <div className="delivery-address">
+                <p> </p>
+              </div>
               <button className="purchase-button" onClick={handleNavigateCheckout}>Proceed with Purchase</button>
+              
             </div>
           </div>
         </div>
