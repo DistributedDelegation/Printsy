@@ -2,6 +2,7 @@ package gallery.resolver;
 
 import gallery.dto.ImageIdList;
 import gallery.dto.ImageUrlList;
+import gallery.dto.PublishedImage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -40,18 +41,32 @@ public class Query {
         this.mongoRepository = mongoRepository;
     }
 
+//    @QueryMapping
+//    public List<Map<String, Object>> getAllPublishedImages() {
+//        return mongoRepository.findByIsImagePublishedYN(true)
+//                                .stream()
+//                                .map(image -> {
+//                                Map<String, Object> imageMap = new HashMap<>();
+//                                imageMap.put("imageId", image.getImageId());
+//                                imageMap.put("imageUrl", image.getImageUrl());
+//                                imageMap.put("likeCount", image.getLikeCount());
+//                                return imageMap;
+//                            })
+//                                .collect(Collectors.toList());
+//    }
+
     @QueryMapping
-    public List<Map<String, Object>> getAllPublishedImages() {
+    public List<PublishedImage> getAllPublishedImages() {
         return mongoRepository.findByIsImagePublishedYN(true)
-                                .stream()
-                                .map(image -> {
-                                Map<String, Object> imageMap = new HashMap<>();
-                                imageMap.put("imageId", image.getImageId());
-                                imageMap.put("imageUrl", image.getImageUrl());
-                                imageMap.put("likeCount", image.getLikeCount());
-                                return imageMap;
-                            })
-                                .collect(Collectors.toList());
+                .stream()
+                .map(image -> {
+                    LOGGER.info(image.toString());
+                    LOGGER.info("ID: " + image.getImageId() + " URL: " + image.getImageUrl(), " LikeCount: " + image.getLikeCount());
+                    PublishedImage img = new PublishedImage(image.getImageId(), image.getImageUrl(), image.getLikeCount());
+                    LOGGER.info("New published image: " + img);
+                    return img;
+                })
+                .collect(Collectors.toList());
     }
 
     @QueryMapping String getImageUrlByImageId(@Argument String imageId){
