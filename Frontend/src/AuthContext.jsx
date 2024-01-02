@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
             })
             .then(response => response.json()) // Convert the response to JSON
             .then(data => {
+                console.log("data returned:", data);
                 setIsAuthenticated(true);
                 setUserID(data.data.currentUser.userID); // Access the userID from the data
                 setUserEmailAddress(data.data.currentUser.emailAddress);
@@ -62,10 +63,13 @@ export const AuthProvider = ({ children }) => {
             .catch(error => {
                 console.log("error:", error);
                 // check if it's an expiry error
-                if (error.response && error.response.status === 400) {
+                if (TypeError) {
                     setIsAuthenticated(false);
                     localStorage.removeItem('user'); 
+                    setIsAuthenticated(false);
+                    setUserID("");
                     setToken("");
+                    setUserEmailAddress("");
                     alert("Your session has expired. Please log in again."); // Notify user
                     // save the current path to redirect back to it after login
                     sessionStorage.setItem('redirectAfterLogin', location.pathname);
@@ -83,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     }, [userID]);    
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login , logout, userID, token}}>
+        <AuthContext.Provider value={{ isAuthenticated, login , logout, userID, token, userEmailAddress}}>
             {children}
         </AuthContext.Provider>
     );
