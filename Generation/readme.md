@@ -18,7 +18,7 @@ Given an image ID the image will be removed from the cloud.
 
 Example Requests:
 
-URL: http://localhost:8089/graphql
+URL: http://localhost:8080/generation/graphql
 POST - raw/java
 
 createImage

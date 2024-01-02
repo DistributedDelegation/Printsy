@@ -36,7 +36,7 @@ const SignUp = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:8085/graphql', {
+      const response = await fetch('http://localhost:8080/auth/graphql', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query, variables }),

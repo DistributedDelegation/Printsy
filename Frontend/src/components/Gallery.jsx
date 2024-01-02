@@ -5,14 +5,15 @@ import { AuthContext } from '../AuthContext';
 const Gallery = () => {
     const [images, setImages] = useState([]);
     const [imageIds, setImageIds] = useState([]);
-    let galleryGraphqlEndpoint = "http://localhost:8088/graphql";
-    let cartGraphqlEndpoint = "http://localhost:8086/graphql";
+    const [imageCount, setImageCount] = useState({});
+    let galleryGraphqlEndpoint = "http://localhost:8080/gallery/graphql";
+    let cartGraphqlEndpoint = "http://localhost:8080/cart/graphql";
     let transactionGatewayGraphqlEndpoint = "http://localhost:8080/transaction/graphql";
     const navigate = useNavigate();
 
     const authContext = useContext(AuthContext);
     const userID = authContext.userID; // Use authContext.userID directly
-    
+        
     const getAllPublishedImageCount = () => {
      
       for (let i=0; i<imageIds.length; i++) {

@@ -26,7 +26,7 @@ const Product = ({ imageUrl, product, onCartChange }) => {
           variables: { imageUrl: url }
         });
         try {
-            const response = await fetch("http://localhost:8089/graphql", {
+            const response = await fetch("http://localhost:8080/generation/graphql", {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'
@@ -73,7 +73,7 @@ const Product = ({ imageUrl, product, onCartChange }) => {
         });
         console.log("Query message:", query_message);
         try {
-            const response = await fetch('http://localhost:8086/graphql', {
+            const response = await fetch('http://localhost:8080/cart/graphql', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
             body: query_message

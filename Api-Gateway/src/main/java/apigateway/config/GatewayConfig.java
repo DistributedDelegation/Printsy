@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GatewayConfig {
+
+
 	@Bean
 	public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
 		return builder.routes()
@@ -27,5 +29,6 @@ public class GatewayConfig {
 						.uri("http://transaction-gateway:8080"))
 				.build();
 	}
+
 
 }

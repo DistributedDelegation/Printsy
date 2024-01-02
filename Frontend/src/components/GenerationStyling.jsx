@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 const GenerationStyling = () => {
   const [features, setFeatures] = useState([]);
-  let galleryGraphqlEndpoint = "http://localhost:8089/graphql";
+  let galleryGraphqlEndpoint = "http://localhost:8080/generation/graphql";
 
   const getAllFeatures = () => {
     const query = JSON.stringify({

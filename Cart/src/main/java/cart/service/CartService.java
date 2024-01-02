@@ -175,8 +175,10 @@ public class CartService {
 
 
     // checked with: {"query": "{ getRemainingCleanupTime }"}
-    public Duration getRemainingCleanupTime(Long userId) {
-        return taskSchedulerService.getRemainingTime(userId);
+    public Long getRemainingCleanupTime(Long userId) {
+        Long remainingTime = taskSchedulerService.getRemainingTime(userId).getSeconds();
+        LOGGER.info("Remaining clean up time for userID " + userId + ": " + remainingTime + "seconds");
+        return remainingTime;
     }
 
     // checked with: {"query": "{ peekQueue { userId productId imageId } }"}

@@ -31,17 +31,21 @@ const SelectedImage = () => {
   };
 
   // ------ Timer ------
-  const fetchRemainingTime = async () => {
-    const response = await fetch('http://localhost:8086/graphql', {
+  const fetchRemainingTime = async (userId) => {
+    const response = await fetch('http://localhost:8080/cart/graphql', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: "{ getRemainingCleanupTime }" }),
+      body: JSON.stringify({ 
+          query: `query($userId: ID!) { getRemainingCleanupTime(userId: $userId) }`,
+          variables: { userId: 1 } 
+      }),
     });
     const data = await response.json();
+    console.log(data);
     const time = data.data.getRemainingCleanupTime;
     setInitialTime(time);
     setShowTimer(time > 0);
-  };
+};
 
   const handleTimerEnd = () => {
     // Logic when timer ends
@@ -114,7 +118,7 @@ const SelectedImage = () => {
 
     setIsLoading(true);
 
-    fetch("http://localhost:8089/graphql", {
+    fetch("http://localhost:8080/generation/graphql", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

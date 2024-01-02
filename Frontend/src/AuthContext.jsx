@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(""); //const a token 
     const navigate = useNavigate(); 
     const location = useLocation();
-    let authenticationGraphqlEndpoint = "http://localhost:8085/graphql";
+    let authenticationGraphqlEndpoint = "http://localhost:8080/auth/graphql";
 
     const login = () => {
         setIsAuthenticated(true);

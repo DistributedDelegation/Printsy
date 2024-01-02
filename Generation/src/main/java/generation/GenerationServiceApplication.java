@@ -11,17 +11,8 @@ import org.springframework.web.client.RestTemplate;
 public class GenerationServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GenerationServiceApplication.class, args); // Boots up the Spring context and starts the application
-    }
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedMethods("*").allowedOrigins("*");
-            }
-        };
+        SpringApplication.run(GenerationServiceApplication.class, args); // Boots up the Spring context and starts the
+                                                                         // application
     }
 
     @Bean

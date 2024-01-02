@@ -38,13 +38,11 @@ public class Mutation {
                             userCredentialInput.getEmailAddress(),
                             userCredentialInput.getPassword()));
         } catch (BadCredentialsException e) {
-            throw new RuntimeException("Incorrect email address or password: " + e.getMessage());
+            return "Incorrect email address or password: " + e.getMessage();
         }
 
         final CustomUser userDetails = userDetailsConfig.loadUserByUsername(userCredentialInput.getEmailAddress());
         return jwtService.createToken(userDetails.getUsername(), userDetails.getUserID());
-
-        //TODO More helpful error handling
     }
 
     @MutationMapping
@@ -53,9 +51,8 @@ public class Mutation {
             userService.registerNewUser(userCredentialInput);
             return "User registered successfully.";
         } catch (Exception ex) {
-            throw new RuntimeException("Registration error: " + ex.getMessage());
+            return "Registration error: " + ex.getMessage();
         }
 
-        //TODO More helpful error handling
     }
 }
