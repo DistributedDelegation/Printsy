@@ -7,8 +7,10 @@ import org.springframework.stereotype.Controller;
 
 import gallery.model.ImageMongo;
 import gallery.model.ImageSQL;
+import gallery.model.UserLikedImages;
 import gallery.repository.ImageMongoRepository;
 import gallery.repository.ImageMySQLRepository;
+import gallery.repository.UserLikedImagesRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,11 +28,13 @@ public class Mutation {
     // Mutation class, and "autowires" (essentially injects them) into this class.
     private final ImageMongoRepository mongoRepository;
     private final ImageMySQLRepository sqlRepository;
+    private final UserLikedImagesRepository userLikedImagesRepository;
 
     @Autowired
-    public Mutation(ImageMySQLRepository sqlRepository, ImageMongoRepository mongoRepository) {
+    public Mutation(ImageMySQLRepository sqlRepository, ImageMongoRepository mongoRepository, UserLikedImagesRepository userLikedImagesRepository) {
         this.mongoRepository = mongoRepository;
         this.sqlRepository = sqlRepository;
+        this.userLikedImagesRepository = userLikedImagesRepository;
     }
 
     @MutationMapping
@@ -67,16 +71,33 @@ public class Mutation {
     }
 
     @MutationMapping
-    public Integer saveIncreasedLikeCount(@Argument String imageId) {
+    public Integer saveIncreasedLikeCount(@Argument String imageId, @Argument String userId) {
         
         ImageMongo imageMongo = mongoRepository.findByImageId(imageId);
         Integer imageLikeCount = imageMongo.getLikeCount() + 1;
         imageMongo.setLikeCount(imageLikeCount);
         mongoRepository.save(imageMongo);
 
-        ImageSQL imageSql = sqlRepository.findByImageId(imageId);
-        imageSql.setLikeCount(imageLikeCount);
-        sqlRepository.save(imageSql);
+        UserLikedImages userLikedImages = new UserLikedImages();
+        userLikedImages.setUserId(userId);
+        userLikedImages.setImageId(imageId);
+        userLikedImagesRepository.save(userLikedImages);
+
+        return imageLikeCount;
+    }
+
+    @MutationMapping
+    public Integer saveDecreasedLikeCount(@Argument String imageId, @Argument String userId) {
+        
+        ImageMongo imageMongo = mongoRepository.findByImageId(imageId);
+        Integer imageLikeCount = imageMongo.getLikeCount() - 1;
+        imageMongo.setLikeCount(imageLikeCount);
+        mongoRepository.save(imageMongo);
+
+        UserLikedImages userLikedImage = userLikedImagesRepository.findByImageIdAndUserId(imageId, userId);
+        if (userLikedImage != null) {
+            userLikedImagesRepository.delete(userLikedImage);
+        }
 
         return imageLikeCount;
     }

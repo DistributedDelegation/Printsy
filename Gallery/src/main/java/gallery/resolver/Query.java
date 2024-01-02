@@ -11,8 +11,10 @@ import org.springframework.stereotype.Controller;
 
 import gallery.model.ImageMongo;
 import gallery.model.ImageSQL;
+import gallery.model.UserLikedImages;
 import gallery.repository.ImageMongoRepository;
 import gallery.repository.ImageMySQLRepository;
+import gallery.repository.UserLikedImagesRepository;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,10 +36,14 @@ public class Query {
     // This top part initializes the repository class and "autowires" (essentially
     // injects them) into this class.
     private final ImageMongoRepository mongoRepository;
+    private final ImageMySQLRepository sqlRepository;
+    private final UserLikedImagesRepository userLikedImagesRepository;
 
     @Autowired
-    public Query(ImageMongoRepository mongoRepository) {
+    public Query(ImageMongoRepository mongoRepository, ImageMySQLRepository sqlRepository, UserLikedImagesRepository userLikedImagesRepository) {
         this.mongoRepository = mongoRepository;
+        this.sqlRepository = sqlRepository;
+        this.userLikedImagesRepository = userLikedImagesRepository;
     }
 
     @QueryMapping
@@ -75,4 +81,14 @@ public class Query {
         LOGGER.info("Created ImageUrlList object " + imageUrlList);
         return imageUrlList;
     }
+
+    @QueryMapping List<String> getUserLikedImages(@Argument String userId){
+        List<UserLikedImages> imageList = userLikedImagesRepository.findByUserId(userId);
+        List<String> imageIdList = new ArrayList<>();
+        for (UserLikedImages image : imageList) {
+            imageIdList.add(image.getImageId());
+        }
+        return imageIdList;
+    }
+    
 }
