@@ -27,7 +27,7 @@ public class Query {
     public User currentUser(@Argument String bearerToken) {
         try {
             System.out.println("Bearer: " + bearerToken);
-            Long id = jwtService.parseTokenGetUserID(controllerUtils.getTokenFromBearer(bearerToken));
+            Long id = jwtService.parseTokenGetUserID(bearerToken);
             return userService.getUserById(id);
         } catch (Exception ex) {
             throw new RuntimeException("Error retrieving current user: " + ex.getMessage());

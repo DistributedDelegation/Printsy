@@ -30,7 +30,6 @@ export const AuthProvider = ({ children }) => {
             //authorization is true
             const bearerToken = localStorage.getItem('user');
             setToken(bearerToken);
-            console.log("bearerToken", bearerToken);
             
             const query = JSON.stringify({
                 query: `query(
@@ -38,14 +37,12 @@ export const AuthProvider = ({ children }) => {
                   ) {
                     currentUser(bearerToken: $bearerToken) {
                         userID
-                        emailAddress
                     }
                 }`,
                 variables: {
                     bearerToken: bearerToken,
                 }
             });
-            console.log("query: ", query);
       
             fetch(authenticationGraphqlEndpoint, {
                 method: 'POST',
@@ -56,9 +53,8 @@ export const AuthProvider = ({ children }) => {
             })
             .then(response => response.json()) // Convert the response to JSON
             .then(data => {
-                console.log("data:", data);
                 setIsAuthenticated(true);
-                setUserID(data.currentUser); // Access the userID from the data
+                setUserID(data.data.currentUser.userID); // Access the userID from the data
             })
             .catch(error => {
                 console.log("error:", error);
