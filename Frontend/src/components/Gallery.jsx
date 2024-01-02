@@ -114,6 +114,10 @@ const Gallery = () => {
       getAllPublishedImages();
     }, []);
 
+    setTimeout(() => {
+      getAllPublishedImageCount();
+    }, 500);
+
     const handleImageClick = (url) => {
       console.log("/selectimage imageURL: " + url)
       navigate('/selected-image', { state: { imageURL: url, uploadedImage: true } });

@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
             .catch(error => {
                 console.log("error:", error);
                 // check if it's an expiry error
-                if (TypeError) {
+                if (error == "TypeError: Cannot read properties of null (reading 'userID')") {
                     setIsAuthenticated(false);
                     localStorage.removeItem('user'); 
                     setIsAuthenticated(false);
