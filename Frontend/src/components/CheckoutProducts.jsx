@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../AuthContext';
 
 // Directly include the products array and mapToStockId function
 const products = [
@@ -51,6 +52,8 @@ const mapFromStockId = (stockId) => {
 const CheckoutProducts = () => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const authContext = useContext(AuthContext);
+  const userId = authContext.userID;
 
   useEffect(() => {
     fetchCartItems();
@@ -58,7 +61,7 @@ const CheckoutProducts = () => {
 
   const fetchCartItems = async () => {
     const query = `query ($userId: ID!) { findCartItemsByUserId(userId: $userId) { productResult { imageId imageUrl stockId price } userId expirationTime } }`;
-    const userId = 1; // Replace with actual user ID
+    //const userId = 1; // Replace with actual user ID
     const variables = { userId };
 
     try {

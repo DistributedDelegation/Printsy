@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import Product from '../components/Product';
 import useMatchHeight from '../components/useMatchHeight';
 import "./Generation.css";
 import "../components/ProdcutStyle.css";
 import Timer from '../components/Timer';
+import { AuthContext } from '../AuthContext';
 
 const SelectedImage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +18,8 @@ const SelectedImage = () => {
   const [initialTime, setInitialTime] = useState(0);
   const [showTimer, setShowTimer] = useState(false);
   const [cartItemsChanged, setCartItemsChanged] = useState(false);
+  const authContext = useContext(AuthContext);
+  const userId = authContext.userID;
 
   // Gallery Images are deactivating upload button
   useEffect(() => {
@@ -37,7 +40,7 @@ const SelectedImage = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
           query: `query($userId: ID!) { getRemainingCleanupTime(userId: $userId) }`,
-          variables: { userId: 1 } 
+          variables: { userId: userId } 
       }),
     });
     const data = await response.json();
@@ -50,11 +53,11 @@ const SelectedImage = () => {
   const handleTimerEnd = () => {
     // Logic when timer ends
     setShowTimer(false);
-    fetchRemainingTime();
+    fetchRemainingTime(userId);
   };
 
   useEffect(() => {
-    fetchRemainingTime();
+    fetchRemainingTime(userId);
   }, [cartItemsChanged]);
 
   const onCartChange = () => {
@@ -133,7 +136,7 @@ const SelectedImage = () => {
           const imageNameInput = data.data.uploadImage.id;
           const imageDescriptionInput = prompt;
           const imagePublishedYN = true;
-          const usrId = "XYZ123";
+          const usrId = userId;
 
           console.log("imageUrl: ", imageUrl);
           console.log("imageNameInput: ", imageNameInput);

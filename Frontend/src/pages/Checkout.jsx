@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import useMatchHeight from '../components/useMatchHeight';
 import "./Secondary.css";
 import CheckoutProducts from '../components/CheckoutProducts';
 import Timer from '../components/Timer';
+import { AuthContext } from '../AuthContext';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ const Home = () => {
   const [showTimer, setShowTimer] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
+  const authContext = useContext(AuthContext);
+  const userId = authContext.userID;
 
   // ------ Timer ------
   const fetchRemainingTime = async (userId) => {
@@ -23,7 +26,7 @@ const Home = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
           query: `query($userId: ID!) { getRemainingCleanupTime(userId: $userId) }`,
-          variables: { userId: 1 } 
+          variables: { userId: userId } 
       }),
     });
     const data = await response.json();
@@ -36,13 +39,13 @@ const Home = () => {
   const handleTimerEnd = () => {
     // Logic when timer ends
     setShowTimer(false);
-    fetchRemainingTime().then(() => {
+    fetchRemainingTime(userId).then(() => {
       window.location.reload();
     });
   };
 
   useEffect(() => {
-    fetchRemainingTime();
+    fetchRemainingTime(userId);
   }, []);
 
   const closePopup = () => {
