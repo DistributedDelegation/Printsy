@@ -6,9 +6,9 @@ const Gallery = () => {
     const [images, setImages] = useState([]);
     const [imageIds, setImageIds] = useState([]);
     const [imageCount, setImageCount] = useState({});
-    let galleryGraphqlEndpoint = "http://localhost:8088/graphql";
-    let cartGraphqlEndpoint = "http://localhost:8086/graphql";
-    let transactionGatewayGraphqlEndpoint = "http://localhost:8087/graphql";
+    let galleryGraphqlEndpoint = "http://localhost:8080/gallery/graphql";
+    let cartGraphqlEndpoint = "http://localhost:8080/cart/graphql";
+    let transactionGatewayGraphqlEndpoint = "http://localhost:8080/transaction/graphql";
     const navigate = useNavigate();
 
     const authContext = useContext(AuthContext);
