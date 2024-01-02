@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import {
   Routes,
   Route,
@@ -10,7 +10,7 @@ import {
 import './App.css'
 import Gallery from './components/Gallery'
 //import Generation from './components/Generation'
-import {AuthProvider} from './AuthContext';
+import { AuthContext } from './AuthContext';
 import Generation from "./pages/Generation";
 import SelectedImage from './pages/SelectedImage';
 import Cart from './pages/Cart';
@@ -22,6 +22,7 @@ function App() {
   const action = useNavigationType();
   const location = useLocation();
   const pathname = location.pathname;
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
     if (action !== "POP") {
@@ -79,17 +80,15 @@ function App() {
   }, [pathname]);
 
   return (
-    <AuthProvider>
-      <Routes>
-        <Route path="/" element={<SignIn />} />
-        <Route path="/generation" element={<Generation />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/selected-image" element={<SelectedImage />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Routes>
-    </AuthProvider>
+    <Routes>
+      {authContext.isAuthenticated ? <Route path="/" element={<Generation />} /> : <Route path="/" element={<SignIn />} />}
+      <Route path="/generation" element={<Generation />} />
+      <Route path="/cart" element={<Cart />} />
+      <Route path="/selected-image" element={<SelectedImage />} />
+      <Route path="/checkout" element={<Checkout />} />
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+    </Routes>
   );
 }
 export default App;
