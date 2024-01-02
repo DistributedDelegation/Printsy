@@ -7,6 +7,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [userID, setUserID] = useState("");
+    const [userEmailAddress, setUserEmailAddress] = useState("");
     const [token, setToken] = useState(""); //const a token 
     const navigate = useNavigate(); 
     const location = useLocation();
@@ -37,6 +38,7 @@ export const AuthProvider = ({ children }) => {
                   ) {
                     currentUser(bearerToken: $bearerToken) {
                         userID
+                        emailAddress
                     }
                 }`,
                 variables: {
@@ -55,6 +57,7 @@ export const AuthProvider = ({ children }) => {
             .then(data => {
                 setIsAuthenticated(true);
                 setUserID(data.data.currentUser.userID); // Access the userID from the data
+                setUserEmailAddress(data.data.currentUser.emailAddress);
             })
             .catch(error => {
                 console.log("error:", error);
