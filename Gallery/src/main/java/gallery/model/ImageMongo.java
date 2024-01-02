@@ -19,6 +19,8 @@ public class ImageMongo {
 
     private String imageTimestamp;
 
+    private Integer likeCount;
+
     public String getImageId() {
         return imageId;
     }
@@ -65,5 +67,13 @@ public class ImageMongo {
 
     public void setImageTimestamp(String imageTimestamp) {
         this.imageTimestamp = imageTimestamp;
+    }
+
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
     }
 }

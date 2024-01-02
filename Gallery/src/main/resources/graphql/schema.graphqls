@@ -11,14 +11,21 @@ type ImageUrlList {
   imageUrls: [String]!
 }
 
+type PublishedImage {
+  imageId: String!
+  imageUrl: String!
+  likeCount: Int!
+}
+
 type Query {
-  getAllPublishedImages: [String!]!
+  getAllPublishedImages: [PublishedImage!]!
   getImageUrlByImageId(imageId: String!): String!
   getImageUrlsByImageIds(imageIds: ImageIdList!): ImageUrlList!
 }
 
 type Mutation {
   saveToImageAndGalleryTable(imageUrl: String!, imageNameInput: String!, imageDescriptionInput: String!, imagePublishedYN: Boolean!, usrId: String!): ID! # Returns image ID if the save operation was successful, false otherwise.
+  saveIncreasedLikeCount(imageId: String!): Int!
 }
 
 schema {

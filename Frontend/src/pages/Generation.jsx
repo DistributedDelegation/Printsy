@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import "./Home.css";
+import "./Generation.css";
 import Gallery from "../components/Gallery";
 import GenerationStyling from "../components/GenerationStyling";
 import useMatchHeight from '../components/useMatchHeight';
 import Timer from '../components/Timer';
 
-const Home = () => {
+const Generation = () => {
   const [prompt, setPrompt] = useState('');
   const [features, setFeatures] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -139,4 +139,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Generation;

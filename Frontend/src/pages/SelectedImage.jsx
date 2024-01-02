@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import Product from '../components/Product';
 import useMatchHeight from '../components/useMatchHeight';
-import "./Home.css";
+import "./Generation.css";
 import "../components/ProdcutStyle.css";
 import Timer from '../components/Timer';
 

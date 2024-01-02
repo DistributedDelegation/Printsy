@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import {
   Routes,
   Route,
@@ -10,15 +10,19 @@ import {
 import './App.css'
 import Gallery from './components/Gallery'
 //import Generation from './components/Generation'
-import Home from "./pages/Home";
+import { AuthContext } from './AuthContext';
+import Generation from "./pages/Generation";
 import SelectedImage from './pages/SelectedImage';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout'
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
 
 function App() {
   const action = useNavigationType();
   const location = useLocation();
   const pathname = location.pathname;
+  const authContext = useContext(AuthContext);
 
   useEffect(() => {
     if (action !== "POP") {
@@ -35,6 +39,10 @@ function App() {
         title = "Printsy";
         metaDescription = "";
         break;
+      case "/generation":
+        title = "";
+        metaDescription = "";
+        break;
       case "/cart":
         title = "";
         metaDescription = "";
@@ -44,6 +52,14 @@ function App() {
         metaDescription = "";
         break;
       case "/checkout":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/signin":
+        title = "";
+        metaDescription = "";
+        break;
+      case "/signup":
         title = "";
         metaDescription = "";
         break;
@@ -65,10 +81,13 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      {authContext.isAuthenticated ? <Route path="/" element={<Generation />} /> : <Route path="/" element={<SignIn />} />}
+      <Route path="/generation" element={<Generation />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/selected-image" element={<SelectedImage />} />
       <Route path="/checkout" element={<Checkout />} />
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
     </Routes>
   );
 }

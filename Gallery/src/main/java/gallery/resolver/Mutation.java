@@ -10,9 +10,11 @@ import gallery.model.ImageSQL;
 import gallery.repository.ImageMongoRepository;
 import gallery.repository.ImageMySQLRepository;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.stream.Collectors;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
@@ -49,17 +51,34 @@ public class Mutation {
         imageMongo.setImageDescription(imageDescriptionInput);
         imageMongo.setIsImagePublishedYN(imagePublishedYN);
         imageMongo.setImageTimestamp(imageTimestamp);
+        imageMongo.setLikeCount(0);
 
         ImageSQL imageSql = new ImageSQL();
         imageSql.setImageId(imageId);
         imageSql.setUsrId(usrId);
         imageSql.setIsImagePublishedYN(imagePublishedYN);
+        imageSql.setLikeCount(0);
 
         // Save the image to our repository
         mongoRepository.save(imageMongo);
         sqlRepository.save(imageSql);
 
         return imageId;
+    }
+
+    @MutationMapping
+    public Integer saveIncreasedLikeCount(@Argument String imageId) {
+        
+        ImageMongo imageMongo = mongoRepository.findByImageId(imageId);
+        Integer imageLikeCount = imageMongo.getLikeCount() + 1;
+        imageMongo.setLikeCount(imageLikeCount);
+        mongoRepository.save(imageMongo);
+
+        ImageSQL imageSql = sqlRepository.findByImageId(imageId);
+        imageSql.setLikeCount(imageLikeCount);
+        sqlRepository.save(imageSql);
+
+        return imageLikeCount;
     }
 
 }

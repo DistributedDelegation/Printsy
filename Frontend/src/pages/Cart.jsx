@@ -5,15 +5,9 @@ import CheckoutProducts from '../components/CheckoutProducts';
 import "./Secondary.css";
 import Timer from '../components/Timer';
 
-const Home = () => {
+const Cart = () => {
   const navigate = useNavigate();
   const { generateRef } = useMatchHeight('generateRef');
-  const [signInEmail, setSignInEmail] = useState('');
-  const [signInPassword, setSignInPassword] = useState('');
-  const [signUpEmail, setSignUpEmail] = useState('');
-  const [signUpPassword, setSignUpPassword] = useState('');
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const [isSigningUp, setIsSigningUp] = useState(false);
   const [initialTime, setInitialTime] = useState(0);
   const [showTimer, setShowTimer] = useState(false);
 
@@ -132,55 +126,6 @@ const Home = () => {
               <h2>To Checkout</h2>
               {showTimer && <Timer initialTime={initialTime} onTimerEnd={handleTimerEnd} />}
               <button className="purchase-button" onClick={handleNavigateCheckout}>Proceed with Purchase</button>
-              {/* <div className="signIn">
-                <p>If you already have an account:</p>
-                <input
-                  type="email"
-                  placeholder="E-Mail Address"
-                  className="text-input"
-                  value={signInEmail}
-                  onChange={(e) => setSignInEmail(e.target.value)}
-                  required
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="text-input"
-                  value={signInPassword}
-                  onChange={(e) => setSignInPassword(e.target.value)}
-                  required
-                />
-                {isSigningIn ? (
-                  <button className="primary-button" disabled>Loading..</button>
-                ) : (
-                  <button className="primary-button" onClick={handleSignIn}>Sign-In</button>
-                )}
-              </div>
-              <div className="divider"></div>
-              <div className="signUp">
-                <p>If you are new here:</p>
-                <input
-                  type="email"
-                  placeholder="E-Mail Address"
-                  className="text-input"
-                  value={signUpEmail}
-                  onChange={(e) => setSignUpEmail(e.target.value)}
-                  required
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  className="text-input"
-                  value={signUpPassword}
-                  onChange={(e) => setSignUpPassword(e.target.value)}
-                  required
-                />
-                {isSigningUp ? (
-                  <button className="secondary-button" disabled>Loading..</button>
-                ) : (
-                  <button className="secondary-button" onClick={handleSignUp}>Sign-Up</button>
-                )} 
-              </div> */}
             </div>
           </div>
         </div>
@@ -189,4 +134,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Cart;
