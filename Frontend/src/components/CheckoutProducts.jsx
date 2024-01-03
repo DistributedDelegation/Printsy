@@ -50,7 +50,7 @@ const CheckoutProducts = ({ refreshKey, timerValue }) => {
   useEffect(() => {
     console.log("Refetching cart items:");
 
-    const timeoutDuration = timerValue <= 0 ? 1000 : 0;
+    const timeoutDuration = timerValue <= 0 ? 2000 : 0;
     const timeout = setTimeout(() => {
       setCartItems([]);
       fetchCartItems();

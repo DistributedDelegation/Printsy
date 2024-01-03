@@ -62,6 +62,32 @@ const CartAndCheckout = () => {
     setShowPopup(false);
   };
 
+  const handlePurchase = async () => {
+    const mutation = `
+      mutation {
+        completePurchase(userId: "${userId}")
+      }
+    `;
+
+    try {
+      const response = await fetch("http://localhost:8080/cart/graphql", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: mutation,
+        }),
+      });
+      const data = await response.json();
+      if (data.data.completePurchase) {
+        console.log("Purchase completed successfully.");
+      } else {
+        console.log("Purchase was not completed.");
+      }
+    } catch (error) {
+      console.error("Error completing purchase:", error);
+    }
+  };
+
   // Return Conditionally Based on isCheckout state
   return (
     <div id="gridTemplate">
@@ -113,9 +139,7 @@ const CartAndCheckout = () => {
                       onChange={(e) => setDeliveryEirCode(e.target.value)}
                     />
                   </div>
-                  <button
-                    className="purchase-button" /*onClick={handlePurchase}*/
-                  >
+                  <button className="purchase-button" onClick={handlePurchase}>
                     Complete Purchase
                   </button>
                 </>

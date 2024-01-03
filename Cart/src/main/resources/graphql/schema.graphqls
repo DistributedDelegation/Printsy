@@ -33,7 +33,6 @@ type TransactionInput {
 type Query {
     findImageAvailability(imageId: ID!): Boolean    # TransactionGateway
     findImageByImageId(imageId: ID!): Int           # MySQL
-    # findCartItemsByProductId(productId: ID!): Int   
     findCartItemsByUserId(userId: ID!): [CartResult]
     findProductById(productId: ID!): ProductResult
     findAllProducts: [ProductResult]

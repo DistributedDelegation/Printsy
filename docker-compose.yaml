@@ -43,13 +43,13 @@ services:
     ports:
       - "8080:8080"
     restart: always
-  
+
   # ----------------Microservices ----------------
   authentication:
     build: ./Authentication
     env_file: .env
     restart: always
-  
+
   gallery:
     build: ./Gallery
     depends_on:
@@ -60,7 +60,7 @@ services:
 
   generation:
     build: ./Generation
-    env_file: 
+    env_file:
       - .env
       - .env.api
     restart: always
@@ -92,4 +92,3 @@ services:
       - ./Transaction/data/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./Transaction/data/mongo-transaction-db1:/data/db
     restart: always
-
