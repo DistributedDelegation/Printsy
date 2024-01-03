@@ -2,6 +2,7 @@ syntax = "proto3";
 package worker;
 option java_package = "worker";
 option java_outer_classname = "WorkerMessages";
+import "google/protobuf/timestamp.proto";
 
 // The Blockchain service definition.
 service TransactionService {
@@ -49,12 +50,12 @@ message ValidateTransactionResponse {
 message TransactionRequest {
   int64 userId = 1;
   string imageId = 2;
-  int64 timestamp = 3;
+  google.protobuf.Timestamp timestamp = 3;
 }
 
 // The response message for a transaction request.
 message TransactionResponse {
-  string status = 1;
+  bool status = 1;
   string detail = 2;
 }
 

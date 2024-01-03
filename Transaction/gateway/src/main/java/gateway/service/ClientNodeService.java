@@ -10,9 +10,12 @@ import org.springframework.stereotype.Service;
 import worker.TransactionServiceGrpc;
 import worker.TransactionServiceGrpc.TransactionServiceBlockingStub;
 import worker.WorkerMessages;
+import worker.WorkerMessages.TransactionRequest;
+import worker.WorkerMessages.TransactionResponse;
 import worker.WorkerMessages.ImageCountRequest;
 import worker.WorkerMessages.ImageCountResponse;
 import worker.WorkerMessages.ValidateTransactionRequest;
+import worker.WorkerMessages.ValidateTransactionResponse;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -62,12 +65,32 @@ public class ClientNodeService {
         logger.info("Sending validation request to server at port" + serverAddress + ":" + request);
 
         boolean response;
-        WorkerMessages.ValidateTransactionResponse grpcResponse;
+        ValidateTransactionResponse grpcResponse;
 
         try {
             grpcResponse = blockingStub.validateTransaction(request);
             logger.info("Received the following from the server: " + grpcResponse.toString());
             response = grpcResponse.getIsValid();
+        } catch (StatusRuntimeException e) {
+            logger.warning("RPC Failed:" +  e.getStatus());
+            response = false;
+        }
+
+        return response;
+    }
+
+    public boolean completeTransaction(Transaction transaction) {
+        logger.info("Creating request to complete transaction and add to the blockchain");
+        TransactionRequest request = TransactionRequest.newBuilder().setImageId(transaction.getImageId()).setUserId(transaction.getUserId()).setTimestamp(transaction.getTimestamp()).build();
+        logger.info("Sending validation request to server at port" + serverAddress + ":" + request);
+
+        boolean response;
+        TransactionResponse grpcResponse;
+
+        try {
+            grpcResponse = blockingStub.submitTransaction(request);
+            logger.info("Received the following from the server: " + grpcResponse.toString());
+            response = grpcResponse.getStatus();
         } catch (StatusRuntimeException e) {
             logger.warning("RPC Failed:" +  e.getStatus());
             response = false;

@@ -2,12 +2,13 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 
-const Gallery = () => {
+const Gallery = ({ containerHeight }) => {
   const [images, setImages] = useState([]);
   const [imageIds, setImageIds] = useState([]);
   let galleryGraphqlEndpoint = "http://localhost:8080/gallery/graphql";
   let cartGraphqlEndpoint = "http://localhost:8080/cart/graphql";
-  let transactionGatewayGraphqlEndpoint = "http://localhost:8080/transaction/graphql";
+  let transactionGatewayGraphqlEndpoint =
+    "http://localhost:8080/transaction/graphql";
   const navigate = useNavigate();
 
   const authContext = useContext(AuthContext);
@@ -36,12 +37,11 @@ const Gallery = () => {
         .then((response) => response.json())
         .then((data) => {
           if (data && data.data.getUserLikedImages) {
-            for (let i = 0; i < data.data.getUserLikedImages.length; i++) {
-              let imageId = data.data.getUserLikedImages[i];
+            for (const element of data.data.getUserLikedImages) {
+              let imageId = element;
               document
                 .getElementById(imageId)
-                .getElementsByClassName("heart-icon")[0]
-                .style.backgroundImage = 
+                .getElementsByClassName("heart-icon")[0].style.backgroundImage =
                 'url("/images/heart-filled.svg")';
             }
           }
@@ -53,8 +53,8 @@ const Gallery = () => {
   };
 
   const getAllPublishedImageCount = () => {
-    for (let i = 0; i < imageIds.length; i++) {
-      let imageId = imageIds[i];
+    for (const element of imageIds) {
+      let imageId = element;
       let count = 10;
 
       const cartQuery = JSON.stringify({
@@ -246,7 +246,7 @@ const Gallery = () => {
   };
 
   return (
-    <div id="galleryImageContainer">
+    <div id="galleryImageContainer" style={{ height: containerHeight }}>
       {images.map(({ imageId, imageUrl, likeCount }) => (
         <div key={imageId} id={imageId} className="galleryImagesElement">
           <img

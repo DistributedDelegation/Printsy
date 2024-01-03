@@ -140,7 +140,21 @@
 
 #galleryImageContainer {
   display: flex;
-  /* gap: 20px; */
+  overflow-y: auto;
+  width: 620px;
+  overflow-x: hidden;
+}
+
+.prodcut-preview {
+  overflow-y: auto;
+  padding-right: 30px;
+}
+
+#user-images {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
 }
 
 #user-images {
