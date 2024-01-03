@@ -21,13 +21,12 @@ public class Mutation {
     // This top part initializes the repository classes (the classes for accessing
     // the dbs) as dependencies for the
     // Mutation class, and "autowires" (essentially injects them) into this class.
-    private final ImageMySQLRepository sqlRepository;
     private final ImageGenerationService imageGenerationService;
     private final ImageStorageService imageStorageService;
 
     @Autowired
-    public Mutation(ImageMySQLRepository sqlRepository, ImageGenerationService imageGenerationService, ImageStorageService imageStorageService) {
-        this.sqlRepository = sqlRepository;
+    public Mutation(ImageGenerationService imageGenerationService,
+            ImageStorageService imageStorageService) {
         this.imageGenerationService = imageGenerationService;
         this.imageStorageService = imageStorageService;
     }
@@ -35,27 +34,31 @@ public class Mutation {
     @MutationMapping
     public Map<String, String> createImage(@Argument String prompt) {
 
-        Image newImage =  imageGenerationService.generateImage(prompt);
-        //String imageUrl = imageStorageService.processAndUploadImage(newImage.getImageUrl(), newImage.getId());
+        Image newImage = imageGenerationService.generateImage(prompt);
+        // String imageUrl =
+        // imageStorageService.processAndUploadImage(newImage.getImageUrl(),
+        // newImage.getId());
 
         Map<String, String> response = new HashMap<>();
-        response.put("id", newImage.getId());
-        response.put("imageURL", newImage.getImageUrl());
-        
+        String id = UUID.randomUUID().toString();
+        String imageUrl = imageStorageService.processAndUploadImage(newImage.getImageUrl(), id);
+        response.put("id", id);
+        response.put("imageURL", imageUrl);
+
         return response;
     }
 
     @MutationMapping
     public Map<String, String> uploadImage(@Argument String url) {
 
-        //Image newImage =  imageGenerationService.generateImage(prompt);
+        // Image newImage = imageGenerationService.generateImage(prompt);
         String id = UUID.randomUUID().toString();
         String imageUrl = imageStorageService.processAndUploadImage(url, id);
 
         Map<String, String> response = new HashMap<>();
-        response.put("id",id);
+        response.put("id", id);
         response.put("imageURL", imageUrl);
-        
+
         return response;
     }
 

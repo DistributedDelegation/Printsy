@@ -24,8 +24,15 @@ type Query {
 }
 
 type Mutation {
-  saveToImageAndGalleryTable(imageUrl: String!, imageNameInput: String!, imageDescriptionInput: String!, imagePublishedYN: Boolean!, usrId: String!): ID! # Returns image ID if the save operation was successful, false otherwise.
+  saveToImageAndGalleryTable(
+    imageUrl: String!
+    imageNameInput: String!
+    imageDescriptionInput: String!
+    imagePublishedYN: Boolean!
+    usrId: String!
+  ): ID! # Returns image ID if the save operation was successful, false otherwise.
   saveIncreasedLikeCount(imageId: String!): Int!
+  makeImagePublic(imageId: String!): Boolean!
 }
 
 schema {

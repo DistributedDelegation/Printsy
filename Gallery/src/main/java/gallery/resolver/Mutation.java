@@ -1,5 +1,9 @@
 package gallery.resolver;
 
+import gallery.filter.LoggingFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -21,6 +25,8 @@ import java.text.SimpleDateFormat;
 @Controller
 public class Mutation {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoggingFilter.class);
+
     // This top part initializes the repository classes (the classes for accessing
     // the dbs) as dependencies for the
     // Mutation class, and "autowires" (essentially injects them) into this class.
@@ -36,15 +42,16 @@ public class Mutation {
     @MutationMapping
     public String saveToImageAndGalleryTable(@Argument String imageUrl, @Argument String imageNameInput, @Argument String imageDescriptionInput, @Argument Boolean imagePublishedYN, @Argument String usrId) {
 
-        // Generate a uuid for the image, this will be the same in both dbs
-        String imageId = UUID.randomUUID().toString();
-        System.out.println("This is the Image ID: "+ imageId);
+        // Generate an uuid for the image, this will be the same in both dbs
+         String imageId = UUID.randomUUID().toString();
+        logger.info("This is the Image ID: "+ imageId);
 
         Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
         String imageTimestamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(timeStamp);
 
         // Create new image object
         ImageMongo imageMongo = new ImageMongo();
+        // ImageMongo imageMongo = mongoRepository.findByImageId(imageId);
         imageMongo.setImageId(imageId);
         imageMongo.setImageUrl(imageUrl);
         imageMongo.setImageName(imageNameInput);
@@ -79,6 +86,21 @@ public class Mutation {
         sqlRepository.save(imageSql);
 
         return imageLikeCount;
+    }
+
+
+    @MutationMapping
+    public Boolean makeImagePublic (@Argument String imageId) {
+
+        ImageSQL imageSql = sqlRepository.findByImageId(imageId);
+        imageSql.setIsImagePublishedYN(true);
+        sqlRepository.save(imageSql);
+
+        ImageMongo imageMongo = mongoRepository.findByImageId(imageId);
+        imageMongo.setIsImagePublishedYN(true);
+        mongoRepository.save(imageMongo);
+
+        return true;
     }
 
 }

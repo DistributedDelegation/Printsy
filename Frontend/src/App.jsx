@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from "react";
 import {
   Routes,
   Route,
@@ -7,16 +7,15 @@ import {
 } from "react-router-dom";
 //import reactLogo from './assets/react.svg'
 //import viteLogo from '/vite.svg'
-import './App.css'
-import Gallery from './components/Gallery'
+import "./App.css";
+import Gallery from "./components/Gallery";
 //import Generation from './components/Generation'
-import { AuthContext } from './AuthContext';
+import { AuthContext } from "./AuthContext";
 import Generation from "./pages/Generation";
-import SelectedImage from './pages/SelectedImage';
-import Cart from './pages/Cart';
-import Checkout from './pages/Checkout'
-import SignIn from './pages/SignIn';
-import SignUp from './pages/SignUp';
+import SelectedImage from "./pages/SelectedImage";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import CartAndCheckout from "./pages/CartAndCheckout";
 
 function App() {
   const action = useNavigationType();
@@ -40,27 +39,23 @@ function App() {
         metaDescription = "";
         break;
       case "/generation":
-        title = "";
+        title = "Printsy - New Image";
         metaDescription = "";
         break;
       case "/cart":
-        title = "";
+        title = "Printsy - Cart";
         metaDescription = "";
         break;
       case "/selected-image":
-        title = "";
-        metaDescription = "";
-        break;
-      case "/checkout":
-        title = "";
+        title = "Printsy";
         metaDescription = "";
         break;
       case "/signin":
-        title = "";
+        title = "Printsy - Sign in";
         metaDescription = "";
         break;
       case "/signup":
-        title = "";
+        title = "Printsy - Sign Up";
         metaDescription = "";
         break;
     }
@@ -81,11 +76,14 @@ function App() {
 
   return (
     <Routes>
-      {authContext.isAuthenticated ? <Route path="/" element={<Generation />} /> : <Route path="/" element={<SignIn />} />}
+      {authContext.isAuthenticated ? (
+        <Route path="/" element={<Generation />} />
+      ) : (
+        <Route path="/" element={<SignIn />} />
+      )}
       <Route path="/generation" element={<Generation />} />
-      <Route path="/cart" element={<Cart />} />
+      <Route path="/cart" element={<CartAndCheckout />} />
       <Route path="/selected-image" element={<SelectedImage />} />
-      <Route path="/checkout" element={<Checkout />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
     </Routes>
