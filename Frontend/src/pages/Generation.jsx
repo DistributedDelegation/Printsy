@@ -6,6 +6,7 @@ import Gallery from "../components/Gallery";
 import GenerationStyling from "../components/GenerationStyling";
 import useMatchHeight from "../components/useMatchHeight";
 import Timer from "../components/Timer";
+import UserImages from "../components/UserImages";
 
 const Generation = () => {
   const [prompt, setPrompt] = useState("");
@@ -218,11 +219,12 @@ const Generation = () => {
             <img src="/images/shirt.png" alt="Shirt"></img>
             <img src="/images/polo.png" alt="Polo Shirt"></img>
           </div>
-          <h2>Gallery</h2>
+          <h2>Public Gallery</h2>
           <p>Select an Image from our Community</p>
           <p>Only 10 Of Each Unique Image Available</p>
           <div className="gallery">
             <Gallery containerHeight={galleryHeight} />
+            <UserImages />
           </div>
         </div>
       </div>

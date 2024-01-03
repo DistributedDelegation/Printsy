@@ -149,3 +149,17 @@
   overflow-y: auto;
   padding-right: 30px;
 }
+
+#user-images {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#user-images {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
