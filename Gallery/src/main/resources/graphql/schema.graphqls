@@ -32,7 +32,7 @@ type Mutation {
     imagePublishedYN: Boolean!
     usrId: String!
   ): ID! # Returns image ID if the save operation was successful, false otherwise.
-  saveIncreasedLikeCount(imageId: String!): Int!
+  saveIncreasedLikeCount(imageId: String!, userId: String!): Int!
   saveDecreasedLikeCount(imageId: String!, userId: String!): Int!
   makeImagePublic(imageId: String!): Boolean!
 }

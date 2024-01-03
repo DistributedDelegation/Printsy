@@ -16,7 +16,7 @@ const SignUp = () => {
       console.log("Password is valid");
     } else {
       alert(
-        "At least 8 characters long\nAt least one uppercase letter\nAt least one lowercase letter\nAt least one special character"
+        "Password Needs:\nAt least 8 characters\nAt least one uppercase letter\nAt least one lowercase letter\nAt least one special character"
       )
       return;
     }
@@ -47,7 +47,7 @@ const SignUp = () => {
       setIsSigningUp(false);
       setTimeout(() => {
         navigate('/signin');
-        }, 1000);
+        }, 500);
       // Handle the confirmation message from the API
     } catch (error) {
       // Handle error
