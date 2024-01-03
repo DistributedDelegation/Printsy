@@ -142,3 +142,10 @@
   display: flex;
   /* gap: 20px; */
 }
+
+#user-images {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}

@@ -17,6 +17,8 @@ public class ImageMongo {
 
     private Boolean isImagePublishedYN;
 
+    private String userId;
+
     private String imageTimestamp;
 
     private Integer likeCount;
@@ -61,6 +63,14 @@ public class ImageMongo {
         this.isImagePublishedYN = isImagePublishedYN;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String usrId) {
+        this.userId = usrId;
+    }
+
     public String getImageTimestamp() {
         return imageTimestamp;
     }
@@ -85,6 +95,7 @@ public class ImageMongo {
                 ", imageName='" + imageName + '\'' +
                 ", imageDescription='" + imageDescription + '\'' +
                 ", isImagePublishedYN=" + isImagePublishedYN +
+                ", userId=" + userId +
                 ", imageTimestamp='" + imageTimestamp + '\'' +
                 ", likeCount=" + likeCount +
                 '}';

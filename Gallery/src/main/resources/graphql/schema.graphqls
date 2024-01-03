@@ -17,11 +17,17 @@ type PublishedImage {
   likeCount: Int
 }
 
+type UserImage {
+  imageId: String
+  imageUrl: String
+}
+
 type Query {
   getAllPublishedImages: [PublishedImage!]!
   getImageUrlByImageId(imageId: String!): String!
   getImageUrlsByImageIds(imageIds: ImageIdList!): ImageUrlList!
   getUserLikedImages(userId: String!): [String]!
+  getUserImages(userId: String!): [UserImage]
 }
 
 type Mutation {

@@ -10,10 +10,8 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.stereotype.Controller;
 
 import gallery.model.ImageMongo;
-import gallery.model.ImageSQL;
 import gallery.model.UserLikedImages;
 import gallery.repository.ImageMongoRepository;
-import gallery.repository.ImageMySQLRepository;
 import gallery.repository.UserLikedImagesRepository;
 
 import java.util.HashMap;
@@ -33,13 +31,11 @@ public class Mutation {
     // the dbs) as dependencies for the
     // Mutation class, and "autowires" (essentially injects them) into this class.
     private final ImageMongoRepository mongoRepository;
-    private final ImageMySQLRepository sqlRepository;
     private final UserLikedImagesRepository userLikedImagesRepository;
 
     @Autowired
-    public Mutation(ImageMySQLRepository sqlRepository, ImageMongoRepository mongoRepository, UserLikedImagesRepository userLikedImagesRepository) {
+    public Mutation(ImageMongoRepository mongoRepository, UserLikedImagesRepository userLikedImagesRepository) {
         this.mongoRepository = mongoRepository;
-        this.sqlRepository = sqlRepository;
         this.userLikedImagesRepository = userLikedImagesRepository;
     }
 
@@ -61,18 +57,12 @@ public class Mutation {
         imageMongo.setImageName(imageNameInput);
         imageMongo.setImageDescription(imageDescriptionInput);
         imageMongo.setIsImagePublishedYN(imagePublishedYN);
+        imageMongo.setUserId(usrId);
         imageMongo.setImageTimestamp(imageTimestamp);
         imageMongo.setLikeCount(0);
 
-        ImageSQL imageSql = new ImageSQL();
-        imageSql.setImageId(imageId);
-        imageSql.setUsrId(usrId);
-        imageSql.setIsImagePublishedYN(imagePublishedYN);
-        imageSql.setLikeCount(0);
-
         // Save the image to our repository
         mongoRepository.save(imageMongo);
-        sqlRepository.save(imageSql);
 
         return imageId;
     }
@@ -112,10 +102,6 @@ public class Mutation {
 
     @MutationMapping
     public Boolean makeImagePublic (@Argument String imageId) {
-
-        ImageSQL imageSql = sqlRepository.findByImageId(imageId);
-        imageSql.setIsImagePublishedYN(true);
-        sqlRepository.save(imageSql);
 
         ImageMongo imageMongo = mongoRepository.findByImageId(imageId);
         imageMongo.setIsImagePublishedYN(true);
