@@ -7,48 +7,49 @@ const Gallery = () => {
   const [imageIds, setImageIds] = useState([]);
   let galleryGraphqlEndpoint = "http://localhost:8080/gallery/graphql";
   let cartGraphqlEndpoint = "http://localhost:8080/cart/graphql";
-  let transactionGatewayGraphqlEndpoint =
-    "http://localhost:8080/transaction/graphql";
+  let transactionGatewayGraphqlEndpoint = "http://localhost:8080/transaction/graphql";
   const navigate = useNavigate();
 
   const authContext = useContext(AuthContext);
   const userID = authContext.userID;
 
   const getUserLikedImages = () => {
-    const query = JSON.stringify({
-      query: `query(
-          $userId: String!
-          ) {
-            getUserLikedImages(userId: $userId)
-        }`,
-      variables: {
-        userId: userID,
-      },
-    });
-
-    fetch(galleryGraphqlEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: query,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data && data.data.getUserLikedImages) {
-          for (let i = 0; i < data.data.getUserLikedImages.length; i++) {
-            let imageId = data.data.getUserLikedImages[i];
-
-            document
-              .getElementById(imageId)
-              .getElementsByClassName("heart-icon")[0].style.backgroundImage =
-              'url("/images/heart-filled.svg")';
-          }
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching the image:", error);
+    if (userID) {
+      const query = JSON.stringify({
+        query: `query(
+            $userId: String!
+            ) {
+              getUserLikedImages(userId: $userId)
+          }`,
+        variables: {
+          userId: userID,
+        },
       });
+
+      fetch(galleryGraphqlEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: query,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data && data.data.getUserLikedImages) {
+            for (let i = 0; i < data.data.getUserLikedImages.length; i++) {
+              let imageId = data.data.getUserLikedImages[i];
+              document
+                .getElementById(imageId)
+                .getElementsByClassName("heart-icon")[0]
+                .style.backgroundImage = 
+                'url("/images/heart-filled.svg")';
+            }
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching the image:", error);
+        });
+    }
   };
 
   const getAllPublishedImageCount = () => {
@@ -90,6 +91,7 @@ const Gallery = () => {
         .then((response) => response.json())
         .then((data) => {
           count = count - data.data.findImageByImageId;
+          console.log("cartCount: " + count);
 
           fetch(transactionGatewayGraphqlEndpoint, {
             method: "POST",
@@ -101,6 +103,7 @@ const Gallery = () => {
             .then((response) => response.json())
             .then((data) => {
               count = count - data.data.checkImageTransactionCount.count;
+              console.log("transactionCount: " + count);
               document
                 .getElementById(imageId)
                 .getElementsByClassName("imageCount")[0].innerText =
@@ -153,15 +156,10 @@ const Gallery = () => {
     getAllPublishedImages();
   }, []);
 
-  useEffect(() => {
-    getAllPublishedImageCount();
-    getUserLikedImages();
-  }, [userID]);
-
   setTimeout(() => {
     getAllPublishedImageCount();
     getUserLikedImages();
-  }, 3000);
+  }, 1000);
 
   const handleImageClick = (imageId, url) => {
     console.log("/selectimage imageURL: " + url);

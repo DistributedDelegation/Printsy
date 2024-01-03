@@ -40,19 +40,25 @@ const SignIn = () => {
         });
         const data = await response.json();
         const token = data.data.authenticate;
-        localStorage.setItem('user', token);
-        Cookies.set('user', token, { expires: 7, secure: true }); // Store the cookies
-        console.log("saved cookies when signin in", Cookies.get('user'));
-        setIsSigningIn(false);
+        if (token === "Incorrect email address or password: Bad credentials") {
+          alert("Incorrect email address or password. Please enter the correct email address and password or sign up for an account.");
+          setIsSigningIn(false);
+        } else {
+          localStorage.setItem('user', token);
+          console.log(token);
+          Cookies.set('user', token, { expires: 7, secure: true }); // Store the cookies
+          console.log("saved cookies when signin in", Cookies.get('user'));
+          setIsSigningIn(false);
 
-        setTimeout(() => {
-          // get the redirect path stored in session storage
-          const redirectPath = sessionStorage.getItem('redirectAfterLogin');
-          // if it exists, navigate to it, otherwise navigate to '/generation'
-          navigate(redirectPath || '/generation');
-          // then remove the redirect path from session storage
-          sessionStorage.removeItem('redirectAfterLogin');
-        }, 1000);
+          setTimeout(() => {
+            // get the redirect path stored in session storage
+            const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+            // if it exists, navigate to it, otherwise navigate to '/generation'
+            navigate(redirectPath || '/generation');
+            // then remove the redirect path from session storage
+            sessionStorage.removeItem('redirectAfterLogin');
+          }, 1000);
+        }
 
       } catch (error) {
         // Handle error
@@ -76,7 +82,7 @@ const SignIn = () => {
           </a>
           <div className="content content-secondary">
             <div className="content-right">
-              <h2>To Checkout</h2>
+              <h2>Sign In</h2>
               <div className="signIn">
                 <p>If you already have an account:</p>
                 <input
@@ -100,9 +106,10 @@ const SignIn = () => {
                 ) : (
                   <button className="primary-button" onClick={handleSignIn}>Sign-In</button>
                 )}
-                <p style={{paddingTop: "20px", color: "red"}}> 🗝️ Don't have an account?
-                  <span onClick={handleSignupClick}>Register now</span>
-                </p>
+                <div id="sign-up-button">
+                  <p>Don't have an account?</p>
+                  <button className="primary-button" onClick={handleSignupClick}>Sign Up Here</button>
+                </div>
               </div>
             </div>
           </div>
