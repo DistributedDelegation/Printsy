@@ -1,12 +1,15 @@
 package worker.model;
 
+import java.util.List;
+
 public class Block {
 
     private Integer sequenceNo;
     private String hash;
     private String previousHash;
     private Integer nonce;
-    private Transaction transaction;
+    private List<Transaction> transactions;
+
 
     public Integer getSequenceNo() {
         return sequenceNo;
@@ -40,11 +43,11 @@ public class Block {
         this.nonce = nonce;
     }
 
-    public Transaction getTransaction() {
-        return transaction;
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }

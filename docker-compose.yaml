@@ -92,3 +92,12 @@ services:
       - ./Transaction/data/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./Transaction/data/mongo-transaction-db1:/data/db
     restart: always
+
+  transaction-mongo-express:
+    image: mongo-express:latest
+    depends_on:
+      - transaction-db-1
+    env_file: ./Transaction/data/.env
+    ports:
+      - "8090:8081"
+    restart: always

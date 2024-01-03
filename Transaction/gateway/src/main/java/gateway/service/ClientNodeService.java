@@ -1,5 +1,6 @@
 package gateway.service;
 
+import gateway.dto.TransactionResult;
 import gateway.model.Transaction;
 import io.grpc.Channel;
 import io.grpc.ManagedChannel;
@@ -16,11 +17,16 @@ import worker.WorkerMessages.ImageCountRequest;
 import worker.WorkerMessages.ImageCountResponse;
 import worker.WorkerMessages.ValidateTransactionRequest;
 import worker.WorkerMessages.ValidateTransactionResponse;
+import worker.WorkerMessages.ProtoTransaction;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
+import com.google.protobuf.Timestamp;
 
 @Service
 public class ClientNodeService {
@@ -72,31 +78,50 @@ public class ClientNodeService {
             logger.info("Received the following from the server: " + grpcResponse.toString());
             response = grpcResponse.getIsValid();
         } catch (StatusRuntimeException e) {
-            logger.warning("RPC Failed:" +  e.getStatus());
+            logger.warning("gRPC Failed:" +  e.getStatus());
             response = false;
         }
 
         return response;
     }
 
-    public boolean completeTransaction(Transaction transaction) {
-        logger.info("Creating request to complete transaction and add to the blockchain");
-        TransactionRequest request = TransactionRequest.newBuilder().setImageId(transaction.getImageId()).setUserId(transaction.getUserId()).setTimestamp(transaction.getTimestamp()).build();
-        logger.info("Sending validation request to server at port" + serverAddress + ":" + request);
+    public TransactionResult completeTransaction(List<Transaction> transactions) {
+        logger.info("Creating request to complete batch of transactions and add to the blockchain");
+        TransactionRequest.Builder requestBuilder = TransactionRequest.newBuilder();
 
-        boolean response;
-        TransactionResponse grpcResponse;
 
-        try {
-            grpcResponse = blockingStub.submitTransaction(request);
-            logger.info("Received the following from the server: " + grpcResponse.toString());
-            response = grpcResponse.getStatus();
-        } catch (StatusRuntimeException e) {
-            logger.warning("RPC Failed:" +  e.getStatus());
-            response = false;
+        for (Transaction transaction : transactions) {
+            ProtoTransaction.Builder protoTransactionBuilder = WorkerMessages.ProtoTransaction.newBuilder();
+            Timestamp timestamp = toProtoTimestamp(transaction.getTimestamp());
+            protoTransactionBuilder.setUserId(transaction.getUserId());
+            protoTransactionBuilder.setImageId(transaction.getImageId());
+            protoTransactionBuilder.setTimestamp(timestamp);
+            ProtoTransaction protoTransaction = protoTransactionBuilder.build();
+            requestBuilder.addTransactions(protoTransaction);
         }
 
-        return response;
+        TransactionRequest request = requestBuilder.build();
+
+        logger.info("Sending validation request to server at port" + serverAddress + ":" + request);
+
+        TransactionResponse grpcResponse = null;
+        try {
+            grpcResponse = blockingStub.submitTransactions(request);
+            logger.info("Received the following from the server: " + grpcResponse.toString());
+        } catch (StatusRuntimeException e) {
+            grpcResponse = TransactionResponse.newBuilder().setStatus(false).setDetail("Transaction Failed").build();
+            logger.warning("gRPC Failed:" +  e.getStatus());
+        }
+
+        return new TransactionResult(grpcResponse.getStatus());
+    }
+
+    private Timestamp toProtoTimestamp(Date date) {
+        long millis = date.getTime();
+        return Timestamp.newBuilder()
+                .setSeconds(millis / 1000)
+                .setNanos((int) ((millis % 1000) * 1000000))
+                .build();
     }
 
     @PreDestroy

@@ -53,34 +53,31 @@ const Gallery = ({ containerHeight }) => {
   };
 
   const getAllPublishedImageCount = () => {
-    for (const element of imageIds) {
-      let imageId = element;
-      let count = 10;
+    imageIds.forEach((imageId) => {
+      // Assume a total of 10 images available initially
+      let totalAvailable = 10;
 
       const cartQuery = JSON.stringify({
-        query: `query(
-            $imageId: ID!
-            ) {
-              findImageByImageId(imageId: $imageId)
-          }`,
+        query: `query($imageId: ID!) {
+          findImageByImageId(imageId: $imageId)
+        }`,
         variables: {
           imageId: imageId,
         },
       });
 
       const transactionQuery = JSON.stringify({
-        query: `query(
-            $imageId: String!
-            ) {
-              checkImageTransactionCount(imageId: $imageId) {
-                count
-              }
-          }`,
+        query: `query($imageId: String!) {
+          checkImageTransactionCount(imageId: $imageId) {
+            count
+          }
+        }`,
         variables: {
           imageId: imageId,
         },
       });
 
+      // Fetch cart count
       fetch(cartGraphqlEndpoint, {
         method: "POST",
         headers: {
@@ -89,10 +86,12 @@ const Gallery = ({ containerHeight }) => {
         body: cartQuery,
       })
         .then((response) => response.json())
-        .then((data) => {
-          count = count - data.data.findImageByImageId;
-          console.log("cartCount: " + count);
+        .then((cartData) => {
+          const cartCount = cartData.data.findImageByImageId;
+          Console.log("Cart count: " + cartCount);
+          totalAvailable -= cartCount; // Subtract cart count from total available
 
+          // Fetch transaction count
           fetch(transactionGatewayGraphqlEndpoint, {
             method: "POST",
             headers: {
@@ -101,22 +100,29 @@ const Gallery = ({ containerHeight }) => {
             body: transactionQuery,
           })
             .then((response) => response.json())
-            .then((data) => {
-              count = count - data.data.checkImageTransactionCount.count;
-              console.log("transactionCount: " + count);
+            .then((transactionData) => {
+              const transactionCount =
+                transactionData.data.checkImageTransactionCount.count;
+              Console.log("transactionCount count: " + transactionCount);
+              totalAvailable -= transactionCount; // Subtract transaction count from total available
+
+              // Update UI with remaining count
               document
                 .getElementById(imageId)
                 .getElementsByClassName("imageCount")[0].innerText =
-                count + "/10";
+                totalAvailable + "/10";
             })
-            .catch((error) => {
-              console.error("Error fetching the image:", error);
+            .catch((transactionError) => {
+              console.error(
+                "Error fetching transaction count:",
+                transactionError
+              );
             });
         })
-        .catch((error) => {
-          console.error("Error fetching the image:", error);
+        .catch((cartError) => {
+          console.error("Error fetching cart count:", cartError);
         });
-    }
+    });
   };
 
   const getAllPublishedImages = () => {

@@ -35,30 +35,32 @@ public class BlockchainNode {
         return blockchainRepository.findTopByOrderByTimestampDesc().getBlock();
     }
 
-    public void writeTransaction(Transaction t) throws Exception {
+    public void writeTransaction(List<Transaction> transactions) throws Exception {
         Block lastBlock = getLastBlock();
-        validator.validateTransaction(t, lastBlock);
-        Block block = blockchainMiner.mineBlock(t, lastBlock);
+        for (Transaction transaction : transactions){
+            validator.validateTransaction(transaction, lastBlock);
+        }
+        Block block = blockchainMiner.mineBlock(transactions, lastBlock);
         BlockRecord blockRecord = new BlockRecord(block);
         blockchainRepository.save(blockRecord);
     }
 
-    public List<Transaction> getTransactionsByUserId(long userId) {
+    public List<List<Transaction>> getTransactionsByUserId(long userId) {
         List<BlockRecord> blockRecords = blockchainRepository.findAllByUserId(userId);
 
-        List<Transaction> transactions = new ArrayList<Transaction>();
+        List<List<Transaction>> transactions = new ArrayList<>();
         for (BlockRecord blockRecord : blockRecords) {
-            transactions.add(blockRecord.getBlock().getTransaction());
+            transactions.add(blockRecord.getBlock().getTransactions());
         }
         return transactions;
     }
 
-    public List<Transaction> getTransactionsByImageId(String imageId) {
+    public List<List<Transaction>> getTransactionsByImageId(String imageId) {
         List<BlockRecord> blockRecords = blockchainRepository.findAllByImageId(imageId);
 
-        List<Transaction> transactions = new ArrayList<Transaction>();
+        List<List<Transaction>> transactions = new ArrayList<>();
         for (BlockRecord blockRecord : blockRecords) {
-            transactions.add(blockRecord.getBlock().getTransaction());
+            transactions.add(blockRecord.getBlock().getTransactions());
         }
         return transactions;
     }

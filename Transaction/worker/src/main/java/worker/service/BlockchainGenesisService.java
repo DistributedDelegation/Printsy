@@ -7,7 +7,9 @@ import worker.model.BlockRecord;
 import worker.repository.BlockchainRepository;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class BlockchainGenesisService {
@@ -41,12 +43,14 @@ public class BlockchainGenesisService {
         genesisTransaction.setImageId("0");
         genesisTransaction.setTimestamp(new Date());
 
+        List<Transaction> genesisTransactions = Collections.singletonList(genesisTransaction);
+
         // Initializing the genesis block
         Block genesisBlock = new Block();
         genesisBlock.setSequenceNo(0); // Genesis block is the first block so sequence number is 0
         genesisBlock.setPreviousHash("0"); // No preceding block, so set to 0
         genesisBlock.setNonce(0);
-        genesisBlock.setTransaction(genesisTransaction);
+        genesisBlock.setTransactions(genesisTransactions);
         genesisBlock.setHash(blockchainMiner.calculateHash(genesisBlock, 0));
 
         BlockRecord genesisRecord = new BlockRecord(genesisBlock);

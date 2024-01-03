@@ -11,7 +11,7 @@ service TransactionService {
   rpc validateTransaction (ValidateTransactionRequest) returns (ValidateTransactionResponse){}
 
   // Sends a transaction to the node.
-  rpc submitTransaction (TransactionRequest) returns (TransactionResponse) {}
+  rpc submitTransactions (TransactionRequest) returns (TransactionResponse) {}
 
   // Retrieves a block's information.
   rpc getBlockInfo (BlockInfoRequest) returns (BlockInfoResponse) {}
@@ -46,13 +46,17 @@ message ValidateTransactionResponse {
   bool isValid = 1;
 }
 
-// The request message containing the transaction details.
+// The message for a list of transactions
 message TransactionRequest {
+  repeated ProtoTransaction transactions = 1;
+}
+
+// New message for a single transaction
+message ProtoTransaction {
   int64 userId = 1;
   string imageId = 2;
   google.protobuf.Timestamp timestamp = 3;
 }
-
 // The response message for a transaction request.
 message TransactionResponse {
   bool status = 1;

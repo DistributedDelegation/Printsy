@@ -8,6 +8,15 @@ public class Transaction {
     private String imageId;
     private Date timestamp;
 
+    public Transaction(Long userId, String imageId, Date timestamp) {
+        this.userId = userId;
+        this.imageId = imageId;
+        this.timestamp = timestamp;
+    }
+
+    public Transaction() {
+    }
+
     public Long getUserId() {
         return userId;
     }

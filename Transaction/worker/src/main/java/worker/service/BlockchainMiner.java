@@ -6,12 +6,13 @@ import worker.model.Transaction;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 @Service
 public class BlockchainMiner {
-    public Block mineBlock(Transaction t, Block lastBlock) throws NoSuchAlgorithmException {
+    public Block mineBlock(List<Transaction> t, Block lastBlock) throws NoSuchAlgorithmException {
         Block newBlock = new Block();
-        newBlock.setTransaction(t);
+        newBlock.setTransactions(t);
         newBlock.setPreviousHash(lastBlock.getHash());
         newBlock.setSequenceNo(lastBlock.getSequenceNo());
 
@@ -32,7 +33,7 @@ public class BlockchainMiner {
 
     public String calculateHash(Block block, int nonce) throws NoSuchAlgorithmException {
         String input = block.getPreviousHash()
-                + block.getTransaction().toString()
+                + block.getTransactions().toString()
                 + nonce;
 
         MessageDigest digest = MessageDigest.getInstance("SHA-256");

@@ -29,15 +29,11 @@ public class WorkerNodeServer {
         int port = 50051;
 
         worker.logger.info("Starting server on " + port);
-
         blockchainGenesisService.initializeBlockchain();
-
         worker.logger.info("Initialized blockchain");
-
         server = ServerBuilder.forPort(port).
                 addService(worker).
                 build().start();
-
         worker.logger.info("Server started, listening on " + port);
     }
 
@@ -48,7 +44,6 @@ public class WorkerNodeServer {
             worker.logger.info("Server shut down");
         }
     }
-
     public void blockUntilShutdown() throws InterruptedException {
         if (server != null) {
             server.awaitTermination();

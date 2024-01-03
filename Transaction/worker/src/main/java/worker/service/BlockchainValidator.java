@@ -5,6 +5,8 @@ import worker.model.Block;
 import worker.model.Transaction;
 import worker.repository.BlockchainRepository;
 
+import java.util.List;
+
 @Service
 public class BlockchainValidator {
 
@@ -24,7 +26,7 @@ public class BlockchainValidator {
             throw new Exception("Transaction validation failed: Image count exceeds the limit.");
         }
 
-        if (transaction.getTimestamp().before(lastBlock.getTransaction().getTimestamp())) {
+        if (transaction.getTimestamp().before(lastBlock.getTransactions().get(0).getTimestamp())) {
             throw new Exception("Transaction validation failed: Timestamp is earlier than the last block.");
         }
 
