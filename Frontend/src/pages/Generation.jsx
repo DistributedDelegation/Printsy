@@ -14,6 +14,7 @@ const Generation = () => {
   const [isUploaded, setIsUploaded] = useState(false);
   const navigate = useNavigate();
   const { generateRef } = useMatchHeight("generateRef");
+  const [galleryHeight, setGalleryHeight] = useState("auto");
   const [initialTime, setInitialTime] = useState(0);
   const [showTimer, setShowTimer] = useState(false);
   const authContext = useContext(AuthContext);
@@ -150,6 +151,20 @@ const Generation = () => {
     fetchRemainingTime();
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (generateRef.current) {
+        const generateDivHeight = generateRef.current.clientHeight;
+        const adjustedHeight = Math.max(0, generateDivHeight - 583) + "px"; // Subtracting 300px from Generate div height
+        setGalleryHeight(adjustedHeight);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // Cart icon link
   const handleNavigateCart = () => {
     navigate("/Cart");
@@ -207,7 +222,7 @@ const Generation = () => {
           <p>Select an Image from our Community</p>
           <p>Only 10 Of Each Unique Image Available</p>
           <div className="gallery">
-            <Gallery />
+            <Gallery containerHeight={galleryHeight} />
           </div>
         </div>
       </div>

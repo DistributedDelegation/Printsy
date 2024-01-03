@@ -16,6 +16,7 @@ const SelectedImage = () => {
   const prompt = location.state?.prompt ? location.state.prompt : "Gallery";
   const navigate = useNavigate();
   const { generateRef } = useMatchHeight("generateRef");
+  const [contentHeight, setContentHeight] = useState("auto");
   const [initialTime, setInitialTime] = useState(0);
   const [showTimer, setShowTimer] = useState(false);
   const [cartItemsChanged, setCartItemsChanged] = useState(false);
@@ -72,6 +73,20 @@ const SelectedImage = () => {
   const handleNavigateCart = () => {
     navigate("/Cart");
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (generateRef.current) {
+        const generateDivHeight = generateRef.current.clientHeight;
+        const adjustedHeight = Math.max(0, generateDivHeight - 850) + "px"; // Subtracting 300px from Generate div height
+        setContentHeight(adjustedHeight);
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Showing products
   const products = [
@@ -178,13 +193,14 @@ const SelectedImage = () => {
           ) : (
             <div>
               {isUploaded ? (
-                <button
-                  className="secondary-button"
-                  style={{ cursor: "no-drop" }}
-                >
-                  Successfully uploaded
-                </button>
+                <></>
               ) : (
+                // <button
+                //   className="secondary-button"
+                //   style={{ cursor: "no-drop" }}
+                // >
+                //   Image is already public
+                // </button>
                 <button className="primary-button" onClick={handleSubmit}>
                   Save to Public Gallery
                 </button>
@@ -208,7 +224,7 @@ const SelectedImage = () => {
         </div>
         <div className="content">
           <h2>Products</h2>
-          <div className="prodcut-preview">
+          <div className="prodcut-preview" style={{ height: contentHeight }}>
             {products.map((product, index) => (
               <Product
                 key={index}
