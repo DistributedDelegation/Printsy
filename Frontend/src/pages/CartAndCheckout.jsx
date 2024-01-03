@@ -80,11 +80,17 @@ const CartAndCheckout = () => {
       const data = await response.json();
       if (data.data.completePurchase) {
         console.log("Purchase completed successfully.");
+        setPopupMessage("Your purchase was successful! Thank you and enjoy your artworks!");
+        setShowPopup(true);
       } else {
         console.log("Purchase was not completed.");
+        setPopupMessage("Your purchase was not successful. Try again or contact us.");
+        setShowPopup(true);
       }
     } catch (error) {
       console.error("Error completing purchase:", error);
+      setPopupMessage("Your purchase was not successful. Try again or contact us.");
+      setShowPopup(true);
     }
   };
 

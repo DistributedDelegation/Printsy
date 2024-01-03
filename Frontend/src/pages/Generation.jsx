@@ -132,11 +132,11 @@ const Generation = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: `query($userId: ID!) { getRemainingCleanupTime(userId: $userId) }`,
-        variables: { userId: 1 },
+        variables: { userId: userId },
       }),
     });
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
     const time = data.data.getRemainingCleanupTime;
     setInitialTime(time);
     setShowTimer(time > 0);
@@ -145,11 +145,11 @@ const Generation = () => {
   const handleTimerEnd = () => {
     // Logic when timer ends
     setShowTimer(false);
-    fetchRemainingTime();
+    fetchRemainingTime(userId);
   };
 
   useEffect(() => {
-    fetchRemainingTime();
+    fetchRemainingTime(userId);
   }, []);
 
   useEffect(() => {

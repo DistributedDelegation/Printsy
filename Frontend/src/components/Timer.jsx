@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import '../components/Timer.css';
 
 const FULL_DASH_ARRAY = 283;
-const WARNING_THRESHOLD = 10;
-const ALERT_THRESHOLD = 5;
+const WARNING_THRESHOLD = 75;
+const ALERT_THRESHOLD = 30;
 
 const COLOR_CODES = {
   info: {

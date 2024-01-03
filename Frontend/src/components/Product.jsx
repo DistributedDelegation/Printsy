@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../AuthContext";
+import "../pages/Secondary.css";
 
 const Product = ({ imageId, imageUrl, product, onCartChange }) => {
   const { name, productImageUrl, price, sizes, overlayPosition } = product;
@@ -153,7 +154,7 @@ const Product = ({ imageId, imageUrl, product, onCartChange }) => {
       </form>
       {showPopup && (
         <div className="popup">
-          <p className="popup-text">{popupMessage}</p>
+          <p style={{ color: "darkslategray" }} className="popup-text">{popupMessage}</p>
           <button onClick={closePopup}>Close</button>
         </div>
       )}
