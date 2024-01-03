@@ -204,7 +204,8 @@ const Generation = () => {
             <img src="/images/polo.png" alt="Polo Shirt"></img>
           </div>
           <h2>Gallery</h2>
-          <p>Select an Image from our Community.</p>
+          <p>Select an Image from our Community</p>
+          <p>Only 10 Of Each Unique Image Available</p>
           <div className="gallery">
             <Gallery />
           </div>

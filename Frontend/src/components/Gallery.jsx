@@ -38,10 +38,11 @@ const Gallery = () => {
           if (data && data.data.getUserLikedImages) {
             for (let i = 0; i < data.data.getUserLikedImages.length; i++) {
               let imageId = data.data.getUserLikedImages[i];
-              let heart = document.getElementById(imageId).getElementsByClassName("heart-icon")[0];
-              if (heart) {
-                heart.style.backgroundImage = 'url("/images/heart-filled.svg")';
-                }
+              document
+                .getElementById(imageId)
+                .getElementsByClassName("heart-icon")[0]
+                .style.backgroundImage = 
+                'url("/images/heart-filled.svg")';
             }
           }
         })
