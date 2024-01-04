@@ -14,10 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 //    @Query("SELECT p FROM Product p WHERE p.productId = ?1")
     Optional<Product> findByProductId(Long productId);
 
-    @Query("SELECT p FROM Product p WHERE p.id NOT IN (SELECT c.product.id FROM Cart c)")
+    @Query("SELECT p FROM Product p WHERE p.productId NOT IN (SELECT c.product.productId FROM Cart c)")
     List<Product> findProductsNotInCart();
-
-//    @Query("SELECT p FROM Product p JOIN Cart c ON p.productId = c.productId WHERE c.userId = ?1")
-//    List<Product> checkCartProductsByUserId(Long userId);
-
+    
 }
