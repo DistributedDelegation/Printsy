@@ -13,10 +13,10 @@ public class BlockRecord {
 
     @Id
     private ObjectId id;
-    private final Block block;
-    private final Long userId;
-    private final Map<String, Integer> imageIdCounts;
-    private final Date timestamp;
+    private Block block;
+    private Long userId;
+    private Map<String, Integer> imageIdCounts;
+    private Date timestamp;
 
     public BlockRecord(Block block) {
         this.block = block;
@@ -25,24 +25,47 @@ public class BlockRecord {
         this.timestamp = new Date();
     }
 
+    public BlockRecord() {
+    }
+
     public ObjectId getId() {
         return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
     }
 
     public Block getBlock() {
         return block;
     }
 
+    public void setBlock(Block block) {
+        this.block = block;
+    }
+
     public Long getUserId() {
         return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public Map<String, Integer> getImageIdCounts() {
         return imageIdCounts;
     }
 
+    public void setImageIdCounts(Map<String, Integer> imageIdCounts) {
+        this.imageIdCounts = imageIdCounts;
+    }
+
     public Date getTimestamp() {
         return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     private Map<String, Integer> calculateImageIdCounts(Block block) {

@@ -3,7 +3,7 @@ type Query {
 }
 
 type Mutation {
-  completeTransaction(transactions: [TransactionInput!]!): TransactionResult!
+  completeTransaction(transactionInputs: [TransactionInput!]!): TransactionResult!
 }
 
 input TransactionInput {

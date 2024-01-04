@@ -88,7 +88,7 @@ const Gallery = ({ containerHeight }) => {
         .then((response) => response.json())
         .then((cartData) => {
           const cartCount = cartData.data.findImageByImageId;
-          Console.log("Cart count: " + cartCount);
+          console.log("Cart count: " + cartCount);
           totalAvailable -= cartCount; // Subtract cart count from total available
 
           // Fetch transaction count
@@ -103,7 +103,7 @@ const Gallery = ({ containerHeight }) => {
             .then((transactionData) => {
               const transactionCount =
                 transactionData.data.checkImageTransactionCount.count;
-              Console.log("transactionCount count: " + transactionCount);
+              console.log("transactionCount count: " + transactionCount);
               totalAvailable -= transactionCount; // Subtract transaction count from total available
 
               // Update UI with remaining count

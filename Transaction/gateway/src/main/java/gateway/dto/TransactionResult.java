@@ -10,9 +10,8 @@ public class TransactionResult {
         this.success = success;
     }
 
-
     @JsonProperty("success")
-    public boolean isSuccess() {
+    public boolean getSuccess() {
         return success;
     }
 

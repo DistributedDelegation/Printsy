@@ -12,7 +12,7 @@ public interface BlockchainRepository extends MongoRepository<BlockRecord, Objec
 
     List<BlockRecord> findAllByUserId(long userId);
 
-    @Query("{'block.imageIdCounts.?0': {$exists: true}}")
+    @Query("{'imageIdCounts.?0': {$exists: true}}")
     List<BlockRecord> findAllByImageId(String imageId);
 
     BlockRecord findTopByOrderByTimestampDesc();

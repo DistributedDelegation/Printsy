@@ -9,4 +9,9 @@ public class TransactionResult {
     public Boolean getSuccess() {
         return success;
     }
+
+    @JsonProperty("success")
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
 }

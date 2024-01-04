@@ -50,6 +50,10 @@ public class TransactionServiceImpl extends TransactionServiceImplBase {
                         TimestampConverter.fromProtoTimestamp(protoTransaction.getTimestamp())
                 )).toList();
 
+        for (Transaction transaction: transactions) {
+            logger.info(transaction.toString());
+        }
+
         TransactionResponse response = null;
         try {
             node.writeTransaction(transactions);

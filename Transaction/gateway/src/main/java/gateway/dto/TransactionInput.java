@@ -2,6 +2,8 @@ package gateway.dto;
 
 import gateway.model.Transaction;
 
+import java.util.Date;
+
 public class TransactionInput {
 
     private Long userId;
@@ -27,7 +29,16 @@ public class TransactionInput {
         Transaction t = new Transaction();
         t.setUserId(userId);
         t.setImageId(imageId);
+        t.setTimestamp(new Date());
 
         return t;
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionInput{" +
+                "userId=" + userId +
+                ", imageId='" + imageId + '\'' +
+                '}';
     }
 }

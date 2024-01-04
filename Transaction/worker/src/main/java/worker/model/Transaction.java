@@ -41,4 +41,12 @@ public class Transaction {
         this.timestamp = timestamp;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "userId=" + userId +
+                ", imageId='" + imageId + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

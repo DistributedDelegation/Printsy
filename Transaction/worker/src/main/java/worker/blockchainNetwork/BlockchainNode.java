@@ -66,7 +66,9 @@ public class BlockchainNode {
     }
 
     public int getImageTransactionCount(String imageId){
-        return blockchainRepository.countByImageId(imageId);
+
+        return getTransactionsByImageId(imageId).size();
+
     }
 
 }

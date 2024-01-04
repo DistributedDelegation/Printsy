@@ -12,11 +12,13 @@ import worker.WorkerMessages;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Controller
 public class Mutation {
 
     private final ClientNodeService clientNodeService;
+    private static final Logger logger = Logger.getLogger(ClientNodeService.class.getName());
 
     @Autowired
     public Mutation(ClientNodeService clientNodeService) {
@@ -42,6 +44,9 @@ public class Mutation {
 
     @MutationMapping
     public TransactionResult completeTransaction(@Argument List<TransactionInput> transactionInputs) {
+        for (TransactionInput input : transactionInputs){
+            logger.info("Transaction received: " + input);
+        }
         List<Transaction> transactions = transactionInputs.stream().map(TransactionInput::toTransaction).toList();
         return clientNodeService.completeTransaction(transactions);
     }

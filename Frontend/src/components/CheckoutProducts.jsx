@@ -50,7 +50,7 @@ const CheckoutProducts = ({ refreshKey, timerValue }) => {
   useEffect(() => {
     console.log("Refetching cart items:");
 
-    const timeoutDuration = timerValue <= 0 ? 2000 : 0;
+    const timeoutDuration = timerValue <= 0 ? 3000 : 0;
     const timeout = setTimeout(() => {
       setCartItems([]);
       fetchCartItems();
@@ -73,6 +73,7 @@ const CheckoutProducts = ({ refreshKey, timerValue }) => {
       const data = await response.json();
       const cartItems = data.data.findCartItemsByUserId;
       console.log("Cart items:", cartItems);
+
       const items = cartItems.map((item) => {
         const { productName, size } = mapFromStockId(
           item.productResult.stockId

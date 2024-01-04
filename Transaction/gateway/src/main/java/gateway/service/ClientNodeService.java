@@ -102,7 +102,7 @@ public class ClientNodeService {
 
         TransactionRequest request = requestBuilder.build();
 
-        logger.info("Sending validation request to server at port" + serverAddress + ":" + request);
+        logger.info("Sending complete transaction request to server at port" + serverAddress + ":" + request);
 
         TransactionResponse grpcResponse = null;
         try {

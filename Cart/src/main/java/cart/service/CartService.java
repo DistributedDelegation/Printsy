@@ -62,7 +62,6 @@ public class CartService {
     // checked with: {"query": "mutation CompletePurchase($userId: ID!) { completePurchase(userId: $userId) }","variables": { "userId": "1" }}
     public boolean completePurchase(Long userId) {
         // Cancel the scheduled task
-        taskSchedulerService.cancelScheduledTask(userId);
         List<Cart> cartItems = cartRepository.findAllByUserId(userId);
         List<TransactionInput> transactionInputs = cartItems.stream() // Convert list to stream
                 .map(Cart::toTransactionInput) // Map each cart item to a TransactionInput
@@ -76,6 +75,7 @@ public class CartService {
             boolean success = transactionGatewayService.completeTransaction(transactionInputs);
             if (success) {
                 cleanUpService.deleteCartAndProductEntitiesByUser(userId);
+                taskSchedulerService.cancelScheduledTask(userId);
             }
             return success;
         } catch (Exception e) {
