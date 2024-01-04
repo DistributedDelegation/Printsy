@@ -159,8 +159,8 @@ const Generation = () => {
   useEffect(() => {
     const handleResize = () => {
       if (generateRef.current) {
-        const generateDivHeight = generateRef.current.clientHeight;
-        const adjustedHeight = Math.max(0, generateDivHeight - 800) + "px"; // Subtracting 300px from Generate div height
+        const generateDivHeight = generateRef.clientHeight;
+        const adjustedHeight = 245;
         setGalleryHeight(adjustedHeight);
       }
     };
@@ -231,7 +231,7 @@ const Generation = () => {
           <div className="gallery">
             <Gallery containerHeight={galleryHeight} />
             <h2>Your Images</h2>
-            <UserImages containerHeight={galleryHeight} />
+            <UserImages containerHeight={galleryHeight - 35} />
           </div>
         </div>
       </div>

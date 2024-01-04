@@ -12,6 +12,7 @@ import java.util.List;
 public class BlockchainMiner {
     public Block mineBlock(List<Transaction> t, Block lastBlock) throws NoSuchAlgorithmException {
         Block newBlock = new Block();
+        newBlock.setSequenceNo(lastBlock.getSequenceNo() + 1);
         newBlock.setTransactions(t);
         newBlock.setPreviousHash(lastBlock.getHash());
         newBlock.setSequenceNo(lastBlock.getSequenceNo());

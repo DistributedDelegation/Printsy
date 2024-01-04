@@ -44,7 +44,7 @@ html {
   grid-gap: 20px;
   justify-content: center;
   margin: auto;
-  min-height: 100vh;
+  /* min-height: 100vh; */
   height: auto;
 }
 

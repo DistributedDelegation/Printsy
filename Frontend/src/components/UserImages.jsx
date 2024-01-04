@@ -56,6 +56,10 @@ const UserImages = ({ containerHeight }) => {
     getUserImages();
   }, []);
 
+  if (userImages.length == 0) {
+    return <div id="user-images">You don't have any images yet!</div>;
+  }
+
   return (
     <div id="user-images" style={{ height: containerHeight }}>
       {userImages.map(({ imageId, imageUrl }) => (

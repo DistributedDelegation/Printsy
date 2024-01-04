@@ -17,8 +17,8 @@
   background: #90BDBD;
   z-index: 0;
   min-height: 100%;
-  min-height: 1270px;
-  height: 850px;
+  /* min-height: 1270px; */
+  /* height: 850px; */
 }
 
 #Gallery {
@@ -31,6 +31,7 @@
 
 #Gallery .content {
   color: var(--color-lightblue-100);
+  top: 80px;
   left: 100px;
 }
 
