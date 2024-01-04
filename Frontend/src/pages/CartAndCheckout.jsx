@@ -22,6 +22,7 @@ const CartAndCheckout = () => {
   const [deliveryEirCode, setDeliveryEirCode] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+  const [isCartEmpty, setIsCartEmpty] = useState(true);
 
   // Fetch timer for the Cart
   const fetchRemainingTime = async (userId) => {
@@ -94,6 +95,11 @@ const CartAndCheckout = () => {
     }
   };
 
+  // Function to update the isCartEmpty state
+  const handleCartEmptyState = (isEmpty) => {
+    setIsCartEmpty(isEmpty);
+  };
+
   // Return Conditionally Based on isCheckout state
   return (
     <div id="gridTemplate">
@@ -106,7 +112,11 @@ const CartAndCheckout = () => {
             <div className="content-left">
               <h2>{isCheckout ? "Selected Products" : "Cart"}</h2>
               <div className="divider"></div>
-              <CheckoutProducts refreshKey={refreshKey} time={initialTime} />
+              <CheckoutProducts 
+                refreshKey={refreshKey} 
+                time={initialTime} 
+                onCartEmpty={handleCartEmptyState}
+                />
             </div>
             <div className="content-right">
               {isCheckout ? (
@@ -167,6 +177,7 @@ const CartAndCheckout = () => {
                   <button
                     className="purchase-button"
                     onClick={handleNavigateCheckout}
+                    disabled={isCartEmpty}
                   >
                     Proceed with Purchase
                   </button>
