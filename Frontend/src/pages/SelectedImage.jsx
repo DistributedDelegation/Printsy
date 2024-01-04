@@ -23,20 +23,27 @@ const SelectedImage = () => {
   const authContext = useContext(AuthContext);
   const userId = authContext.userID;
 
+  const defaultTimeForNewItem = 120;
+
   // Gallery Images are deactivating upload button
   useEffect(() => {
     if (location.state?.uploadedImage) {
       setIsUploaded(location.state.uploadedImage);
     }
-  }, [location.state?.uploadedImage]);
+    if (location.state.initialTime !== undefined) {
+      setInitialTime(location.state.initialTime);
+    }
+    if (location.state.showTimer !== undefined) {
+      setShowTimer(location.state.showTimer);
+    }
+  }, [location.state]);
+
+  console.log(showTimer);
 
   // Back to home link
   const handleNavigateHome = () => {
     navigate("/");
   };
-
-  console.log("Current Image Id:" + imageId);
-  console.log("Current Image Url:" + imageUrl);
 
   // ------ Timer ------
   const fetchRemainingTime = async (userId) => {
@@ -61,12 +68,10 @@ const SelectedImage = () => {
     fetchRemainingTime(userId);
   };
 
-  useEffect(() => {
-    fetchRemainingTime(userId);
-  }, [cartItemsChanged]);
-
-  const onCartChange = () => {
-    setCartItemsChanged(!cartItemsChanged);
+  const onItemAddedToCart = () => {
+    setInitialTime(defaultTimeForNewItem); // Start with a default time
+    setShowTimer(true); // Show the timer immediately
+    setTimeout(() => fetchRemainingTime(userId), 1500); // Fetch the actual remaining time
   };
 
   // Cart icon link
@@ -94,7 +99,7 @@ const SelectedImage = () => {
       name: "Mug",
       productImageUrl: "/images/mug.png",
       price: 10,
-      sizes: ["onesize"],
+      sizes: ["OneSize"],
       overlayPosition: { top: "172px", left: "113px", widthHeight: "110px" },
     },
     {
@@ -231,7 +236,7 @@ const SelectedImage = () => {
                 imageId={imageId}
                 imageUrl={imageUrl}
                 product={product}
-                onCartChange={onCartChange}
+                onCartChange={onItemAddedToCart}
               />
             ))}
           </div>

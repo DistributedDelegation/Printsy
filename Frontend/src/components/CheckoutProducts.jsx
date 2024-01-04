@@ -7,7 +7,7 @@ const products = [
     name: "Mug",
     productImageUrl: "/images/mug.png",
     price: 10,
-    sizes: ["onesize"],
+    sizes: ["OneSize"],
     overlayPosition: { top: "36px", left: "23px", widthHeight: "24px" },
   },
 
@@ -30,7 +30,7 @@ const products = [
 const mapFromStockId = (stockId) => {
   // Inverse mapping from stockId to {productName, size}
   const inverseMapping = {
-    1: { productName: "Mug", size: "onesize" },
+    1: { productName: "Mug", size: "OneSize" },
     2: { productName: "T-Shirt", size: "S" },
     3: { productName: "T-Shirt", size: "M" },
     4: { productName: "T-Shirt", size: "L" },
@@ -48,11 +48,10 @@ const CheckoutProducts = ({ refreshKey, timerValue, onCartEmpty }) => {
   const userId = authContext.userID;
 
   useEffect(() => {
+    setCartItems([]);
     console.log("Refetching cart items:");
-
-    const timeoutDuration = timerValue <= 0 ? 3000 : 0;
+    const timeoutDuration = timerValue <= 10 ? 3000 : 0;
     const timeout = setTimeout(() => {
-      setCartItems([]);
       fetchCartItems();
     }, timeoutDuration);
 
@@ -61,7 +60,6 @@ const CheckoutProducts = ({ refreshKey, timerValue, onCartEmpty }) => {
 
   const fetchCartItems = async () => {
     const query = `query ($userId: ID!) { findCartItemsByUserId(userId: $userId) { productResult { imageId imageUrl stockId price } userId expirationTime } }`;
-    //const userId = 1; // Replace with actual user ID
     const variables = { userId };
 
     try {
@@ -73,7 +71,6 @@ const CheckoutProducts = ({ refreshKey, timerValue, onCartEmpty }) => {
       const data = await response.json();
       const cartItems = data.data.findCartItemsByUserId;
       console.log("Cart items:", cartItems);
-
       const items = cartItems.map((item) => {
         const { productName, size } = mapFromStockId(
           item.productResult.stockId
@@ -93,30 +90,53 @@ const CheckoutProducts = ({ refreshKey, timerValue, onCartEmpty }) => {
         };
       });
 
-      const totalPrice = items.reduce(
-        (acc, item) => acc + item.productResult.price,
+      const productCountMap = {};
+      const uniqueItems = [];
+
+      items.forEach((item) => {
+        const id = `${item.productResult.stockId}-${item.productSize}-${item.productResult.imageId}`;
+        if (productCountMap[id]) {
+          productCountMap[id].count += 1;
+        } else {
+          productCountMap[id] = { ...item, count: 1 };
+          uniqueItems.push(productCountMap[id]);
+        }
+      });
+
+      uniqueItems.sort((a, b) => {
+        const imageIdA = a.productResult.imageId;
+        const imageIdB = b.productResult.imageId;
+
+        // Assuming imageId is a string for alphanumeric sorting
+        return imageIdA.localeCompare(imageIdB);
+      });
+
+      const totalPrice = uniqueItems.reduce(
+        (acc, item) => acc + item.productResult.price * item.count,
         0
       );
+
       setTotalPrice(totalPrice);
-      setCartItems(items);
+      setCartItems(uniqueItems);
     } catch (error) {
       console.error("Error fetching cart products:", error);
     }
   };
 
+  useEffect(() => {
+    // Notify parent component about the cart status
+    onCartEmpty(cartItems.length === 0);
+  }, [cartItems, onCartEmpty]);
+
   if (cartItems.length === 0) {
-    onCartEmpty(true);
     return <div className="empty-cart-message">Cart is empty!</div>;
-  } else {
-    onCartEmpty(false);
   }
 
   return (
     <div>
       <div className="cart-items">
         {cartItems.map((product, index) => {
-          // Unpack product details
-          const { productResult, productSize } = product;
+          const { productResult, productSize, count } = product;
           const { imageUrl, price } = productResult;
           const { name, productImageUrl, overlayPosition, sizes } =
             product.productTypeDetail || {};
@@ -150,6 +170,7 @@ const CheckoutProducts = ({ refreshKey, timerValue, onCartEmpty }) => {
                   <span className="product-size">
                     {productSize || "Unknown Size"}
                   </span>
+                  <span className="product-count">Quantity: {count}</span>
                 </div>
                 <div className="product-details-right">
                   <span className="product-price">€{price}</span>

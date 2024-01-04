@@ -22,4 +22,8 @@ public class CartQueue {
     public CartItemTask peekQueue() {
         return queue.peek();
     }
+
+    public int getQueueSize() {
+        return queue.size();
+    }
 }

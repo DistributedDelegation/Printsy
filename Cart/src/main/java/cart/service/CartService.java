@@ -51,12 +51,8 @@ public class CartService {
 
     // ----------------- Transaction Service -----------------
     public boolean isImageAvailable(String imageId) {
-        // Check the total count of the image in carts and transactions
-        int countInCarts = cartRepository.countByProductImageId(imageId);
-        int countInTransactions = transactionGatewayService.getTransactionImageAvailability(imageId);
-        int total = countInCarts + countInTransactions;
         // Determine availability (assuming a threshold of 10)
-        return total < 10;
+        return getImageCountByImageId(imageId) < 10;
     }
 
     // checked with: {"query": "mutation CompletePurchase($userId: ID!) { completePurchase(userId: $userId) }","variables": { "userId": "1" }}
@@ -89,13 +85,11 @@ public class CartService {
     // checked with: {"query": "query findImageByImageId($imageId: ID!) { findImageByImageId(imageId: $imageId) }","variables": { "imageId": "1" }}
     public Integer getImageCountByImageId(String imageId) {
 
-        Integer imageCount = cartRepository.countByProductImageId(imageId);
+        int countInCartQueues = cartQueueService.checkImagesInQueue(imageId);
+        int countInCarts = cartRepository.countByProductImageId(imageId);
+        int countInTransactions = transactionGatewayService.getTransactionImageAvailability(imageId);
 
-        if (imageCount != null) {
-            return imageCount;
-        } else {
-            throw new RuntimeException("Image with ID " + imageId + " not found");
-        }
+        return countInCartQueues + countInCarts + countInTransactions;
     }
 
     // checked with: {"query": "query findCartItemsByProductId($productId: ID!) { findCartItemsByProductId(productId: $productId) }","variables": { "productId": "1" }}

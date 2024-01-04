@@ -48,15 +48,23 @@ public class CartQueueService {
         // Compute if absent will run the lambda function is the key is not in the Queue Map
         CartQueue cartQueue = queueMap.computeIfAbsent(imageId, k -> new CartQueue());
         LOGGER.info("Added to queue: " + imageId);
-        if (cartQueue.enqueue(cartItemTask)){
+        if (cartQueue.enqueue(cartItemTask)) {
             LOGGER.info("success");
-        }
-        else {
+        } else {
             LOGGER.severe("failed to enqueue task");
         }
     }
 
-    private void startProcessing(){
+    public int checkImagesInQueue(String imageId) {
+        CartQueue imageQueue = queueMap.get(imageId);
+        if (imageQueue != null) {
+            return imageQueue.getQueueSize();
+        } else {
+            return 0;
+        }
+    }
+
+    private void startProcessing() {
         executorService.submit(this::processAllQueues);
     }
 

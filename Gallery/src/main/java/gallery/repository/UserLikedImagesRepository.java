@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface UserLikedImagesRepository extends JpaRepository<UserLikedImages, String> {
-    List<UserLikedImages> findByUserId(String userId);
-    UserLikedImages findByImageIdAndUserId(String imageId, String userId);
+    List<UserLikedImages> findByUserId(Long userId);
+    UserLikedImages findByImageIdAndUserId(String imageId, Long userId);
 }

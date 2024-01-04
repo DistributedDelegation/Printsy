@@ -27,7 +27,7 @@ type Query {
   getImageUrlByImageId(imageId: String!): String!
   getImageUrlsByImageIds(imageIds: ImageIdList!): ImageUrlList!
   getUserLikedImages(userId: String!): [String]!
-  getUserImages(userId: String!): [UserImage]
+  getUserImages(userId: ID!): [UserImage]
 }
 
 type Mutation {

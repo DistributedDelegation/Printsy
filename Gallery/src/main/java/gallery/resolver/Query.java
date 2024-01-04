@@ -44,20 +44,6 @@ public class Query {
         this.userLikedImagesRepository = userLikedImagesRepository;
     }
 
-//    @QueryMapping
-//    public List<Map<String, Object>> getAllPublishedImages() {
-//        return mongoRepository.findByIsImagePublishedYN(true)
-//                                .stream()
-//                                .map(image -> {
-//                                Map<String, Object> imageMap = new HashMap<>();
-//                                imageMap.put("imageId", image.getImageId());
-//                                imageMap.put("imageUrl", image.getImageUrl());
-//                                imageMap.put("likeCount", image.getLikeCount());
-//                                return imageMap;
-//                            })
-//                                .collect(Collectors.toList());
-//    }
-
     @QueryMapping
     public List<PublishedImage> getAllPublishedImages() {
         return mongoRepository.findByIsImagePublishedYN(true)
@@ -94,7 +80,7 @@ public class Query {
         return imageUrlList;
     }
 
-    @QueryMapping List<String> getUserLikedImages(@Argument String userId){
+    @QueryMapping List<String> getUserLikedImages(@Argument Long userId){
         List<UserLikedImages> imageList = userLikedImagesRepository.findByUserId(userId);
         List<String> imageIdList = new ArrayList<>();
         for (UserLikedImages image : imageList) {
@@ -104,7 +90,7 @@ public class Query {
     }
 
     @QueryMapping
-    public List<Map<String, Object>> getUserImages(@Argument String userId) {
+    public List<Map<String, Object>> getUserImages(@Argument Long userId) {
         return mongoRepository.findByUserId(userId)
                                 .stream()
                                 .map(image -> {

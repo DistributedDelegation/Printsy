@@ -9,8 +9,8 @@ public class UserLikedImages {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "VARCHAR(250)")
-    private String userId;
+    @Column
+    private Long userId;
 
     @Column(columnDefinition = "VARCHAR(250)")
     private String imageId;
@@ -23,11 +23,11 @@ public class UserLikedImages {
         this.id = id;
     }
     
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

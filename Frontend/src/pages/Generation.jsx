@@ -21,6 +21,8 @@ const Generation = () => {
   const authContext = useContext(AuthContext);
   const userId = authContext.userID;
 
+  console.log(showTimer);
+
   const handlePromptChange = (e) => {
     setPrompt(e.target.value);
   };
@@ -107,6 +109,8 @@ const Generation = () => {
                   imageUrl: imageUrl,
                   prompt: combinedPrompt,
                   isUploaded: false,
+                  showTimer: showTimer,
+                  initialTime: timer,
                 },
               });
             })

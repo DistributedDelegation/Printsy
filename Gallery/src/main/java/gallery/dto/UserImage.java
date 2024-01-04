@@ -7,8 +7,8 @@ public class UserImage {
     public UserImage() {
     }
 
-    public UserImage(String imageid, String imageUrl) {
-        this.imageId = imageid;
+    public UserImage(String imageId, String imageUrl) {
+        this.imageId = imageId;
         this.imageUrl = imageUrl;
     }
 

@@ -17,7 +17,7 @@ public class ImageMongo {
 
     private Boolean isImagePublishedYN;
 
-    private String userId;
+    private Long userId;
 
     private String imageTimestamp;
 
@@ -63,11 +63,11 @@ public class ImageMongo {
         this.isImagePublishedYN = isImagePublishedYN;
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String usrId) {
+    public void setUserId(Long usrId) {
         this.userId = usrId;
     }
 

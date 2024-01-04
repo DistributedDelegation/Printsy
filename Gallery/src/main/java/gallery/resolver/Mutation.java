@@ -40,7 +40,7 @@ public class Mutation {
     }
 
     @MutationMapping
-    public String saveToImageAndGalleryTable(@Argument String imageUrl, @Argument String imageNameInput, @Argument String imageDescriptionInput, @Argument Boolean imagePublishedYN, @Argument String usrId) {
+    public String saveToImageAndGalleryTable(@Argument String imageUrl, @Argument String imageNameInput, @Argument String imageDescriptionInput, @Argument Boolean imagePublishedYN, @Argument Long usrId) {
 
         // Generate an uuid for the image, this will be the same in both dbs
          String imageId = UUID.randomUUID().toString();
@@ -68,7 +68,7 @@ public class Mutation {
     }
 
     @MutationMapping
-    public Integer saveIncreasedLikeCount(@Argument String imageId, @Argument String userId) {
+    public Integer saveIncreasedLikeCount(@Argument String imageId, @Argument Long userId) {
         
         ImageMongo imageMongo = mongoRepository.findByImageId(imageId);
         Integer imageLikeCount = imageMongo.getLikeCount() + 1;
@@ -84,7 +84,7 @@ public class Mutation {
     }
 
     @MutationMapping
-    public Integer saveDecreasedLikeCount(@Argument String imageId, @Argument String userId) {
+    public Integer saveDecreasedLikeCount(@Argument String imageId, @Argument Long userId) {
         
         ImageMongo imageMongo = mongoRepository.findByImageId(imageId);
         Integer imageLikeCount = imageMongo.getLikeCount() - 1;

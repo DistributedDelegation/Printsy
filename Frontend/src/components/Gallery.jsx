@@ -20,8 +20,8 @@ const Gallery = ({ containerHeight }) => {
         query: `query(
             $userId: String!
             ) {
-          getUserLikedImages(userId: $userId)
-        }`,
+              getUserLikedImages(userId: $userId)
+          }`,
         variables: {
           userId: userID,
         },
@@ -62,9 +62,21 @@ const Gallery = ({ containerHeight }) => {
           findImageByImageId(imageId: $imageId)
         }`,
         variables: {
-          imageId: image.imageId,
+          imageId: imageId,
         },
       });
+
+      const transactionQuery = JSON.stringify({
+        query: `query($imageId: String!) {
+          checkImageTransactionCount(imageId: $imageId) {
+            count
+          }
+        }`,
+        variables: {
+          imageId: imageId,
+        },
+      });
+
       // Fetch cart count
       fetch(cartGraphqlEndpoint, {
         method: "POST",
@@ -77,14 +89,38 @@ const Gallery = ({ containerHeight }) => {
         .then((cartData) => {
           const cartCount = cartData.data.findImageByImageId;
           console.log("Cart count: " + cartCount);
-          totalAvailable -= cartCount;
-          document
-            .getElementById(imageId)
-            .getElementsByClassName("imageCount")[0].innerText =
-            totalAvailable + "/10";
+          totalAvailable -= cartCount; // Subtract cart count from total available
+
+          // Fetch transaction count
+          fetch(transactionGatewayGraphqlEndpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: transactionQuery,
+          })
+            .then((response) => response.json())
+            .then((transactionData) => {
+              const transactionCount =
+                transactionData.data.checkImageTransactionCount.count;
+              console.log("transactionCount count: " + transactionCount);
+              totalAvailable -= transactionCount; // Subtract transaction count from total available
+
+              // Update UI with remaining count
+              document
+                .getElementById(imageId)
+                .getElementsByClassName("imageCount")[0].innerText =
+                totalAvailable + "/10";
+            })
+            .catch((transactionError) => {
+              console.error(
+                "Error fetching transaction count:",
+                transactionError
+              );
+            });
         })
-        .catch((transactionError) => {
-          console.error("Error fetching transaction count:", transactionError);
+        .catch((cartError) => {
+          console.error("Error fetching cart count:", cartError);
         });
     });
   };

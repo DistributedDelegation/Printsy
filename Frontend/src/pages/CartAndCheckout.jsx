@@ -61,6 +61,7 @@ const CartAndCheckout = () => {
   // Close Popup
   const closePopup = () => {
     setShowPopup(false);
+    navigate("/");
   };
 
   const handlePurchase = async () => {
@@ -120,11 +121,11 @@ const CartAndCheckout = () => {
             <div className="content-left">
               <h2>{isCheckout ? "Selected Products" : "Cart"}</h2>
               <div className="divider"></div>
-              <CheckoutProducts 
-                refreshKey={refreshKey} 
-                time={initialTime} 
+              <CheckoutProducts
+                refreshKey={refreshKey}
+                time={initialTime}
                 onCartEmpty={handleCartEmptyState}
-                />
+              />
             </div>
             <div className="content-right">
               {isCheckout ? (

@@ -13,7 +13,7 @@ const Product = ({ imageId, imageUrl, product, onCartChange }) => {
   const mapToStockId = (productName, size) => {
     // Define the mapping based on the stockId conversion
     const mapping = {
-      Mug: { onesize: "001" },
+      Mug: { OneSize: "001" },
       "T-Shirt": { S: "002", M: "003", L: "004" },
       "Polo-Shirt": { S: "005", M: "006", L: "007" },
     };
@@ -154,7 +154,9 @@ const Product = ({ imageId, imageUrl, product, onCartChange }) => {
       </form>
       {showPopup && (
         <div className="popup">
-          <p style={{ color: "darkslategray" }} className="popup-text">{popupMessage}</p>
+          <p style={{ color: "darkslategray" }} className="popup-text">
+            {popupMessage}
+          </p>
           <button onClick={closePopup}>Close</button>
         </div>
       )}

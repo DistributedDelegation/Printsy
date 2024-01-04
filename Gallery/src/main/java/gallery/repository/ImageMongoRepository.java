@@ -9,5 +9,5 @@ import java.util.List;
 public interface ImageMongoRepository extends MongoRepository<ImageMongo, String> {
     List<ImageMongo> findByIsImagePublishedYN(boolean isImagePublishedYN);
     ImageMongo findByImageId(String imageId);
-    List<ImageMongo> findByUserId(String userId);
+    List<ImageMongo> findByUserId(Long userId);
 }

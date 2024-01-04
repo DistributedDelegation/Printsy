@@ -5,17 +5,17 @@ import jakarta.persistence.*;
 
 @Embeddable
 public class UserImageId implements Serializable {
-    private String userId;
+    private Long userId;
     private String imageId;
 
     public UserImageId() {
     }
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
