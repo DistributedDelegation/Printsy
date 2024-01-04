@@ -9,7 +9,6 @@ html {
   height: 100%;
   background: #2E4C54;
   font-family: var(--font-roboto);
-  overflow: hidden;
 }
 
 /* Variables */
