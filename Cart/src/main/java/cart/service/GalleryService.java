@@ -2,6 +2,7 @@ package cart.service;
 
 import cart.dto.ImageIdList;
 import cart.dto.ImageUrlList;
+import cart.util.Parser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -10,18 +11,22 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Service
 public class GalleryService {
     private static final Logger LOGGER = Logger.getLogger(GalleryService.class.getName());
+    private final Parser parser;
     private final WebClient webClient;
     private final Map<String, String> imageUrlCache = new HashMap<>();  // Cache for storing image URLs
 
     @Autowired
-    public GalleryService(@Qualifier("galleryWebClient") WebClient webClient) {
+    public GalleryService(@Qualifier("galleryWebClient") WebClient webClient, Parser parser) {
         this.webClient = webClient;
+        this.parser = parser;
     }
 
     public String getImageUrl(String imageId) {
@@ -83,7 +88,9 @@ public class GalleryService {
                     .block();
             LOGGER.info("Response: " + response);
 
-            ImageUrlList imageUrlList = parseImageUrlList(response);
+            ImageUrlList imageUrlList = parser.parseResponse(ImageUrlList.class, "getImageUrlsByImageIds", response);
+
+//            ImageUrlList imageUrlList = parseImageUrlList(response);
             if (imageUrlList != null && imageUrlList.getImageUrls() != null) {
                 List<String> imageUrls = imageUrlList.getImageUrls();
                 for (int i = 0; i < uncachedImageIds.size(); i++) {
@@ -119,18 +126,5 @@ public class GalleryService {
                 .put("query", "query GetImageUrlsByImageIds($imageIds: ImageIdList!) { getImageUrlsByImageIds(imageIds: $imageIds) {imageUrls}}")
                 .set("variables", variablesNode)
                 .toString();
-    }
-
-    private ImageUrlList parseImageUrlList(String response) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode rootNode = objectMapper.readTree(response);
-            JsonNode imageUrlsNode = rootNode.path("data").path("getImageUrlsByImageIds");
-            return objectMapper.treeToValue(imageUrlsNode, ImageUrlList.class);
-
-        } catch (Exception e) {
-            LOGGER.severe("Error while parsing response: " + e);
-            return null;
-        }
     }
 }

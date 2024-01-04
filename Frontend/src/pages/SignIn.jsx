@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useMatchHeight from '../components/useMatchHeight';
+import useMatchHeight from "../components/useMatchHeight";
 import "./Secondary.css";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { generateRef } = useMatchHeight('generateRef');
-  const [signInEmail, setSignInEmail] = useState('');
-  const [signInPassword, setSignInPassword] = useState('');
+  const { generateRef } = useMatchHeight("generateRef");
+  const [signInEmail, setSignInEmail] = useState("");
+  const [signInPassword, setSignInPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
 
   const handleSignupClick = () => {
-    navigate('/signup');
+    navigate("/signup");
   };
 
   const handleSignIn = async () => {
@@ -33,44 +33,45 @@ const SignIn = () => {
       };
 
       try {
-        const response = await fetch('http://localhost:8080/auth/graphql', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const response = await fetch("http://localhost:8080/auth/graphql", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ query, variables }),
         });
         const data = await response.json();
         const token = data.data.authenticate;
         if (token === "Incorrect email address or password: Bad credentials") {
-          alert("Incorrect email address or password. Please enter the correct email address and password or sign up for an account.");
+          alert(
+            "Incorrect email address or password. Please enter the correct email address and password or sign up for an account."
+          );
           setIsSigningIn(false);
         } else {
-          localStorage.setItem('user', token);
+          localStorage.setItem("user", token);
           console.log(token);
-          Cookies.set('user', token, { expires: 7, secure: true }); // Store the cookies
-          console.log("saved cookies when signin in", Cookies.get('user'));
+          Cookies.set("user", token, { expires: 7, secure: true }); // Store the cookies
+          console.log("saved cookies when signin in", Cookies.get("user"));
           setIsSigningIn(false);
 
           setTimeout(() => {
             // get the redirect path stored in session storage
-            const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+            const redirectPath = sessionStorage.getItem("redirectAfterLogin");
             // if it exists, navigate to it, otherwise navigate to '/generation'
-            navigate(redirectPath || '/generation');
+            navigate(redirectPath || "/generation");
             // then remove the redirect path from session storage
-            sessionStorage.removeItem('redirectAfterLogin');
+            sessionStorage.removeItem("redirectAfterLogin");
           }, 1000);
         }
-
       } catch (error) {
         // Handle error
-        console.error('Error during sign in:', error);
+        console.error("Error during sign in:", error);
         setIsSigningIn(false);
       }
-    }
+    };
 
-    const token = localStorage.getItem('user');
-      if (!token) {
-          signInUsingAccount();
-      }
+    const token = localStorage.getItem("user");
+    if (!token) {
+      signInUsingAccount();
+    }
   };
 
   return (
@@ -102,13 +103,22 @@ const SignIn = () => {
                   required
                 />
                 {isSigningIn ? (
-                  <button className="primary-button" disabled>Loading..</button>
+                  <button className="primary-button" disabled>
+                    Loading..
+                  </button>
                 ) : (
-                  <button className="primary-button" onClick={handleSignIn}>Sign-In</button>
+                  <button className="primary-button" onClick={handleSignIn}>
+                    Sign-In
+                  </button>
                 )}
                 <div id="sign-up-button">
                   <p>Don't have an account?</p>
-                  <button className="primary-button" onClick={handleSignupClick}>Sign Up Here</button>
+                  <button
+                    className="primary-button"
+                    onClick={handleSignupClick}
+                  >
+                    Sign Up Here
+                  </button>
                 </div>
               </div>
             </div>

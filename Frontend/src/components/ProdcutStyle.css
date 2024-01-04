@@ -47,10 +47,10 @@
 .product-container .secondary-button {
     display: box;
     position: absolute;
-    top: 400px;
+    top: 410px;
     right: 0px;
     width: 120px;
-    height: 30px; 
+    height: 30px;
     border-radius: 5px;
 }
 

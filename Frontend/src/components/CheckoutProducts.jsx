@@ -44,18 +44,19 @@ const mapFromStockId = (stockId) => {
 const CheckoutProducts = ({ refreshKey, timerValue, onCartEmpty }) => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const authContext = useContext(AuthContext);
   const userId = authContext.userID;
 
   useEffect(() => {
-    setCartItems([]);
-    console.log("Refetching cart items:");
-    const timeoutDuration = timerValue <= 10 ? 3000 : 0;
+    setIsLoading(true); // Start loading
     const timeout = setTimeout(() => {
       fetchCartItems();
-    }, timeoutDuration);
+    }, 3000);
 
-    return () => clearTimeout(timeout); // Cleanup the timeout
+    return () => {
+      clearTimeout(timeout); // Cleanup the timeout
+    };
   }, [refreshKey]);
 
   const fetchCartItems = async () => {
@@ -118,8 +119,10 @@ const CheckoutProducts = ({ refreshKey, timerValue, onCartEmpty }) => {
 
       setTotalPrice(totalPrice);
       setCartItems(uniqueItems);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching cart products:", error);
+      setIsLoading(false);
     }
   };
 
@@ -128,8 +131,20 @@ const CheckoutProducts = ({ refreshKey, timerValue, onCartEmpty }) => {
     onCartEmpty(cartItems.length === 0);
   }, [cartItems, onCartEmpty]);
 
+  if (isLoading) {
+    return (
+      <div className="loading" style={{ marginTop: "10px" }}>
+        Loading...{" "}
+      </div>
+    );
+  }
+
   if (cartItems.length === 0) {
-    return <div className="empty-cart-message">Cart is empty!</div>;
+    return (
+      <div className="empty-cart-message" style={{ marginTop: "10px" }}>
+        Cart is empty!
+      </div>
+    );
   }
 
   return (

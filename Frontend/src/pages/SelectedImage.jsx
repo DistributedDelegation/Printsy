@@ -83,7 +83,7 @@ const SelectedImage = () => {
     const handleResize = () => {
       if (generateRef.current) {
         const generateDivHeight = generateRef.current.clientHeight;
-        const adjustedHeight = Math.max(0, generateDivHeight - 850) + "px"; // Subtracting 300px from Generate div height
+        const adjustedHeight = Math.max(0, generateDivHeight - 1050) + "px"; // Subtracting 300px from Generate div height
         setContentHeight(adjustedHeight);
       }
     };

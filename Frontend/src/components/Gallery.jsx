@@ -5,6 +5,7 @@ import { AuthContext } from "../AuthContext";
 const Gallery = ({ containerHeight }) => {
   const [images, setImages] = useState([]);
   const [imageIds, setImageIds] = useState([]);
+  const [imageLikes, setImageLikes] = useState([]);
   let galleryGraphqlEndpoint = "http://localhost:8080/gallery/graphql";
   let cartGraphqlEndpoint = "http://localhost:8080/cart/graphql";
   let transactionGatewayGraphqlEndpoint =
@@ -14,158 +15,130 @@ const Gallery = ({ containerHeight }) => {
   const authContext = useContext(AuthContext);
   const userID = authContext.userID;
 
-  const getUserLikedImages = () => {
+  useEffect(() => {
+    getAllPublishedImages();
+  }, []);
+
+  const getUserLikedImages = (initialImages) => {
+    console.log("getting user liked images");
     if (userID) {
       const query = JSON.stringify({
-        query: `query(
-            $userId: String!
-            ) {
-              getUserLikedImages(userId: $userId)
+        query: `query($userId: String!) {
+            getUserLikedImages(userId: $userId)
           }`,
-        variables: {
-          userId: userID,
-        },
+        variables: { userId: userID },
       });
 
-      fetch(galleryGraphqlEndpoint, {
+      return fetch(galleryGraphqlEndpoint, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: query,
       })
         .then((response) => response.json())
         .then((data) => {
           if (data && data.data.getUserLikedImages) {
-            for (const element of data.data.getUserLikedImages) {
-              let imageId = element;
-              document
-                .getElementById(imageId)
-                .getElementsByClassName("heart-icon")[0].style.backgroundImage =
-                'url("/images/heart-filled.svg")';
-            }
+            const likedImageIds = data.data.getUserLikedImages; // array of liked image IDs
+
+            // Update the images state to reflect the liked status
+            return initialImages.map((image) => ({
+              ...image,
+              isLikedByUser: likedImageIds.includes(image.imageId),
+            }));
+          } else {
+            return initialImages; // If no data or no liked images, return the images as is
           }
         })
         .catch((error) => {
           console.error("Error fetching the image:", error);
+          return initialImages; // In case of error, return the initial images as is
         });
+    } else {
+      return Promise.resolve(initialImages); // If no userID, return the initial images as is
     }
   };
 
-  const getAllPublishedImageCount = () => {
-    imageIds.forEach((imageId) => {
-      // Assume a total of 10 images available initially
-      let totalAvailable = 10;
-
-      const cartQuery = JSON.stringify({
-        query: `query($imageId: ID!) {
-          findImageByImageId(imageId: $imageId)
-        }`,
-        variables: {
-          imageId: imageId,
-        },
-      });
-
-      const transactionQuery = JSON.stringify({
-        query: `query($imageId: String!) {
-          checkImageTransactionCount(imageId: $imageId) {
-            count
-          }
-        }`,
-        variables: {
-          imageId: imageId,
-        },
-      });
-
-      // Fetch cart count
-      fetch(cartGraphqlEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: cartQuery,
-      })
-        .then((response) => response.json())
-        .then((cartData) => {
-          const cartCount = cartData.data.findImageByImageId;
-          console.log("Cart count: " + cartCount);
-          totalAvailable -= cartCount; // Subtract cart count from total available
-
-          // Fetch transaction count
-          fetch(transactionGatewayGraphqlEndpoint, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: transactionQuery,
-          })
-            .then((response) => response.json())
-            .then((transactionData) => {
-              const transactionCount =
-                transactionData.data.checkImageTransactionCount.count;
-              console.log("transactionCount count: " + transactionCount);
-              totalAvailable -= transactionCount; // Subtract transaction count from total available
-
-              // Update UI with remaining count
-              document
-                .getElementById(imageId)
-                .getElementsByClassName("imageCount")[0].innerText =
-                totalAvailable + "/10";
-            })
-            .catch((transactionError) => {
-              console.error(
-                "Error fetching transaction count:",
-                transactionError
-              );
-            });
-        })
-        .catch((cartError) => {
-          console.error("Error fetching cart count:", cartError);
-        });
-    });
-  };
-
-  const getAllPublishedImages = () => {
-    const query = JSON.stringify({
-      query: `{
-            getAllPublishedImages {
-              imageId
-              imageUrl
-              likeCount
-            }
-          }`,
+  const updateImageAvailabilityCount = (image) => {
+    const cartQuery = JSON.stringify({
+      query: `query($imageId: ID!) {
+        findImageByImageId(imageId: $imageId)
+      }`,
+      variables: {
+        imageId: image.imageId,
+      },
     });
 
-    fetch(galleryGraphqlEndpoint, {
+    return fetch(cartGraphqlEndpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: cartQuery,
+    })
+      .then((response) => response.json())
+      .then((cartData) => {
+        const cartCount = cartData.data.findImageByImageId || 0;
+        console.log("Cart count for image " + image.imageId + ": " + cartCount);
+        const totalAvailable = 10 - cartCount;
+        return { ...image, availabilityCount: totalAvailable };
+      })
+      .catch((cartError) => {
+        console.error(
+          "Error fetching cart count for image " + image.imageId + ": ",
+          cartError
+        );
+        return { ...image }; // In case of error, return the image unchanged
+      });
+  };
+
+  const getAllPublishedImages = () => {
+    console.log("getting all published images");
+    const query = JSON.stringify({
+      query: `{
+        getAllPublishedImages {
+          imageId
+          imageUrl
+          likeCount
+        }
+      }`,
+    });
+
+    fetch(galleryGraphqlEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: query,
     })
       .then((response) => response.json())
       .then((data) => {
         if (data && data.data.getAllPublishedImages) {
-          setImages(data.data.getAllPublishedImages);
+          const initialImages = data.data.getAllPublishedImages.map(
+            (image) => ({
+              ...image,
+              availabilityCount: 10, // initial assumption
+              isLikedByUser: false, // initial assumption
+            })
+          );
+
+          // Update initialImages with liked status from getUserLikedImages
+          getUserLikedImages(initialImages).then((updatedImages) => {
+            setImages(updatedImages); // Set state with new liked status
+
+            // For each image, update availability count
+            Promise.all(updatedImages.map(updateImageAvailabilityCount)).then(
+              (finalImages) => {
+                setImages(finalImages); // Update state with new availability counts
+              }
+            );
+          });
+
           setImageIds(
             data.data.getAllPublishedImages.map(({ imageId }) => imageId)
           );
-          getAllPublishedImageCount();
         }
       })
       .catch((error) => {
-        console.error("Error fetching the image:", error);
+        console.error("Error fetching the images:", error);
       });
   };
-
-  useEffect(() => {
-    getAllPublishedImages();
-  }, []);
-
-  setTimeout(() => {
-    getAllPublishedImageCount();
-    getUserLikedImages();
-  }, 1000);
 
   const handleImageClick = (imageId, url) => {
     console.log("/selectimage imageURL: " + url);
@@ -175,86 +148,104 @@ const Gallery = ({ containerHeight }) => {
   };
 
   const handleLikeClick = (imageId) => {
-    if (
-      document.getElementById(imageId).getElementsByClassName("heart-icon")[0]
-        .style.backgroundImage === 'url("/images/heart-filled.svg")'
-    ) {
-      const mutation = JSON.stringify({
-        query: `mutation(
-            $imageId: String!,
-            $userId: String!
-            ) {
-              saveDecreasedLikeCount(imageId: $imageId, userId: $userId)
-          }`,
-        variables: {
-          imageId: imageId,
-          userId: userID,
-        },
-      });
+    const imageIndex = images.findIndex((image) => image.imageId === imageId);
+    if (imageIndex === -1) return; // Image not found
 
-      fetch(galleryGraphqlEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: mutation,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          document
-            .getElementById(imageId)
-            .getElementsByClassName("likesCount")[0].innerHTML =
-            data.data.saveDecreasedLikeCount;
-          document
-            .getElementById(imageId)
-            .getElementsByClassName("heart-icon")[0].style.backgroundImage =
-            'url("/images/heart.svg")';
-        })
-        .catch((error) => {
-          console.error("Error saving the image:", error);
-        });
+    const image = images[imageIndex];
+    if (image.isLikedByUser) {
+      dislikeImage(imageId, imageIndex);
     } else {
-      const mutation = JSON.stringify({
-        query: `mutation(
-            $imageId: String!,
-            $userId: String!
-            ) {
-              saveIncreasedLikeCount(imageId: $imageId, userId: $userId)
-          }`,
-        variables: {
-          imageId: imageId,
-          userId: userID,
-        },
-      });
-
-      fetch(galleryGraphqlEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: mutation,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          document
-            .getElementById(imageId)
-            .getElementsByClassName("likesCount")[0].innerHTML =
-            data.data.saveIncreasedLikeCount;
-          document
-            .getElementById(imageId)
-            .getElementsByClassName("heart-icon")[0].style.backgroundImage =
-            'url("/images/heart-filled.svg")';
-        })
-        .catch((error) => {
-          console.error("Error saving the image:", error);
-        });
+      likeImage(imageId, imageIndex);
     }
+  };
+
+  const likeImage = (imageId, imageIndex) => {
+    const mutation = JSON.stringify({
+      query: `mutation($imageId: String!, $userId: String!) {
+        saveIncreasedLikeCount(imageId: $imageId, userId: $userId)
+      }`,
+      variables: {
+        imageId: imageId,
+        userId: userID,
+      },
+    });
+
+    // Perform the mutation to increase like count
+    fetch(galleryGraphqlEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: mutation,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Update the local state to reflect the new like status and count
+        setImages((prevImages) =>
+          prevImages.map((img, index) =>
+            index === imageIndex
+              ? {
+                  ...img,
+                  isLikedByUser: true,
+                  likeCount: data.data.saveIncreasedLikeCount,
+                }
+              : img
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error liking the image:", error);
+      });
+  };
+
+  const dislikeImage = (imageId, imageIndex) => {
+    const mutation = JSON.stringify({
+      query: `mutation($imageId: String!, $userId: String!) {
+        saveDecreasedLikeCount(imageId: $imageId, userId: $userId)
+      }`,
+      variables: {
+        imageId: imageId,
+        userId: userID,
+      },
+    });
+
+    // Perform the mutation to decrease like count
+    fetch(galleryGraphqlEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: mutation,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Update the local state to reflect the new like status and count
+        setImages((prevImages) =>
+          prevImages.map((img, index) =>
+            index === imageIndex
+              ? {
+                  ...img,
+                  isLikedByUser: false,
+                  likeCount: data.data.saveDecreasedLikeCount,
+                }
+              : img
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error disliking the image:", error);
+      });
   };
 
   return (
     <div id="galleryImageContainer" style={{ height: containerHeight }}>
-      {images.map(({ imageId, imageUrl, likeCount }) => (
-        <div key={imageId} id={imageId} className="galleryImagesElement">
+      {images.map(({ imageId, imageUrl, likeCount, availabilityCount }) => (
+        <div
+          key={imageId}
+          id={imageId}
+          className="galleryImagesElement"
+          style={{ opacity: availabilityCount === 0 ? 0.25 : 1 }}
+        >
           <img
             className="galleryImages"
             src={imageUrl}
@@ -263,10 +254,16 @@ const Gallery = ({ containerHeight }) => {
           />
           <span
             className="icon heart-icon"
+            style={{
+              backgroundImage: images.find((img) => img.imageId === imageId)
+                .isLikedByUser
+                ? 'url("/images/heart-filled.svg")'
+                : 'url("/images/heart.svg")',
+            }}
             onClick={() => handleLikeClick(imageId)}
           ></span>
           <span className="likesCount">{likeCount}</span>
-          <span className="imageCount">10/10</span>
+          <span className="imageCount">{availabilityCount}/10</span>
         </div>
       ))}
     </div>

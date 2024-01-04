@@ -110,7 +110,7 @@ const Generation = () => {
                   prompt: combinedPrompt,
                   isUploaded: false,
                   showTimer: showTimer,
-                  initialTime: timer,
+                  initialTime: initialTime,
                 },
               });
             })
@@ -160,7 +160,7 @@ const Generation = () => {
     const handleResize = () => {
       if (generateRef.current) {
         const generateDivHeight = generateRef.current.clientHeight;
-        const adjustedHeight = Math.max(0, generateDivHeight - 583) + "px"; // Subtracting 300px from Generate div height
+        const adjustedHeight = Math.max(0, generateDivHeight - 800) + "px"; // Subtracting 300px from Generate div height
         setGalleryHeight(adjustedHeight);
       }
     };
@@ -224,11 +224,14 @@ const Generation = () => {
             <img src="/images/polo.png" alt="Polo Shirt"></img>
           </div>
           <h2>Public Gallery</h2>
-          <p>Select an Image from our Community</p>
-          <p>Only 10 Of Each Unique Image Available</p>
+          <p className="gallery-text">
+            Select an Image from our Community. Only 10 of each unique image
+            available.
+          </p>
           <div className="gallery">
             <Gallery containerHeight={galleryHeight} />
-            <UserImages />
+            <h2>Your Images</h2>
+            <UserImages containerHeight={galleryHeight} />
           </div>
         </div>
       </div>

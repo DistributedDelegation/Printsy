@@ -1,10 +1,10 @@
 package cart.service;
 
 import cart.dto.CountResult;
-import cart.dto.TransactionResult;
 import cart.dto.TransactionInput;
+import cart.dto.TransactionResult;
+import cart.util.Parser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,10 +21,12 @@ public class TransactionGatewayService {
     private static final Logger LOGGER = Logger.getLogger(TransactionGatewayService.class.getName());
 
     private final WebClient webClient;
+    private final Parser parser;
 
     @Autowired
-    public TransactionGatewayService(@Qualifier("transactionWebClient") WebClient webClient) {
+    public TransactionGatewayService(@Qualifier("transactionWebClient") WebClient webClient, Parser parser) {
         this.webClient = webClient;
+        this.parser = parser;
     }
 
     // checked with: {"query": "query FindImageAvailability($imageId: ID!) { findImageAvailability(imageId: $imageId) }","variables": { "imageId": "1" } }
@@ -33,19 +35,20 @@ public class TransactionGatewayService {
         LOGGER.info("Query: "+ query);
 
         // Make a post request and retrieve the result
-        CountResult response = webClient.post()
+        String response = webClient.post()
                 .uri("/graphql")
                 .bodyValue(query)
                 .retrieve()
-                .bodyToMono(CountResult.class)
+                .bodyToMono(String.class)
                 .block();
 
         if (response == null) {
             LOGGER.severe("Failed to send image count query to transaction-gateway");
             return -1;
         } else {
-            LOGGER.info("Successfully sent image count query to transaction-gateway: " + response);
-            return response.getCount();
+            CountResult countResult = parser.parseResponse(CountResult.class, "checkImageTransactionCount", response);
+            LOGGER.info("Successfully sent image count query to transaction-gateway: " + response + ". Count = " + countResult.getCount());
+            return countResult.getCount();
         }
     }
 
@@ -72,7 +75,7 @@ public class TransactionGatewayService {
                 LOGGER.severe("Failed to send transaction inputs to Transaction-Gateway");
                 return false;
             } else {
-                Boolean success = Objects.requireNonNull(parseToTransactionResult(rawResponse)).getSuccess();
+                Boolean success = Objects.requireNonNull(parser.parseResponse(TransactionResult.class, "completeTransaction", rawResponse)).getSuccess();
                 LOGGER.info("Successfully sent transaction inputs to Transaction-Gateway");
                 return success;
             }
@@ -83,19 +86,6 @@ public class TransactionGatewayService {
         }
     }
 
-
-    private TransactionResult parseToTransactionResult(String response) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode rootNode = objectMapper.readTree(response);
-            JsonNode completePurchaseNode = rootNode.path("data").path("completeTransaction");
-            LOGGER.info(completePurchaseNode.toString());
-            return objectMapper.treeToValue(completePurchaseNode, TransactionResult.class);
-        } catch (Exception e) {
-            LOGGER.severe("Error while parsing response: " + e);
-            return null;
-        }
-    }
 }
 
 

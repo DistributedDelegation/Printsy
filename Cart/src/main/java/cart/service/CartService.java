@@ -29,9 +29,7 @@ public class CartService {
     private final CleanUpService cleanUpService;
     private final TaskSchedulerService taskSchedulerService;
     private final CartQueueService cartQueueService;
-    private final CartQueue cartQueue;
     private final TransactionGatewayService transactionGatewayService;
-    private final GalleryService galleryService;
 
 
     @Autowired
@@ -43,10 +41,8 @@ public class CartService {
         this.productService = productService;
         this.cleanUpService = cleanUpService;
         this.taskSchedulerService = taskSchedulerService;
-        this.cartQueue = cartQueue;
         this.transactionGatewayService = transactionGatewayService;
         this.cartQueueService = cartQueueService;
-        this.galleryService = galleryService;
     }
 
     // ----------------- Transaction Service -----------------
@@ -152,6 +148,7 @@ public class CartService {
     // ----------------- Product Creation & Enqueuing -----------------
     // checked with: {"query": "mutation addItemtoCart($imageId: ID!, $stockId: ID!, $price: Int!, $userId: ID!) { addItemtoCart(imageId: $imageId, stockId: $stockId, price: $price, userId: $userId) }","variables": {"imageId": "1", "stockId": "1", "price": 100, "userId": "1" } }
     public String addItemToCart(String imageId, Long stockId, Integer price, Long userId) {
+
         LOGGER.info("Attempting to create product with Image ID: " + imageId + ", Stock ID: " + stockId + ", Price: " + price);
 
         // Check if image is available

@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 
-const UserImages = () => {
+const UserImages = ({ containerHeight }) => {
   const [userImages, setUserImages] = useState([]);
   let galleryGraphqlEndpoint = "http://localhost:8080/gallery/graphql";
   const navigate = useNavigate();
@@ -57,20 +57,17 @@ const UserImages = () => {
   }, []);
 
   return (
-    <div id="user-images-container">
-      <h2>Your Images</h2>
-      <div id="user-images">
-        {userImages.map(({ imageId, imageUrl }) => (
-          <div key={imageId} id={imageId} className="galleryImagesElement">
-            <img
-              className="galleryImages"
-              src={imageUrl}
-              alt="Gallery"
-              onClick={() => handleImageClick(imageId, imageUrl)}
-            />
-          </div>
-        ))}
-      </div>
+    <div id="user-images" style={{ height: containerHeight }}>
+      {userImages.map(({ imageId, imageUrl }) => (
+        <div key={imageId} id={imageId} className="galleryImagesElement">
+          <img
+            className="galleryImages"
+            src={imageUrl}
+            alt="Gallery"
+            onClick={() => handleImageClick(imageId, imageUrl)}
+          />
+        </div>
+      ))}
     </div>
   );
 };

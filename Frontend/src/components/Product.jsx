@@ -138,20 +138,22 @@ const Product = ({ imageId, imageUrl, product, onCartChange }) => {
           }}
         />
       </div>
-      <span className="product-name">{name}</span>
-      <span className="product-price">€{price}</span>
-      <form onSubmit={(e) => handleAddToCart(e, product.price)}>
-        <select className="size-dropdown">
-          {product.sizes.map((size, index) => (
-            <option key={index} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-        <button type="submit" className="secondary-button">
-          Add to Cart
-        </button>
-      </form>
+      <div>
+        <span className="product-name">{name}</span>
+        <span className="product-price">€{price}</span>
+        <form onSubmit={(e) => handleAddToCart(e, product.price)}>
+          <select className="size-dropdown">
+            {product.sizes.map((size, index) => (
+              <option key={index} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+          <button type="submit" className="secondary-button">
+            Add to Cart
+          </button>
+        </form>
+      </div>
       {showPopup && (
         <div className="popup">
           <p style={{ color: "darkslategray" }} className="popup-text">

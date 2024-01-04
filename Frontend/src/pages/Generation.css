@@ -17,6 +17,7 @@
   background: #90BDBD;
   z-index: 0;
   min-height: 100%;
+  min-height: 1270px;
   height: 850px;
 }
 
@@ -155,11 +156,9 @@
   flex-wrap: wrap;
   flex-direction: row;
   justify-content: center;
+  overflow-y: auto;
 }
 
-#user-images {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
+.gallery-text {
+  font-size: smaller;
 }

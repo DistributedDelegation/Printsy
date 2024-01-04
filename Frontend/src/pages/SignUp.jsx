@@ -1,23 +1,29 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useMatchHeight from '../components/useMatchHeight';
+import useMatchHeight from "../components/useMatchHeight";
 import "./Secondary.css";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const { generateRef } = useMatchHeight('generateRef');
-  const [signUpEmail, setSignUpEmail] = useState('');
-  const [signUpPassword, setSignUpPassword] = useState('');
+  const { generateRef } = useMatchHeight("generateRef");
+  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signUpPassword, setSignUpPassword] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
 
-  const handleSignUp = async () => {
+  useEffect(() => {
+    document.body.style.overflowY = "hidden";
+    return () => {
+      document.body.style.overflowY = "auto";
+    };
+  }, []);
 
+  const handleSignUp = async () => {
     if (checkPasswordValidity(signUpPassword)) {
       console.log("Password is valid");
     } else {
       alert(
         "Password Needs:\nAt least 8 characters\nAt least one uppercase letter\nAt least one lowercase letter\nAt least one special character"
-      )
+      );
       return;
     }
 
@@ -36,22 +42,22 @@ const SignUp = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/auth/graphql', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("http://localhost:8080/auth/graphql", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ query, variables }),
       });
       const data = response.data;
-      setSignUpEmail('');  // reset email
-      setSignUpPassword('');  // reset password
+      setSignUpEmail(""); // reset email
+      setSignUpPassword(""); // reset password
       setIsSigningUp(false);
       setTimeout(() => {
-        navigate('/signin');
-        }, 500);
+        navigate("/signin");
+      }, 500);
       // Handle the confirmation message from the API
     } catch (error) {
       // Handle error
-      console.error('Error during sign up:', error);
+      console.error("Error during sign up:", error);
       setIsSigningUp(false);
     }
   };
@@ -61,9 +67,8 @@ const SignUp = () => {
     const hasLowerCase = /[a-z]/.test(pass);
     const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(pass);
     const hasMinLength = pass.length >= 8;
-    return hasUpperCase && hasLowerCase && hasSpecialChar && hasMinLength
+    return hasUpperCase && hasLowerCase && hasSpecialChar && hasMinLength;
   };
-
 
   return (
     <div id="gridTemplate">
@@ -93,9 +98,13 @@ const SignUp = () => {
                   required
                 />
                 {isSigningUp ? (
-                  <button className="secondary-button" disabled>Loading...</button>
+                  <button className="secondary-button" disabled>
+                    Loading...
+                  </button>
                 ) : (
-                  <button className="secondary-button" onClick={handleSignUp}>Sign-Up</button>
+                  <button className="secondary-button" onClick={handleSignUp}>
+                    Sign-Up
+                  </button>
                 )}
               </div>
             </div>
