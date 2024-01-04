@@ -41,7 +41,7 @@ const mapFromStockId = (stockId) => {
   return inverseMapping[stockId] || { productName: "Unknown", size: "Unknown" }; // default or error case
 };
 
-const CheckoutProducts = ({ refreshKey, timerValue }) => {
+const CheckoutProducts = ({ refreshKey, timerValue, onCartEmpty }) => {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const authContext = useContext(AuthContext);
@@ -105,7 +105,10 @@ const CheckoutProducts = ({ refreshKey, timerValue }) => {
   };
 
   if (cartItems.length === 0) {
+    onCartEmpty(true);
     return <div className="empty-cart-message">Cart is empty!</div>;
+  } else {
+    onCartEmpty(false);
   }
 
   return (
