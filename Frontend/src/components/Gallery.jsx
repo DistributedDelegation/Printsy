@@ -65,18 +65,6 @@ const Gallery = ({ containerHeight }) => {
           imageId: image.imageId,
         },
       });
-
-      const transactionQuery = JSON.stringify({
-        query: `query($imageId: String!) {
-          checkImageTransactionCount(imageId: $imageId) {
-            count
-          }
-        }`,
-        variables: {
-          imageId: imageId,
-        },
-      });
-
       // Fetch cart count
       fetch(cartGraphqlEndpoint, {
         method: "POST",
