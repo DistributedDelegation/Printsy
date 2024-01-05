@@ -1,4 +1,4 @@
-# Team Printsy
+# Team Printsy - Group 4
 
 ## Team Members
 * Cole Neumark
