@@ -16,7 +16,7 @@ The service is powered by an Authentication service for user account creation an
 1. In the root directory, run `docker-compose build`
 2. In the same root directory, run `docker-compose up`
 
-## For the frontend service:
+### For the frontend service:
 1. From the root directory, navigate to the Frontend folder with `cd Frontend`
 2. In the Frontend folder, run `npm install`
 3. In the Frontend folder, run `npm run dev`
