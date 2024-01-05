@@ -75,8 +75,6 @@ services:
     env_file: ./Transaction/data/.env
     depends_on:
       - transaction-worker-1
-    ports:
-      - "8085:8080"
     restart: always
 
   # ----------------Blockchain ----------------
