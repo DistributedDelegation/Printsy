@@ -10,13 +10,6 @@ const SignUp = () => {
   const [signUpPassword, setSignUpPassword] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
 
-  useEffect(() => {
-    document.body.style.overflowY = "hidden";
-    return () => {
-      document.body.style.overflowY = "auto";
-    };
-  }, []);
-
   const handleSignUp = async () => {
     if (checkPasswordValidity(signUpPassword)) {
       console.log("Password is valid");
